@@ -178,7 +178,37 @@ docker-compose exec ml python experiments/scripts/runexperiment3.py \
 
 **Output**: `results/exp3.csv` with compliance flags and privacy risk scores
 
+### Experiment 4: Statistical Robustness
+
+Executes configurations across multiple random seeds to compute the mean and standard deviation of key metrics (AUC, EOD, DPD, FAIR-CARE score).
+
+```bash
+docker-compose exec ml python experiments/scripts/runexperiment4_robustness.py \
+  --dataset compas \
+  --configs baseline,configa,configb \
+  --seeds 42,43,44,45,46 \
+  --output results/exp4_robustness.json
+```
+
+**Output**: `results/exp4_robustness.json` with aggregated means and standard deviations.
+
+### Experiment 5: Hyperparameter Sensitivity
+
+Varies the differential privacy budget ($\epsilon$) and $k$-anonymity threshold to map out the utility-privacy-fairness trade-off surface.
+
+```bash
+docker-compose exec ml python experiments/scripts/runexperiment5_sensitivity.py \
+  --dataset compas \
+  --epsilons 0.1,1.0,5.0 \
+  --ks 2,5,10 \
+  --output results/exp5_sensitivity.json
+```
+
+**Output**: `results/exp5_sensitivity.json` with metric variations across parameter grids.
+
 ### Aggregate Results and Generate Figures
+
+Generates the core paper figures from Experiments 1-3.
 
 ```bash
 docker-compose exec ml python experiments/scripts/aggregateresults.py \
@@ -186,7 +216,13 @@ docker-compose exec ml python experiments/scripts/aggregateresults.py \
   --output results/figures/
 ```
 
-**Output**: Plots in `results/figures/` matching paper figures
+Generates the statistical robustness and sensitivity visualizations from Experiments 4-5.
+
+```bash
+docker-compose exec ml python experiments/scripts/visualize_new_experiments.py
+```
+
+**Output**: All generated plots and charts matching the paper figures will be saved in `results/figures/`.
 
 ## Running Tests
 

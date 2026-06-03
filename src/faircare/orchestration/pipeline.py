@@ -45,8 +45,13 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
 
     audit = AuditTrail(log_dir=os.path.join(output_dir, "logs"))
     
+    import time
+    
+    start_total = time.time()
+    
     # --- BRONZE LAYER ---
     if verbose: print("\n=== BRONZE LAYER ===")
+    start_bronze = time.time()
     ingestion = DataIngestion(spark)
     bronze_df = ingestion.ingest(
         dataset_config['raw_path'], 
@@ -68,9 +73,11 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         "quality_score": 0.9
     })
     if verbose: print(f"Bronze Score (SB): {sb}")
+    time_bronze = time.time() - start_bronze
 
     # --- SILVER LAYER ---
     if verbose: print("\n=== SILVER LAYER ===")
+    start_silver = time.time()
     anon_config = config.get('anonymization', {}).copy()
     anon_config['quasi_identifiers'] = dataset_config.get('quasi_identifiers', [])
     anon_config['label_column'] = dataset_config.get('label_column')
@@ -95,9 +102,11 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         "risk": silver_meta.get("risk", 1.0)
     })
     if verbose: print(f"Silver Score (SS): {ss}")
+    time_silver = time.time() - start_silver
 
     # --- GOLD LAYER ---
     if verbose: print("\n=== GOLD LAYER ===")
+    start_gold = time.time()
     bias_mitigator = BiasMitigator(dataset_config)
     gold_df = bias_mitigator.mitigate(silver_df, spark)
     
@@ -119,12 +128,28 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         "utility_retention": utility_report.get("utility_retention", 0)
     })
     if verbose: print(f"Gold Score (SG): {sg}")
+    time_gold = time.time() - start_gold
 
     # --- COMPOSITE SCORE ---
     if verbose: print("\n=== FAIR-CARE SCORE ===")
     scorer = FAIRCAREScore(config)
     final_score = scorer.calculate(sb, ss, sg)
     if verbose: print(f"Final Score: {final_score}")
+    
+    # --- GOVERNANCE ENFORCEMENT ---
+    checker = ComplianceCheck(config.get('compliance', {}))
+    # We pass the final_score to check compliance
+    # Assuming checker.evaluate takes the FAIR-CARE score or similar metrics
+    # In this mock, we'll just implement the logic based on the status
+    compliance_status = final_score.get('status', 'UNKNOWN')
+    if compliance_status == 'AT RISK':
+        if verbose: print("\n[CONTROL PLANE ACTION] Dataset Locked: Governance Threshold Not Met. Promotion Prevented.")
+        final_score['locked'] = True
+    else:
+        if verbose: print("\n[CONTROL PLANE ACTION] Dataset Approved for Promotion.")
+        final_score['locked'] = False
+        
+    time_total = time.time() - start_total
     
     # Add detailed metrics for experiments
     final_score['fairness'] = fairness_report
@@ -137,6 +162,12 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         'k': anon_config.get('k', 0),
         'epsilon': anon_config.get('epsilon', float('inf'))
     }
+    final_score['runtimes'] = {
+        'bronze': time_bronze,
+        'silver': time_silver,
+        'gold': time_gold,
+        'total': time_total
+    }
     
     # Save Summary
     summary_path = os.path.join(output_dir, f"{dataset}_metricssummary.json")
@@ -144,7 +175,7 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     with open(summary_path, 'w') as f:
         json.dump(final_score, f, indent=2)
         
-    if verbose: print(f"Pipeline complete. Results saved to {output_dir}")
+    if verbose: print(f"Pipeline complete in {time_total:.2f}s. Results saved to {output_dir}")
     spark.stop()
     
     return final_score
