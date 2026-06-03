@@ -1,0 +1,92 @@
+[
+    {
+        "dataset": "compas",
+        "epsilon": 0.1,
+        "k": 2,
+        "fc_score": 0.9795486782720826,
+        "utility": 0.9980657640232109,
+        "privacy_risk": 0.5,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 0.1,
+        "k": 5,
+        "fc_score": 0.9795486782720826,
+        "utility": 0.9980657640232109,
+        "privacy_risk": 0.06666666666666667,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 0.1,
+        "k": 10,
+        "fc_score": 0.9795486782720826,
+        "utility": 0.9980657640232109,
+        "privacy_risk": 0.06666666666666667,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 1.0,
+        "k": 2,
+        "fc_score": 0.9795486782720826,
+        "utility": 0.9980657640232109,
+        "privacy_risk": 0.5,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 1.0,
+        "k": 5,
+        "fc_score": 0.9795486782720826,
+        "utility": 0.9980657640232109,
+        "privacy_risk": 0.06666666666666667,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 1.0,
+        "k": 10,
+        "fc_score": 0.9795486782720826,
+        "utility": 0.9980657640232109,
+        "privacy_risk": 0.06666666666666667,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 5.0,
+        "k": 2,
+        "fc_score": 0.9795486782720826,
+        "utility": 0.9980657640232109,
+        "privacy_risk": 0.5,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 5.0,
+        "k": 5,
+        "fc_score": 0.9795486782720826,
+        "utility": 0.9980657640232109,
+        "privacy_risk": 0.06666666666666667,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 5.0,
+        "k": 10,
+        "fc_score": 0.9795486782720826,
+        "utility": 0.9980657640232109,
+        "privacy_risk": 0.06666666666666667,
+        "dpd": 0.0,
+        "locked": false
+    }
+]

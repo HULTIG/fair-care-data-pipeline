@@ -1,0 +1,35 @@
+{
+  "score": 0.9960524582261838,
+  "status": "EXCELLENT",
+  "components": {
+    "bronze": 0.9666666666666667,
+    "silver": 1.0229320831802626,
+    "gold": 0.9895987498469294
+  },
+  "locked": false,
+  "fairness": {
+    "error": "could not convert string to float: '>50K'",
+    "statistical_parity_difference": 0.0,
+    "disparate_impact": 1.0
+  },
+  "utility": {
+    "correlation_distance": 0.10038501471862718,
+    "original_auc": 0.7468598868704821,
+    "anonymized_auc": 0.7982410460196286,
+    "utility_retention": 1.0687962495407881
+  },
+  "privacy": {
+    "risk": 0.2,
+    "information_loss": 0.2
+  },
+  "anonymization": {
+    "k": 5,
+    "epsilon": 1.0
+  },
+  "runtimes": {
+    "bronze": 1.8101189136505127,
+    "silver": 5.601408004760742,
+    "gold": 7.885121583938599,
+    "total": 15.29665994644165
+  }
+}

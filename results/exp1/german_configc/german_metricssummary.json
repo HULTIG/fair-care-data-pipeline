@@ -1,0 +1,35 @@
+{
+  "score": 0.9766666666666667,
+  "status": "EXCELLENT",
+  "components": {
+    "bronze": 0.9666666666666667,
+    "silver": 1.0,
+    "gold": 0.9666666666666667
+  },
+  "locked": false,
+  "fairness": {
+    "error": "The favorable and unfavorable labels provided do not match the labels in the dataset.",
+    "statistical_parity_difference": 0.0,
+    "disparate_impact": 1.0
+  },
+  "utility": {
+    "correlation_distance": 0.0,
+    "original_auc": 0.8045638571954362,
+    "anonymized_auc": 0.8045638571954362,
+    "utility_retention": 1.0
+  },
+  "privacy": {
+    "risk": 1.0,
+    "information_loss": 0.2
+  },
+  "anonymization": {
+    "k": 0,
+    "epsilon": 1.0
+  },
+  "runtimes": {
+    "bronze": 1.4387352466583252,
+    "silver": 3.303415298461914,
+    "gold": 6.720254182815552,
+    "total": 11.462419986724854
+  }
+}

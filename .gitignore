@@ -48,7 +48,7 @@ data/processed/
 paper-draft/
 
 # Results and logs
-results/
+# results/
 logs/
 *.log
 
