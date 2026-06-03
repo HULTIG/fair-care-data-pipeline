@@ -1,0 +1,27 @@
+{
+  "score": 0.7419690215237866,
+  "status": "ACCEPTABLE",
+  "components": {
+    "bronze": 0.6333333333333333,
+    "silver": 0.998050983129219,
+    "gold": 0.6313843164625524
+  },
+  "fairness": {
+    "statistical_parity_difference": NaN,
+    "disparate_impact": NaN
+  },
+  "utility": {
+    "correlation_distance": 0.0,
+    "original_auc": 0.9153793799611519,
+    "anonymized_auc": 0.9100271103970241,
+    "utility_retention": 0.9941529493876572
+  },
+  "privacy": {
+    "risk": 0.25,
+    "information_loss": 0.2
+  },
+  "anonymization": {
+    "k": 5,
+    "epsilon": 1.0
+  }
+}
