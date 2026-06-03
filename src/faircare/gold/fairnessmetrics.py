@@ -102,6 +102,35 @@ class FairnessMetrics:
                 report["statistical_parity_difference"] = spd if not math.isnan(spd) else 0.0
                 report["disparate_impact"] = di if not math.isnan(di) else 1.0
                 
+                # EOD calculation as a diagnostic metric 
+                try:
+                    from sklearn.linear_model import LogisticRegression
+                    dataset_train, dataset_test = dataset.split([0.7], shuffle=True)
+                    
+                    X_train = dataset_train.features
+                    y_train = dataset_train.labels.ravel()
+                    
+                    if len(set(y_train)) > 1:
+                        model = LogisticRegression(solver='liblinear', max_iter=200)
+                        model.fit(X_train, y_train)
+                        
+                        dataset_pred = dataset_test.copy()
+                        dataset_pred.labels = model.predict(dataset_test.features).reshape(-1,1)
+                        
+                        from aif360.metrics import ClassificationMetric
+                        class_metric = ClassificationMetric(
+                            dataset_test, dataset_pred,
+                            unprivileged_groups=[unpriv_group_encoded],
+                            privileged_groups=[priv_group_encoded]
+                        )
+                        eod = class_metric.equal_opportunity_difference()
+                        report["equal_opportunity_difference"] = eod if not math.isnan(eod) else 0.0
+                    else:
+                        report["equal_opportunity_difference"] = 0.0
+                except Exception as e:
+                    print(f"EOD calculation failed: {e}")
+                    report["equal_opportunity_difference"] = 0.0
+                
             except Exception as e:
                 print(f"Fairness metrics calculation failed: {e}")
                 report["error"] = str(e)

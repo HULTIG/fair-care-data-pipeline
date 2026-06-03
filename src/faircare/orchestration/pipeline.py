@@ -125,7 +125,7 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     gold_metrics = GoldMetrics()
     sg = gold_metrics.calculate({
         "statistical_parity_difference": fairness_report.get("statistical_parity_difference"),
-        "utility_retention": utility_report.get("utility_retention", 0)
+        "model_utility": utility_report.get("anonymized_auc", utility_report.get("utility_retention", 0.5))
     })
     if verbose: print(f"Gold Score (SG): {sg}")
     time_gold = time.time() - start_gold
