@@ -1,6 +1,6 @@
 # FAIR-CARE Lakehouse: Ethical AI Data Governance Pipeline
 
-**Artifact for ICSA 2026 Submission**
+**Artifact for ICDM 2026 Submission**
 
 ## Overview
 
@@ -258,10 +258,10 @@ This software is licensed under the Apache License 2.0. See `LICENSE` for detail
 
 To cite this work:
 ```bibtex
-@software{faircare2025,
-  title = {A Reference Architecture for FAIR and Ethically Governed Data Pipelines in High-Risk AI Domains},
+@software{faircare2026,
+  title = {Governance-Aware Data Pipelines for High-Risk AI Domains: A FAIR-CARE Score and Empirical Study},
   author = {Anonymous for Review},
-  year = {2025},
+  year = {2026},
   license = {Apache-2.0},
   url = {https://anonymous.4open.science/r/fair-care-lakehouse}
 }

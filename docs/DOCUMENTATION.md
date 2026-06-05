@@ -3,7 +3,7 @@
 **Project**: FAIR-CARE Lakehouse - Ethical AI Data Governance Pipeline  
 **Version**: 1.0.0  
 **Date**: November 2025  
-**Artifact for**: ICSA 2026 Submission  
+**Artifact for**: ICDM 2026 Submission  
 
 ---
 
