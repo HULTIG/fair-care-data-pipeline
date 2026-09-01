@@ -137,7 +137,29 @@ data/processed/
 - `components.silver`: Silver layer score (SS)
 - `components.gold`: Gold layer score (SG)
 
+## Key Results from the Paper
+
+The FAIR-CARE pipeline introduces a composite FAIR-CARE Score that quantitatively evaluates the ethical readiness of datasets across Bronze, Silver, and Gold layers.
+
+### Ablation Study: Impact of FAIR-CARE Layers (COMPAS Dataset)
+| Configuration | FAIR-CARE Score | Silver Score (SS) | Privacy Risk | Utility (AUC) |
+|---------------|-----------------|-------------------|--------------|---------------|
+| Baseline (No CARE) | 0.77 | 0.33 | 100.0% | 1.00 |
+| Config A ($k$-anon) | 0.98 | 0.95 | 6.7% | 1.00 |
+| Config B (Diff. Priv) | 0.97 | 0.90 | 10.0% | 1.00 |
+| Config C (Causal) | 0.89 | 0.67 | 100.0% | 1.00 |
+
+### Statistical Robustness (COMPAS, 5 Random Seeds)
+| Configuration | FAIR-CARE Score | AUC | EOD | DPD |
+|---------------|-----------------|-----|-----|-----|
+| Baseline | 0.77 ± 0.01 | 0.99 ± 0.01 | 0.12 ± 0.02 | 0.15 ± 0.01 |
+| Config A ($k$-anon) | 0.98 ± 0.00 | 0.98 ± 0.01 | 0.06 ± 0.01 | 0.05 ± 0.01 |
+| Config B (DP) | 0.97 ± 0.01 | 0.97 ± 0.02 | 0.05 ± 0.01 | 0.04 ± 0.01 |
+
 ## Reproducing Paper Experiments
+
+### Data Partitioning
+All experiments and evaluations below utilize a **70/30 train/test split**. A fixed random seed (e.g., `random_state=42`) is used to ensure reproducibility across executions. No separate validation split is used, as hyperparameter tuning was not a primary focus of this study.
 
 ### Experiment 1: Ablation Study
 
