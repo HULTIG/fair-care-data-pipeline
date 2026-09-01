@@ -1,6 +1,4 @@
-# FAIR-CARE Lakehouse: Ethical AI Data Governance Pipeline
-
-**Artifact for ICDM 2026 Submission**
+# Governing Data Before the Model: A Layered Pipeline Architecture and Readiness Metric for High-Risk AI Systems
 
 ## Overview
 
@@ -274,26 +272,10 @@ docker-compose exec ml pytest tests/test_faircarescore.py -v
 - **[Configuration](docs/configuration.md)**: Config file reference
 - **[API Reference](docs/API_REFERENCE.md)**: Python API documentation
 
-## License and Citation
+## License
 
 This software is licensed under the Apache License 2.0. See `LICENSE` for details.
 
-To cite this work:
-```bibtex
-@software{faircare2026,
-  title = {Governance-Aware Data Pipelines for High-Risk AI Domains: A FAIR-CARE Score and Empirical Study},
-  author = {Anonymous for Review},
-  year = {2026},
-  license = {Apache-2.0},
-  url = {https://anonymous.4open.science/r/fair-care-lakehouse}
-}
-```
-
-See `CITATION.cff` for machine-readable citation metadata.
-
-## Contact
-
-For questions about this artifact: **Anonymous for Review**
 
 ---
 
