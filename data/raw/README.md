@@ -1,6 +1,6 @@
 # Dataset Download Instructions
 
-This directory contains raw datasets for the FAIR-CARE pipeline experiments.
+This directory contains raw datasets for the PACE pipeline experiments.
 
 ## Automated Download
 

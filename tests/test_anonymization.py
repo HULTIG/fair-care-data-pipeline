@@ -5,7 +5,7 @@ import pytest
 import pandas as pd
 import numpy as np
 from pyspark.sql import SparkSession
-from faircare.silver.anonymization import AnonymizationEngine
+from pace.silver.anonymization import AnonymizationEngine
 
 
 @pytest.fixture(scope="module")

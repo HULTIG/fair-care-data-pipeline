@@ -19,8 +19,8 @@
 
 #### Step 1: Extract Artifact
 ```bash
-tar -xzf fair-care-lakehouse.tar.gz
-cd fair-care-lakehouse
+tar -xzf pace-lakehouse.tar.gz
+cd pace-lakehouse
 ```
 
 #### Step 2: Build Docker Image
@@ -46,7 +46,7 @@ docker-compose ps
 
 #### Step 5: Test Pipeline
 ```bash
-docker-compose exec ml python -c "import faircare; print('Installation successful!')"
+docker-compose exec ml python -c "import pace; print('Installation successful!')"
 ```
 
 ### Method 2: Native Python
@@ -124,9 +124,9 @@ SPARK_MASTER=spark://spark-master:7077
 
 # Postgres
 POSTGRES_HOST=postgres
-POSTGRES_DB=faircare
-POSTGRES_USER=faircare
-POSTGRES_PASSWORD=faircare
+POSTGRES_DB=pace
+POSTGRES_USER=pace
+POSTGRES_PASSWORD=pace
 
 # Optional: API Keys for external services
 # OPENAI_API_KEY=your_key_here
@@ -150,13 +150,13 @@ datasets:
 ### Quick Test
 ```bash
 # Docker
-docker-compose exec ml python -m faircare.orchestration.pipeline \
+docker-compose exec ml python -m pace.orchestration.pipeline \
   --dataset compas \
   --config experiments/configs/default.yaml \
   --output results/test
 
 # Native
-python -m faircare.orchestration.pipeline \
+python -m pace.orchestration.pipeline \
   --dataset compas \
   --config experiments/configs/default.yaml \
   --output results/test
@@ -190,7 +190,7 @@ docker-compose logs ml
 
 ### Python Issues
 
-**Problem**: `ModuleNotFoundError: No module named 'faircare'`
+**Problem**: `ModuleNotFoundError: No module named 'pace'`
 ```bash
 # Ensure PYTHONPATH is set
 export PYTHONPATH=$PWD/src:$PYTHONPATH
@@ -231,7 +231,7 @@ ls -la data/raw/*/
 ### Docker
 ```bash
 docker-compose down -v
-docker rmi fair-care-lakehouse_ml
+docker rmi pace-lakehouse_ml
 ```
 
 ### Native

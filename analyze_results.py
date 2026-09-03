@@ -11,7 +11,7 @@ def analyze_exp1(filepath):
         return
 
     # Pivot to see scores for each config per dataset
-    pivot = df.pivot(index='dataset', columns='config', values='faircarescore')
+    pivot = df.pivot(index='dataset', columns='config', values='pacescore')
     print("Scores by Config:")
     print(pivot)
 
@@ -34,7 +34,7 @@ def analyze_exp3(filepath):
         print(f"Error reading {filepath}: {e}")
         return
 
-    print(df.groupby('dataset')[['faircarescore', 'privacy_risk']].mean())
+    print(df.groupby('dataset')[['pacescore', 'privacy_risk']].mean())
 
 def statistical_test(df, col1, col2):
     # Paired t-test
@@ -51,11 +51,11 @@ if __name__ == "__main__":
     try:
         df1 = pd.read_csv(base_path + "exp1.csv")
         # Filter for Baseline and ConfigA
-        baseline = df1[df1['config'] == 'baseline']['faircarescore'].values
-        configa = df1[df1['config'] == 'configa']['faircarescore'].values
+        baseline = df1[df1['config'] == 'baseline']['pacescore'].values
+        configa = df1[df1['config'] == 'configa']['pacescore'].values
         # Ensure they are paired by dataset order
         # (Assuming rows are ordered or pivot ensures it. Let's pivot)
-        pivot = df1.pivot(index='dataset', columns='config', values='faircarescore')
+        pivot = df1.pivot(index='dataset', columns='config', values='pacescore')
         stat, p = statistical_test(pivot, 'baseline', 'configa')
         print(f"\nT-Test Baseline vs ConfigA: stat={stat:.3f}, p={p:.3f}")
         

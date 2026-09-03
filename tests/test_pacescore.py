@@ -1,13 +1,13 @@
 """
-Tests for FAIR-CARE Score module
+Tests for PACE Score module
 """
 import pytest
-from faircare.metrics.faircarescore import FAIRCAREScore
+from pace.metrics.pacescore import PACEScore
 
 
 @pytest.fixture
 def default_config():
-    """Default FAIR-CARE config"""
+    """Default PACE config"""
     return {
         "weights": {
             "bronze": 0.3,
@@ -17,15 +17,15 @@ def default_config():
     }
 
 
-def test_faircare_score_initialization(default_config):
-    """Test FAIRCAREScore initialization"""
-    scorer = FAIRCAREScore(default_config)
+def test_pace_score_initialization(default_config):
+    """Test PACEScore initialization"""
+    scorer = PACEScore(default_config)
     assert scorer.config == default_config
 
 
 def test_calculate_excellent_score(default_config):
     """Test calculation with excellent scores"""
-    scorer = FAIRCAREScore(default_config)
+    scorer = PACEScore(default_config)
     result = scorer.calculate(sb=0.9, ss=0.9, sg=0.9)
     
     assert result["score"] == pytest.approx(0.9)
@@ -37,7 +37,7 @@ def test_calculate_excellent_score(default_config):
 
 def test_calculate_acceptable_score(default_config):
     """Test calculation with acceptable scores"""
-    scorer = FAIRCAREScore(default_config)
+    scorer = PACEScore(default_config)
     result = scorer.calculate(sb=0.75, ss=0.75, sg=0.75)
     
     assert result["score"] == 0.75
@@ -46,7 +46,7 @@ def test_calculate_acceptable_score(default_config):
 
 def test_calculate_at_risk_score(default_config):
     """Test calculation with at-risk scores"""
-    scorer = FAIRCAREScore(default_config)
+    scorer = PACEScore(default_config)
     result = scorer.calculate(sb=0.5, ss=0.5, sg=0.5)
     
     assert result["score"] == 0.5
@@ -62,7 +62,7 @@ def test_weighted_calculation():
             "gold": 0.2
         }
     }
-    scorer = FAIRCAREScore(config)
+    scorer = PACEScore(config)
     result = scorer.calculate(sb=1.0, ss=0.5, sg=0.0)
     
     # Expected: 0.5*1.0 + 0.3*0.5 + 0.2*0.0 = 0.65
@@ -72,7 +72,7 @@ def test_weighted_calculation():
 def test_boundary_excellent_acceptable():
     """Test boundary between EXCELLENT and ACCEPTABLE"""
     config = {"weights": {"bronze": 0.33, "silver": 0.33, "gold": 0.34}}
-    scorer = FAIRCAREScore(config)
+    scorer = PACEScore(config)
     
     # Exactly 0.85 should be EXCELLENT
     result = scorer.calculate(sb=0.85, ss=0.85, sg=0.85)
@@ -86,7 +86,7 @@ def test_boundary_excellent_acceptable():
 def test_boundary_acceptable_at_risk():
     """Test boundary between ACCEPTABLE and AT RISK"""
     config = {"weights": {"bronze": 0.33, "silver": 0.33, "gold": 0.34}}
-    scorer = FAIRCAREScore(config)
+    scorer = PACEScore(config)
     
     # Exactly 0.70 should be ACCEPTABLE
     result = scorer.calculate(sb=0.70, ss=0.70, sg=0.70)
@@ -99,7 +99,7 @@ def test_boundary_acceptable_at_risk():
 
 def test_zero_scores(default_config):
     """Test with all zero scores"""
-    scorer = FAIRCAREScore(default_config)
+    scorer = PACEScore(default_config)
     result = scorer.calculate(sb=0.0, ss=0.0, sg=0.0)
     
     assert result["score"] == 0.0
@@ -108,7 +108,7 @@ def test_zero_scores(default_config):
 
 def test_perfect_scores(default_config):
     """Test with perfect scores"""
-    scorer = FAIRCAREScore(default_config)
+    scorer = PACEScore(default_config)
     result = scorer.calculate(sb=1.0, ss=1.0, sg=1.0)
     
     assert result["score"] == 1.0
@@ -117,7 +117,7 @@ def test_perfect_scores(default_config):
 
 def test_mixed_scores(default_config):
     """Test with mixed layer scores"""
-    scorer = FAIRCAREScore(default_config)
+    scorer = PACEScore(default_config)
     result = scorer.calculate(sb=0.9, ss=0.7, sg=0.8)
     
     # Expected: 0.3*0.9 + 0.3*0.7 + 0.4*0.8 = 0.27 + 0.21 + 0.32 = 0.80
@@ -127,7 +127,7 @@ def test_mixed_scores(default_config):
 
 def test_components_in_result(default_config):
     """Test that components are included in result"""
-    scorer = FAIRCAREScore(default_config)
+    scorer = PACEScore(default_config)
     result = scorer.calculate(sb=0.8, ss=0.7, sg=0.9)
     
     assert "components" in result
@@ -145,7 +145,7 @@ def test_equal_weights():
             "gold": 0.34
         }
     }
-    scorer = FAIRCAREScore(config)
+    scorer = PACEScore(config)
     result = scorer.calculate(sb=0.6, ss=0.8, sg=1.0)
     
     # Should be close to average
@@ -162,7 +162,7 @@ def test_gold_heavy_weights():
             "gold": 0.8
         }
     }
-    scorer = FAIRCAREScore(config)
+    scorer = PACEScore(config)
     result = scorer.calculate(sb=0.5, ss=0.5, sg=1.0)
     
     # Expected: 0.1*0.5 + 0.1*0.5 + 0.8*1.0 = 0.9
@@ -172,7 +172,7 @@ def test_gold_heavy_weights():
 def test_missing_weights_uses_defaults():
     """Test that missing weights use defaults"""
     config = {}
-    scorer = FAIRCAREScore(config)
+    scorer = PACEScore(config)
     result = scorer.calculate(sb=0.8, ss=0.8, sg=0.8)
     
     # Should use default weights (0.33, 0.33, 0.34 or similar)

@@ -4,7 +4,7 @@ Tests for Fairness Metrics module
 import pytest
 import pandas as pd
 from pyspark.sql import SparkSession
-from faircare.gold.fairnessmetrics import FairnessMetrics
+from pace.gold.fairnessmetrics import FairnessMetrics
 
 
 @pytest.fixture(scope="module")

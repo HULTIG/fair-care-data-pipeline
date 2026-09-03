@@ -32,7 +32,7 @@ def download_file(url, dest_path):
         print(f"Failed to download {url}: {e}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Download datasets for FAIR-CARE pipeline")
+    parser = argparse.ArgumentParser(description="Download datasets for PACE pipeline")
     parser.add_argument("--config", default="configs/default.yaml", help="Path to config file")
     parser.add_argument("--datasets", default="all", help="Comma-separated list of datasets to download (or 'all')")
     args = parser.parse_args()

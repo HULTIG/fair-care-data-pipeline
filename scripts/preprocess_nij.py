@@ -2,7 +2,7 @@
 NIJ Recidivism Dataset Preprocessing Script
 
 This script preprocesses the NIJ Recidivism Forecasting Challenge dataset
-to make it compatible with the FAIR-CARE pipeline.
+to make it compatible with the PACE pipeline.
 """
 import argparse
 import pandas as pd

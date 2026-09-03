@@ -4,7 +4,7 @@ Tests for Causal Analysis module
 import pytest
 import pandas as pd
 from pyspark.sql import SparkSession
-from faircare.silver.causalanalysis import CausalAnalyzer
+from pace.silver.causalanalysis import CausalAnalyzer
 
 
 @pytest.fixture(scope="module")

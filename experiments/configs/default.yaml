@@ -12,6 +12,14 @@ datasets:
     label_column: "two_year_recid"
     favorable_label: 0
     quasi_identifiers: ["age", "c_charge_degree", "sex"]
+    drop_columns: [
+      "is_recid", "decile_score", "score_text",
+      "r_case_number", "r_charge_degree", "r_days_from_arrest", "r_offense_date",
+      "r_charge_desc", "r_jail_in", "r_jail_out", "violent_recid", "is_violent_recid",
+      "vr_case_number", "vr_charge_degree", "vr_offense_date", "vr_charge_desc",
+      "type_of_assessment", "decile_score.1", "v_type_of_assessment", "v_decile_score",
+      "v_score_text", "event", "start", "end", "in_custody", "out_custody"
+    ]
     
   adult:
     source_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"

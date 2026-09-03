@@ -22,3 +22,9 @@ class AuditTrail:
             f.write(json.dumps(event) + "\n")
             
         print(f"Logged event: {event_type}")
+
+    def verify_provenance(self) -> bool:
+        """
+        Verifies that provenance data (audit trail) is accessible and has entries.
+        """
+        return os.path.exists(self.log_file) and os.path.getsize(self.log_file) > 0

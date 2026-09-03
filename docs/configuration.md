@@ -2,7 +2,7 @@
 
 ## Overview
 
-The FAIR-CARE pipeline is configured via YAML files. This document describes all available configuration options.
+The PACE pipeline is configured via YAML files. This document describes all available configuration options.
 
 ## Configuration File Structure
 
@@ -323,7 +323,7 @@ weights:
   gold: 0.25
 ```
 
-### Full FAIR-CARE (Default)
+### Full PACE (Default)
 
 ```yaml
 anonymization:

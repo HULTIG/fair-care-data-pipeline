@@ -1,6 +1,6 @@
-# FAIR-CARE Lakehouse: Implementation Documentation
+# PACE Lakehouse: Implementation Documentation
 
-**Project**: FAIR-CARE Lakehouse - Ethical AI Data Governance Pipeline  
+**Project**: PACE Lakehouse - Ethical AI Data Governance Pipeline  
 **Version**: 1.0.0  
 **Date**: November 2025  
 **Artifact for**: ICDM 2026 Submission  
@@ -28,7 +28,7 @@
 
 ### 1.1 Project Overview
 
-The **FAIR-CARE Lakehouse** is a production-ready, reference architecture for ethical AI data governance that integrates:
+The **PACE Lakehouse** is a production-ready, reference architecture for ethical AI data governance that integrates:
 
 - **FAIR Principles**: Findability, Accessibility, Interoperability, and Reusability
 - **CARE Principles**: Causality, Anonymity, Regulatory-compliance, and Ethics
@@ -40,7 +40,7 @@ This system implements a three-layer **Medallion Architecture** (Bronze–Silver
 - **Fairness Metrics**: Demographic parity, equalized odds, disparate impact, counterfactual fairness
 - **Bias Mitigation**: Pre-processing, in-processing, and post-processing techniques
 - **Regulatory Compliance**: GDPR, HIPAA, and CCPA compliance checks
-- **Composite Scoring**: FAIR-CARE Score (0-1) for ethical data readiness assessment
+- **Composite Scoring**: PACE Score (0-1) for ethical data readiness assessment
 
 ### 1.2 Key Features
 
@@ -59,10 +59,10 @@ This artifact supports the following paper claims:
 
 | Paper Claim | Artifact Component | Location |
 |-------------|-------------------|----------|
-| Bronze Layer (Ingestion, PII Detection, Provenance) | Bronze module | `src/faircare/bronze/` |
-| Silver Layer (Anonymization, Utility, Causal Analysis) | Silver module | `src/faircare/silver/` |
-| Gold Layer (Bias Mitigation, Fairness Metrics) | Gold module | `src/faircare/gold/` |
-| FAIR-CARE Score Framework | Metrics module | `src/faircare/metrics/` |
+| Bronze Layer (Ingestion, PII Detection, Provenance) | Bronze module | `src/pace/bronze/` |
+| Silver Layer (Anonymization, Utility, Causal Analysis) | Silver module | `src/pace/silver/` |
+| Gold Layer (Bias Mitigation, Fairness Metrics) | Gold module | `src/pace/gold/` |
+| PACE Score Framework | Metrics module | `src/pace/metrics/` |
 | Experiment 1: Ablation Study | Experiment script | `experiments/scripts/runexperiment1.py` |
 | Experiment 2: Multi-Dataset Benchmarking | Experiment script | `experiments/scripts/runexperiment2.py` |
 | Experiment 3: Regulatory Configurations | Experiment script | `experiments/scripts/runexperiment3.py` |
@@ -185,7 +185,7 @@ The system implements a strict **Bronze-Silver-Gold** pipeline:
                        │
                        ▼
               ┌────────────────┐
-              │ FAIR-CARE Score│
+              │ PACE Score│
               │ S = w_B·S_B +  │
               │     w_S·S_S +  │
               │     w_G·S_G    │
@@ -256,7 +256,7 @@ The system implements a strict **Bronze-Silver-Gold** pipeline:
 
 #### 4.1.1 Data Ingestion
 
-**File**: `src/faircare/bronze/ingestion.py`
+**File**: `src/pace/bronze/ingestion.py`
 
 The Bronze layer ingests raw data from various sources while preserving complete fidelity:
 
@@ -321,7 +321,7 @@ class DataIngestion:
 
 #### 4.1.2 PII Detection
 
-**File**: `src/faircare/bronze/pii_detection.py`
+**File**: `src/pace/bronze/pii_detection.py`
 
 Multi-technique PII detection using regex, NLP, and statistical methods:
 
@@ -436,7 +436,7 @@ class PIIDetection:
 
 #### 4.1.3 Bias Baseline Audit
 
-**File**: `src/faircare/bronze/bias_audit.py`
+**File**: `src/pace/bronze/bias_audit.py`
 
 ```python
 from typing import List, Dict
@@ -480,7 +480,7 @@ class BiasAudit:
 
 #### 4.1.4 Bronze Metrics
 
-**File**: `src/faircare/metrics/bronze_metrics.py`
+**File**: `src/pace/metrics/bronze_metrics.py`
 
 ```python
 class BronzeMetrics:
@@ -526,7 +526,7 @@ class BronzeMetrics:
 
 #### 4.2.1 Anonymization Engine
 
-**File**: `src/faircare/silver/anonymization.py`
+**File**: `src/pace/silver/anonymization.py`
 
 The Silver layer applies privacy-preserving transformations:
 
@@ -676,7 +676,7 @@ class AnonymizationEngine:
 
 #### 4.2.2 Causal Analysis
 
-**File**: `src/faircare/silver/causal_analysis.py`
+**File**: `src/pace/silver/causal_analysis.py`
 
 ```python
 from causalnex.structure import StructureModel
@@ -735,7 +735,7 @@ class CausalAnalyzer:
 
 #### 4.2.3 Human-in-the-Loop Interface
 
-**File**: `src/faircare/silver/human_in_loop.py`
+**File**: `src/pace/silver/human_in_loop.py`
 
 ```python
 import streamlit as st
@@ -802,7 +802,7 @@ class HITLDashboard:
 
 #### 4.3.1 Bias Mitigation
 
-**File**: `src/faircare/gold/bias_mitigation.py`
+**File**: `src/pace/gold/bias_mitigation.py`
 
 ```python
 from aif360.datasets import BinaryLabelDataset
@@ -859,7 +859,7 @@ class BiasMitigator:
 
 #### 4.3.2 Fairness Metrics
 
-**File**: `src/faircare/gold/fairness_metrics.py`
+**File**: `src/pace/gold/fairness_metrics.py`
 
 ```python
 from aif360.metrics import BinaryLabelDatasetMetric, ClassificationMetric
@@ -906,16 +906,16 @@ class FairnessMetrics:
 
 ## 5. Core Components
 
-### 5.1 FAIR-CARE Score Framework
+### 5.1 PACE Score Framework
 
-**File**: `src/faircare/metrics/faircarescore.py`
+**File**: `src/pace/metrics/pacescore.py`
 
-The FAIR-CARE Score is a composite metric that aggregates Bronze, Silver, and Gold layer scores:
+The PACE Score is a composite metric that aggregates Bronze, Silver, and Gold layer scores:
 
 ```python
-class FAIRCAREScore:
+class PACEScore:
     """
-    Composite FAIR-CARE Score computation.
+    Composite PACE Score computation.
     
     Formula:
         S = w_B * S_B + w_S * S_S + w_G * S_G
@@ -940,7 +940,7 @@ class FAIRCAREScore:
         }
     
     def compute(self) -> float:
-        """Compute composite FAIR-CARE Score."""
+        """Compute composite PACE Score."""
         score = (
             self.weights["w_B"] * self.s_b +
             self.weights["w_S"] * self.s_s +
@@ -960,19 +960,19 @@ class FAIRCAREScore:
 
 ### 5.2 Orchestration Pipeline
 
-**File**: `src/faircare/orchestration/pipeline.py`
+**File**: `src/pace/orchestration/pipeline.py`
 
 The main orchestration pipeline coordinates all layers:
 
 ```python
-from faircare.bronze import DataIngestion, PIIDetection, BiasAudit
-from faircare.silver import AnonymizationEngine, CausalAnalyzer
-from faircare.gold import BiasMitigator, FairnessMetrics
-from faircare.metrics import BronzeMetrics, SilverMetrics, GoldMetrics, FAIRCAREScore
+from pace.bronze import DataIngestion, PIIDetection, BiasAudit
+from pace.silver import AnonymizationEngine, CausalAnalyzer
+from pace.gold import BiasMitigator, FairnessMetrics
+from pace.metrics import BronzeMetrics, SilverMetrics, GoldMetrics, PACEScore
 
-class FAIRCAREPipeline:
+class PACEPipeline:
     """
-    End-to-end FAIR-CARE pipeline orchestration.
+    End-to-end PACE pipeline orchestration.
     """
     
     def __init__(self, dataset_name: str, config_file: str):
@@ -1001,14 +1001,14 @@ class FAIRCAREPipeline:
         self.results["gold_metrics"] = gold_metrics
         
         # COMPOSITE SCORE
-        print("📊 Computing FAIR-CARE Score...")
+        print("📊 Computing PACE Score...")
         fair_care_score = self._compute_fair_care_score()
         self.results["fair_care_score"] = fair_care_score
         
         # SAVE RESULTS
         self._save_all(output_dir)
         
-        print(f"✅ Pipeline complete. FAIR-CARE Score: {fair_care_score:.3f}")
+        print(f"✅ Pipeline complete. PACE Score: {fair_care_score:.3f}")
         
     def _run_bronze(self) -> DataFrame:
         """Execute Bronze layer processing."""
@@ -1062,7 +1062,7 @@ from typing import List, Optional
 import uvicorn
 
 app = FastAPI(
-    title="FAIR-CARE Lakehouse API",
+    title="PACE Lakehouse API",
     description="Ethical AI Data Governance API",
     version="1.0.0"
 )
@@ -1080,7 +1080,7 @@ class SearchResponse(BaseModel):
 @app.get("/")
 async def root():
     return {
-        "name": "FAIR-CARE Lakehouse API",
+        "name": "PACE Lakehouse API",
         "version": "1.0.0",
         "status": "operational"
     }
@@ -1130,10 +1130,10 @@ Async task processing for long-running operations:
 
 ```python
 from celery import Celery
-from faircare.orchestration.pipeline import FAIRCAREPipeline
+from pace.orchestration.pipeline import PACEPipeline
 
 celery_app = Celery(
-    "faircare_tasks",
+    "pace_tasks",
     broker="amqp://guest:guest@rabbitmq:5672//",
     backend="redis://redis:6379/0"
 )
@@ -1141,9 +1141,9 @@ celery_app = Celery(
 @celery_app.task(name="tasks.run_pipeline")
 def run_pipeline_task(dataset: str, config: str, output_dir: str):
     """
-    Execute FAIR-CARE pipeline as Celery task.
+    Execute PACE pipeline as Celery task.
     """
-    pipeline = FAIRCAREPipeline(dataset_name=dataset, config_file=config)
+    pipeline = PACEPipeline(dataset_name=dataset, config_file=config)
     pipeline.run(output_dir=output_dir)
     
     return {
@@ -1271,7 +1271,7 @@ services:
       - rabbitmq
       - redis
   
-  # FAIR-CARE ML Service
+  # PACE ML Service
   ml:
     build:
       context: .
@@ -1286,8 +1286,8 @@ services:
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/[org]/fair-care-lakehouse.git
-cd fair-care-lakehouse
+git clone https://github.com/[org]/pace-lakehouse.git
+cd pace-lakehouse
 
 # 2. Configure environment
 cp .env.example .env
@@ -1306,7 +1306,7 @@ docker-compose ps
 docker-compose exec ml python scripts/download_datasets.py --datasets compas,adult,german
 
 # 7. Run pipeline
-docker-compose exec ml python -m faircare.orchestration.pipeline \
+docker-compose exec ml python -m pace.orchestration.pipeline \
   --dataset compas \
   --config configs/default.yaml \
   --output results/compas_run001
@@ -1335,7 +1335,7 @@ docker-compose exec ml python experiments/scripts/runexperiment1.py \
 ```
 
 **Expected Results**:
-- Baseline: FAIR-CARE Score ≈ 0.80-0.85
+- Baseline: PACE Score ≈ 0.80-0.85
 - Config A: Score drops to ≈ 0.60 (privacy risk increases)
 - Config B: Score ≈ 0.75 (causal validity concerns)
 - Config C: Score ≈ 0.70 (fairness metrics degrade)
@@ -1351,7 +1351,7 @@ docker-compose exec ml python experiments/scripts/runexperiment1.py \
 - NIJ Recidivism (recidivism forecasting)
 
 **Metrics Compared**:
-- FAIR-CARE Score
+- PACE Score
 - Privacy risk
 - Utility retention
 - Fairness metrics (DPD, EOD, DIR)
@@ -1378,7 +1378,7 @@ docker-compose exec ml python experiments/scripts/runexperiment1.py \
 pytest tests/ -v
 
 # Run with coverage
-pytest tests/ --cov=faircare --cov-report=html
+pytest tests/ --cov=pace --cov-report=html
 
 # Expected: 50+ tests, ~85% coverage
 ```
@@ -1391,7 +1391,7 @@ Test end-to-end pipeline execution:
 # tests/test_integration.py
 def test_full_pipeline():
     """Test complete Bronze-Silver-Gold pipeline."""
-    pipeline = FAIRCAREPipeline(
+    pipeline = PACEPipeline(
         dataset_name="compas",
         config_file="configs/test.yaml"
     )
@@ -1452,7 +1452,7 @@ gold:
     - disparate_impact
     - counterfactual_fairness
 
-# FAIR-CARE Score weights
+# PACE Score weights
 scoring:
   w_B: 0.25
   w_S: 0.40
@@ -1484,7 +1484,7 @@ silver:
     epsilon: 2.0  # Increase from 0.1
 ```
 
-#### Issue: FAIR-CARE Score Plateaus
+#### Issue: PACE Score Plateaus
 **Symptom**: Score stuck around 0.75  
 **Solution**: 
 1. Check utility retention in Silver layer
@@ -1498,7 +1498,7 @@ silver:
 - Data quality scores (Bronze)
 - Privacy risk (Silver)
 - Fairness metrics (Gold)
-- FAIR-CARE Score trend
+- PACE Score trend
 
 **Logging**:
 ```python
@@ -1508,7 +1508,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('logs/faircare.log'),
+        logging.FileHandler('logs/pace.log'),
         logging.StreamHandler()
     ]
 )
@@ -1519,7 +1519,7 @@ logging.basicConfig(
 ## Appendix A: File Structure
 
 ```
-fair-care-lakehouse/
+pace-lakehouse/
 ├── api/
 │   ├── main.py                 # FastAPI application
 │   ├── celery_app.py           # Celery configuration
@@ -1567,7 +1567,7 @@ fair-care-lakehouse/
 │   ├── add_embeddings.py
 │   └── qdrant_indexing.py
 ├── src/
-│   └── faircare/
+│   └── pace/
 │       ├── bronze/
 │       │   ├── ingestion.py
 │       │   ├── pii_detection.py
@@ -1584,7 +1584,7 @@ fair-care-lakehouse/
 │       │   ├── bronze_metrics.py
 │       │   ├── silver_metrics.py
 │       │   ├── gold_metrics.py
-│       │   └── faircarescore.py
+│       │   └── pacescore.py
 │       ├── orchestration/
 │       │   └── pipeline.py
 │       └── dashboard/
@@ -1618,5 +1618,5 @@ fair-care-lakehouse/
 
 **Document Version**: 1.0  
 **Last Updated**: November 2025  
-**Maintained By**: FAIR-CARE Development Team  
+**Maintained By**: PACE Development Team  
 **License**: Apache 2.0

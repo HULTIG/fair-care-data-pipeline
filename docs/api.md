@@ -2,12 +2,12 @@
 
 ## Overview
 
-The FAIR-CARE Lakehouse provides a Python API for building ethical AI data pipelines. This document describes the main classes and their usage.
+The PACE Lakehouse provides a Python API for building ethical AI data pipelines. This document describes the main classes and their usage.
 
 ## Installation
 
 ```python
-pip install faircare
+pip install pace
 # or
 pip install -e .  # for development
 ```
@@ -15,7 +15,7 @@ pip install -e .  # for development
 ## Quick Start
 
 ```python
-from faircare.orchestration.pipeline import run_pipeline
+from pace.orchestration.pipeline import run_pipeline
 
 # Run full pipeline
 metrics = run_pipeline(
@@ -25,7 +25,7 @@ metrics = run_pipeline(
     verbose=True
 )
 
-print(f"FAIR-CARE Score: {metrics['score']}")
+print(f"PACE Score: {metrics['score']}")
 ```
 
 ## Bronze Layer
@@ -35,7 +35,7 @@ print(f"FAIR-CARE Score: {metrics['score']}")
 Ingests raw data into Bronze Delta tables with metadata.
 
 ```python
-from faircare.bronze.ingestion import DataIngestion
+from pace.bronze.ingestion import DataIngestion
 from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("demo").getOrCreate()
@@ -57,7 +57,7 @@ df = ingestion.ingest(
 Detects personally identifiable information using regex and NLP.
 
 ```python
-from faircare.bronze.piidetection import PIIDetection
+from pace.bronze.piidetection import PIIDetection
 
 config = {
     "confidence_threshold": 0.8,
@@ -79,7 +79,7 @@ pii_report = detector.detect(df, sample_size=1000)
 Logs pipeline events for provenance tracking.
 
 ```python
-from faircare.bronze.audittrail import AuditTrail
+from pace.bronze.audittrail import AuditTrail
 
 audit = AuditTrail(log_dir="results/logs")
 audit.log_event("PII_DETECTION", {"columns_flagged": ["ssn", "email"]})
@@ -95,7 +95,7 @@ audit.log_event("PII_DETECTION", {"columns_flagged": ["ssn", "email"]})
 Applies privacy-preserving transformations.
 
 ```python
-from faircare.silver.anonymization import AnonymizationEngine
+from pace.silver.anonymization import AnonymizationEngine
 
 config = {
     "technique": "kanonymity",  # or "differentialprivacy"
@@ -120,7 +120,7 @@ anonymized_df = anonymizer.anonymize(bronze_df, spark)
 Measures data utility after anonymization.
 
 ```python
-from faircare.silver.utilityassessment import UtilityAssessment
+from pace.silver.utilityassessment import UtilityAssessment
 
 config = {"label_column": "recidivism"}
 assessor = UtilityAssessment(config)
@@ -137,7 +137,7 @@ utility_report = assessor.assess(original_df, anonymized_df)
 Validates causal assumptions using DoWhy.
 
 ```python
-from faircare.silver.causalanalysis import CausalAnalyzer
+from pace.silver.causalanalysis import CausalAnalyzer
 
 config = {
     "protected_attribute": "race",
@@ -160,7 +160,7 @@ causal_report = analyzer.analyze(silver_df)
 Mitigates bias using AIF360 algorithms.
 
 ```python
-from faircare.gold.biasmitigation import BiasMitigator
+from pace.gold.biasmitigation import BiasMitigator
 
 config = {
     "protected_attribute": "race",
@@ -183,7 +183,7 @@ mitigated_df = mitigator.mitigate(silver_df, spark)
 Calculates fairness metrics using AIF360.
 
 ```python
-from faircare.gold.fairnessmetrics import FairnessMetrics
+from pace.gold.fairnessmetrics import FairnessMetrics
 
 metrics_calculator = FairnessMetrics(config)
 fairness_report = metrics_calculator.calculate(gold_df)
@@ -203,7 +203,7 @@ fairness_report = metrics_calculator.calculate(gold_df)
 Performs feature quality checks.
 
 ```python
-from faircare.gold.featureengineering import FeatureEngineer
+from pace.gold.featureengineering import FeatureEngineer
 
 engineer = FeatureEngineer(config)
 processed_df, quality_report = engineer.process(gold_df)
@@ -218,7 +218,7 @@ processed_df, quality_report = engineer.process(gold_df)
 Generates text embeddings using Sentence-BERT.
 
 ```python
-from faircare.gold.embeddings import EmbeddingsGenerator
+from pace.gold.embeddings import EmbeddingsGenerator
 
 config = {"text_columns": ["notes", "description"]}
 embedder = EmbeddingsGenerator(config)
@@ -236,7 +236,7 @@ df_with_embeddings = embedder.generate(gold_df, spark)
 Calculate scores for each layer.
 
 ```python
-from faircare.metrics.layermetrics import BronzeMetrics, SilverMetrics, GoldMetrics
+from pace.metrics.layermetrics import BronzeMetrics, SilverMetrics, GoldMetrics
 
 # Bronze Score
 bronze = BronzeMetrics()
@@ -261,12 +261,12 @@ sg = gold.calculate({
 })
 ```
 
-### FAIR-CARE Score
+### PACE Score
 
 Composite ethical readiness score.
 
 ```python
-from faircare.metrics.faircarescore import FAIRCAREScore
+from pace.metrics.pacescore import PACEScore
 
 config = {
     "weights": {
@@ -276,7 +276,7 @@ config = {
     }
 }
 
-scorer = FAIRCAREScore(config)
+scorer = PACEScore(config)
 result = scorer.calculate(sb=0.9, ss=0.85, sg=0.85)
 # Returns: {"score": 0.867, "status": "EXCELLENT", "components": {"bronze": 0.9, "silver": 0.85, "gold": 0.85}}
 ```
@@ -291,7 +291,7 @@ result = scorer.calculate(sb=0.9, ss=0.85, sg=0.85)
 Validates regulatory compliance.
 
 ```python
-from faircare.metrics.compliance import ComplianceCheck
+from pace.metrics.compliance import ComplianceCheck
 
 checker = ComplianceCheck(config)
 compliance_report = checker.check(metadata)
@@ -305,7 +305,7 @@ compliance_report = checker.check(metadata)
 End-to-end pipeline execution.
 
 ```python
-from faircare.orchestration.pipeline import run_pipeline
+from pace.orchestration.pipeline import run_pipeline
 
 metrics = run_pipeline(
     dataset="compas",
@@ -379,4 +379,4 @@ See `notebooks/` for complete examples:
 - `03silveranonymization.ipynb`: Anonymization techniques
 - `04causalvalidation.ipynb`: Causal analysis
 - `05goldfairness.ipynb`: Fairness metrics
-- `06faircarescore.ipynb`: FAIR-CARE Score calculation
+- `06pacescore.ipynb`: PACE Score calculation

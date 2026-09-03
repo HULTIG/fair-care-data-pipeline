@@ -1,6 +1,6 @@
 """
 Experiment 2: Multi-Dataset Benchmarking
-Compares FAIR-CARE performance across different datasets and anonymization techniques.
+Compares PACE performance across different datasets and anonymization techniques.
 """
 import argparse
 import csv
@@ -10,7 +10,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from faircare.orchestration.pipeline import run_pipeline
+from pace.orchestration.pipeline import run_pipeline
 
 def main():
     parser = argparse.ArgumentParser(description="Experiment 2: Multi-Dataset Benchmarking")
@@ -64,7 +64,7 @@ def main():
                     'SB': metrics.get('components', {}).get('bronze', 0),
                     'SS': metrics.get('components', {}).get('silver', 0),
                     'SG': metrics.get('components', {}).get('gold', 0),
-                    'faircarescore': metrics.get('score', 0),
+                    'pacescore': metrics.get('score', 0),
                     'dpd': metrics.get('fairness', {}).get('statistical_parity_difference', None),
                     'di': metrics.get('fairness', {}).get('disparate_impact', None),
                     'utility': metrics.get('utility', {}).get('utility_retention', 0),

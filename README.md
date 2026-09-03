@@ -2,7 +2,7 @@
 
 ## Overview
 
-The FAIR-CARE Lakehouse is a reference architecture for ethical AI data governance that integrates:
+The PACE Lakehouse is a reference architecture for ethical AI data governance that integrates:
 - **FAIR Principles**: Findability, Accessibility, Interoperability, and Reusability
 - **CARE Principles**: Causality, Anonymity, Regulatory-compliance, and Ethics
 
@@ -11,18 +11,18 @@ This artifact implements a three-layer Medallion architecture (Bronze–Silver�
 - Causal inference validation
 - Fairness metrics and bias mitigation
 - Regulatory compliance checks (GDPR, HIPAA, CCPA)
-- Composite FAIR-CARE Score for ethical data readiness
+- Composite PACE Score for ethical data readiness
 
-![FAIR-CARE Architecture](docs/img/arch-fair-care.png)
+![PACE Architecture](docs/img/arch-pace.png)
 
 ## Artifact Scope
 
 | Paper  | Artifact Component |
 |-------------|-------------------|
-| Bronze Layer (Ingestion, PII Detection, Provenance) | `src/faircare/bronze/` |
-| Silver Layer (Anonymization, Utility, Causal Analysis) | `src/faircare/silver/` |
-| Gold Layer (Bias Mitigation, Fairness Metrics) | `src/faircare/gold/` |
-| FAIR-CARE Score Framework | `src/faircare/metrics/faircarescore.py` |
+| Bronze Layer (Ingestion, PII Detection, Provenance) | `src/pace/bronze/` |
+| Silver Layer (Anonymization, Utility, Causal Analysis) | `src/pace/silver/` |
+| Gold Layer (Bias Mitigation, Fairness Metrics) | `src/pace/gold/` |
+| PACE Score Framework | `src/pace/metrics/pacescore.py` |
 | Experiment 1: Ablation Study | `experiments/scripts/runexperiment1.py` |
 | Experiment 2: Multi-Dataset Benchmarking | `experiments/scripts/runexperiment2.py` |
 | Experiment 3: Regulatory Configurations | `experiments/scripts/runexperiment3.py` |
@@ -47,8 +47,8 @@ This artifact implements a three-layer Medallion architecture (Bronze–Silver�
 
 ```bash
 # Extract artifact
-tar -xzf fair-care-lakehouse.tar.gz
-cd fair-care-lakehouse
+tar -xzf pace-lakehouse.tar.gz
+cd pace-lakehouse
 
 # Build and start services
 docker-compose build ml
@@ -97,14 +97,14 @@ See `data/raw/README.md` for detailed instructions and URLs:
 
 ```bash
 # Using Docker
-docker-compose exec ml python -m faircare.orchestration.pipeline \
+docker-compose exec ml python -m pace.orchestration.pipeline \
   --dataset compas \
   --config experiments/configs/default.yaml \
   --output results/compas_demo \
   --verbose
 
 # Native Python
-python -m faircare.orchestration.pipeline \
+python -m pace.orchestration.pipeline \
   --dataset compas \
   --config experiments/configs/default.yaml \
   --output results/compas_demo \
@@ -117,7 +117,7 @@ python -m faircare.orchestration.pipeline \
 results/compas_demo/
 ├── logs/
 │   └── audit_log.json        # Provenance trail
-└── compas_metricssummary.json # FAIR-CARE scores and metrics
+└── compas_metricssummary.json # PACE scores and metrics
 
 data/processed/
 ├── bronze/
@@ -129,7 +129,7 @@ data/processed/
 ```
 
 **Key Metrics in `compas_metricssummary.json`**:
-- `score`: Composite FAIR-CARE Score (0-1)
+- `score`: Composite PACE Score (0-1)
 - `status`: EXCELLENT (≥0.85), ACCEPTABLE (0.70-0.85), or AT RISK (<0.70)
 - `components.bronze`: Bronze layer score (SB)
 - `components.silver`: Silver layer score (SS)
@@ -137,10 +137,10 @@ data/processed/
 
 ## Key Results from the Paper
 
-The FAIR-CARE pipeline introduces a composite FAIR-CARE Score that quantitatively evaluates the ethical readiness of datasets across Bronze, Silver, and Gold layers.
+The PACE pipeline introduces a composite PACE Score that quantitatively evaluates the ethical readiness of datasets across Bronze, Silver, and Gold layers.
 
-### Ablation Study: Impact of FAIR-CARE Layers (COMPAS Dataset)
-| Configuration | FAIR-CARE Score | Silver Score (SS) | Privacy Risk | Utility (AUC) |
+### Ablation Study: Impact of PACE Layers (COMPAS Dataset)
+| Configuration | PACE Score | Silver Score (SS) | Privacy Risk | Utility (AUC) |
 |---------------|-----------------|-------------------|--------------|---------------|
 | Baseline (No CARE) | 0.77 | 0.33 | 100.0% | 1.00 |
 | Config A ($k$-anon) | 0.98 | 0.95 | 6.7% | 1.00 |
@@ -148,7 +148,7 @@ The FAIR-CARE pipeline introduces a composite FAIR-CARE Score that quantitativel
 | Config C (Causal) | 0.89 | 0.67 | 100.0% | 1.00 |
 
 ### Statistical Robustness (COMPAS, 5 Random Seeds)
-| Configuration | FAIR-CARE Score | AUC | EOD | DPD |
+| Configuration | PACE Score | AUC | EOD | DPD |
 |---------------|-----------------|-----|-----|-----|
 | Baseline | 0.77 ± 0.01 | 0.99 ± 0.01 | 0.12 ± 0.02 | 0.15 ± 0.01 |
 | Config A ($k$-anon) | 0.98 ± 0.00 | 0.98 ± 0.01 | 0.06 ± 0.01 | 0.05 ± 0.01 |
@@ -170,11 +170,11 @@ docker-compose exec ml python experiments/scripts/runexperiment1.py \
   --output results/exp1.csv
 ```
 
-**Output**: `results/exp1.csv` with columns: dataset, config, SB, SS, SG, faircarescore, dpd, eod, utility
+**Output**: `results/exp1.csv` with columns: dataset, config, SB, SS, SG, pacescore, dpd, eod, utility
 
 ### Experiment 2: Multi-Dataset Benchmarking
 
-Compares FAIR-CARE performance across all four datasets.
+Compares PACE performance across all four datasets.
 
 ```bash
 docker-compose exec ml python experiments/scripts/runexperiment2.py \
@@ -200,7 +200,7 @@ docker-compose exec ml python experiments/scripts/runexperiment3.py \
 
 ### Experiment 4: Statistical Robustness
 
-Executes configurations across multiple random seeds to compute the mean and standard deviation of key metrics (AUC, EOD, DPD, FAIR-CARE score).
+Executes configurations across multiple random seeds to compute the mean and standard deviation of key metrics (AUC, EOD, DPD, PACE score).
 
 ```bash
 docker-compose exec ml python experiments/scripts/runexperiment4_robustness.py \
@@ -256,13 +256,13 @@ docker-compose up -d
 docker-compose exec ml pytest tests/ -v
 
 # Run with coverage report
-docker-compose exec ml pytest tests/ --cov=faircare --cov-report=term-missing
+docker-compose exec ml pytest tests/ --cov=pace --cov-report=term-missing
 
 # Run a specific test file
-docker-compose exec ml pytest tests/test_faircarescore.py -v
+docker-compose exec ml pytest tests/test_pacescore.py -v
 ```
 
-**Expected**: 50+ tests covering Bronze, Silver, Gold layers and FAIR-CARE Score calculation.
+**Expected**: 50+ tests covering Bronze, Silver, Gold layers and PACE Score calculation.
 
 ## Documentation
 

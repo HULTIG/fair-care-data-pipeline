@@ -4,7 +4,7 @@ Tests for PII Detection module
 import pytest
 import pandas as pd
 from pyspark.sql import SparkSession
-from faircare.bronze.piidetection import PIIDetection
+from pace.bronze.piidetection import PIIDetection
 
 
 @pytest.fixture(scope="module")

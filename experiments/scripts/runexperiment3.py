@@ -10,7 +10,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-from faircare.orchestration.pipeline import run_pipeline
+from pace.orchestration.pipeline import run_pipeline
 
 def nested_update(base, update):
     """Recursively update nested dictionaries."""
@@ -87,7 +87,7 @@ def main():
                     'SB': metrics.get('components', {}).get('bronze', 0),
                     'SS': metrics.get('components', {}).get('silver', 0),
                     'SG': metrics.get('components', {}).get('gold', 0),
-                    'faircarescore': metrics.get('score', 0),
+                    'pacescore': metrics.get('score', 0),
                     'k': k,
                     'epsilon': epsilon,
                     'privacy_risk': privacy_risk,

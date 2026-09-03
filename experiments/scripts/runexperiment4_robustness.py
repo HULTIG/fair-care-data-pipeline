@@ -12,7 +12,7 @@ import sys
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
-from faircare.orchestration.pipeline import run_pipeline
+from pace.orchestration.pipeline import run_pipeline
 
 def nested_update(base_dict, update_dict):
     import collections.abc
@@ -82,7 +82,7 @@ def main():
                 
         if runs:
             # Calculate means and std
-            faircare_scores = [r.get('score', 0) for r in runs]
+            pace_scores = [r.get('score', 0) for r in runs]
             utils = [r.get('utility', {}).get('utility_retention', 0) for r in runs]
             dpds = [r.get('fairness', {}).get('statistical_parity_difference', 0) or 0 for r in runs]
             
@@ -92,8 +92,8 @@ def main():
             summary_results.append({
                 'dataset': dataset,
                 'config': config_name,
-                'fc_score_mean': np.mean(faircare_scores),
-                'fc_score_std': np.std(faircare_scores),
+                'fc_score_mean': np.mean(pace_scores),
+                'fc_score_std': np.std(pace_scores),
                 'utility_mean': np.mean(utils),
                 'utility_std': np.std(utils),
                 'dpd_mean': np.mean(dpds),

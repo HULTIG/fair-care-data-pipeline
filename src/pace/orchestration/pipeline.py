@@ -3,19 +3,19 @@ import yaml
 import json
 import os
 from pyspark.sql import SparkSession
-from faircare.bronze.ingestion import DataIngestion
-from faircare.bronze.piidetection import PIIDetection
-from faircare.bronze.audittrail import AuditTrail
-from faircare.silver.anonymization import AnonymizationEngine
-from faircare.silver.utilityassessment import UtilityAssessment
-from faircare.silver.causalanalysis import CausalAnalyzer
-from faircare.gold.biasmitigation import BiasMitigator
-from faircare.gold.fairnessmetrics import FairnessMetrics
-from faircare.gold.featureengineering import FeatureEngineer
-from faircare.gold.embeddings import EmbeddingsGenerator
-from faircare.metrics.layermetrics import BronzeMetrics, SilverMetrics, GoldMetrics
-from faircare.metrics.faircarescore import FAIRCAREScore
-from faircare.metrics.compliance import ComplianceCheck
+from pace.bronze.ingestion import DataIngestion
+from pace.bronze.piidetection import PIIDetection
+from pace.bronze.audittrail import AuditTrail
+from pace.silver.anonymization import AnonymizationEngine
+from pace.silver.utilityassessment import UtilityAssessment
+from pace.silver.causalanalysis import CausalAnalyzer
+from pace.gold.biasmitigation import BiasMitigator
+from pace.gold.fairnessmetrics import FairnessMetrics
+from pace.gold.featureengineering import FeatureEngineer
+from pace.gold.embeddings import EmbeddingsGenerator
+from pace.metrics.layermetrics import BronzeMetrics, SilverMetrics, GoldMetrics
+from pace.metrics.pacescore import PACEScore
+from pace.metrics.compliance import ComplianceCheck
 
 def load_config(config_path):
     with open(config_path, 'r') as f:
@@ -23,7 +23,7 @@ def load_config(config_path):
 
 def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     """
-    Run the FAIR-CARE pipeline and return metrics.
+    Run the PACE pipeline and return metrics.
     Used by experiment scripts.
     """
     if isinstance(config_or_path, dict):
@@ -36,7 +36,7 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
 
     # Initialize Spark
     spark = SparkSession.builder \
-        .appName(f"FAIR-CARE-{dataset}") \
+        .appName(f"PACE-{dataset}") \
         .config("spark.jars.packages", "io.delta:delta-spark_2.12:3.0.0") \
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
@@ -59,18 +59,23 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         dataset,
         has_header=dataset_config.get('has_header', True),
         column_names=dataset_config.get('column_names'),
-        delimiter=dataset_config.get('delimiter', ',')
+        delimiter=dataset_config.get('delimiter', ','),
+        drop_columns=dataset_config.get('drop_columns')
     )
     
     pii_detector = PIIDetection(config.get('pii_detection', {}))
     pii_report = pii_detector.detect(bronze_df)
     audit.log_event("PII_DETECTION", pii_report)
     
+    # Calculate a simple quality score based on non-null ratio
+    total_count = bronze_df.count()
+    quality_score = (bronze_df.dropna().count() / total_count) if total_count > 0 else 0.0
+    
     bronze_metrics = BronzeMetrics()
     sb = bronze_metrics.calculate({
-        "provenance_complete": True, 
+        "provenance_complete": audit.verify_provenance(), 
         "pii_found": any(r.get('recommendation') == 'REVIEW' for r in pii_report.values()),
-        "quality_score": 0.9
+        "quality_score": quality_score
     })
     if verbose: print(f"Bronze Score (SB): {sb}")
     time_bronze = time.time() - start_bronze
@@ -97,9 +102,10 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     
     silver_metrics = SilverMetrics()
     ss = silver_metrics.calculate({
-        "utility_retention": utility_report.get("utility_retention", 0),
-        "causal_validity": causal_report.get("causal_validity", "FAIL"),
-        "risk": silver_meta.get("risk", 1.0)
+        "epsilon": anon_config.get("epsilon"),
+        "k": anon_config.get("k"),
+        "risk": silver_meta.get("risk", 1.0),
+        "causal_validity": causal_report.get("causal_validity", "FAIL")
     })
     if verbose: print(f"Silver Score (SS): {ss}")
     time_silver = time.time() - start_silver
@@ -131,15 +137,15 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     time_gold = time.time() - start_gold
 
     # --- COMPOSITE SCORE ---
-    if verbose: print("\n=== FAIR-CARE SCORE ===")
-    scorer = FAIRCAREScore(config)
+    if verbose: print("\n=== PACE SCORE ===")
+    scorer = PACEScore(config)
     final_score = scorer.calculate(sb, ss, sg)
     if verbose: print(f"Final Score: {final_score}")
     
     # --- GOVERNANCE ENFORCEMENT ---
     checker = ComplianceCheck(config.get('compliance', {}))
     # We pass the final_score to check compliance
-    # Assuming checker.evaluate takes the FAIR-CARE score or similar metrics
+    # Assuming checker.evaluate takes the PACE score or similar metrics
     # In this mock, we'll just implement the logic based on the status
     compliance_status = final_score.get('status', 'UNKNOWN')
     if compliance_status == 'AT RISK':
@@ -181,7 +187,7 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     return final_score
 
 def main():
-    parser = argparse.ArgumentParser(description="FAIR-CARE Pipeline")
+    parser = argparse.ArgumentParser(description="PACE Pipeline")
     parser.add_argument("--dataset", required=True, help="Dataset name (compas, adult, german, nij)")
     parser.add_argument("--config", default="configs/default.yaml", help="Path to config file")
     parser.add_argument("--output", default="results", help="Output directory")

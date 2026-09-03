@@ -13,7 +13,7 @@ This guide provides step-by-step instructions to reproduce the three main experi
 ## Experiment 1: Ablation Study
 
 ### Objective
-Measure the contribution of each FAIR-CARE component by systematically removing them.
+Measure the contribution of each PACE component by systematically removing them.
 
 ### Configurations
 
@@ -23,7 +23,7 @@ Measure the contribution of each FAIR-CARE component by systematically removing 
 | `configa` | + k-anonymity | Ingestion + Anonymization |
 | `configb` | + Differential Privacy | Ingestion + DP |
 | `configc` | + Causal validation | Ingestion + Causal |
-| `default` | Full FAIR-CARE | All components |
+| `default` | Full PACE | All components |
 
 ### Running the Experiment
 
@@ -39,7 +39,7 @@ docker-compose exec ml python experiments/scripts/runexperiment1.py \
 
 `results/exp1.csv`:
 ```csv
-dataset,config,SB,SS,SG,faircarescore,dpd,eod,di,utility,privacy_risk
+dataset,config,SB,SS,SG,pacescore,dpd,eod,di,utility,privacy_risk
 compas,baseline,0.85,0.30,0.40,0.52,-0.25,-0.18,0.55,0.95,0.85
 compas,configa,0.85,0.75,0.45,0.68,-0.12,-0.10,0.72,0.88,0.15
 compas,configb,0.85,0.80,0.45,0.70,-0.15,-0.12,0.68,0.82,0.05
@@ -54,12 +54,12 @@ compas,default,0.90,0.85,0.85,0.87,-0.08,-0.06,0.85,0.85,0.08
 - **Config A (k-anon)**: Improved privacy (risk=0.15) with moderate utility loss (0.88)
 - **Config B (DP)**: Best privacy (risk=0.05) but higher utility loss (0.82)
 - **Config C (Causal)**: Better fairness (DPD=-0.20) but limited privacy
-- **Full FAIR-CARE**: Balanced trade-offs (FAIR-CARE=0.87, utility=0.85, DPD=-0.08, risk=0.08)
+- **Full PACE**: Balanced trade-offs (PACE=0.87, utility=0.85, DPD=-0.08, risk=0.08)
 
 ## Experiment 2: Multi-Dataset Benchmarking
 
 ### Objective
-Evaluate FAIR-CARE performance across diverse datasets with different characteristics.
+Evaluate PACE performance across diverse datasets with different characteristics.
 
 ### Datasets
 
@@ -72,7 +72,7 @@ Evaluate FAIR-CARE performance across diverse datasets with different characteri
 
 `results/exp2.csv`:
 ```csv
-dataset,technique,SB,SS,SG,faircarescore,dpd,eod,di,utility,info_loss,privacy_risk
+dataset,technique,SB,SS,SG,pacescore,dpd,eod,di,utility,info_loss,privacy_risk
 compas,kanonymity,0.90,0.82,0.85,0.86,-0.08,-0.06,0.85,0.85,0.25,0.08
 compas,ldiversity,0.90,0.85,0.85,0.87,-0.07,-0.05,0.87,0.83,0.30,0.05
 compas,tcloseness,0.90,0.88,0.85,0.88,-0.06,-0.04,0.88,0.80,0.35,0.03
@@ -83,7 +83,7 @@ adult,kanonymity,0.88,0.80,0.82,0.83,-0.10,-0.08,0.80,0.87,0.22,0.10
 
 ### Key Findings (from Paper)
 
-- **COMPAS**: Highest FAIR-CARE scores (0.86-0.88) due to well-structured data
+- **COMPAS**: Highest PACE scores (0.86-0.88) due to well-structured data
 - **Adult**: Good performance (0.83-0.85) with gender fairness improvements
 - **German**: Lower scores (0.75-0.78) due to small dataset size
 - **NIJ**: Strong privacy (risk<0.05) with acceptable utility (0.80-0.85)
@@ -91,7 +91,7 @@ adult,kanonymity,0.88,0.80,0.82,0.83,-0.10,-0.08,0.80,0.87,0.22,0.10
 ## Experiment 3: Regulatory Compliance
 
 ### Objective
-Test FAIR-CARE configurations for GDPR, HIPAA, and CCPA compliance.
+Test PACE configurations for GDPR, HIPAA, and CCPA compliance.
 
 ### Regulatory Modes
 
@@ -115,7 +115,7 @@ docker-compose exec ml python experiments/scripts/runexperiment3.py \
 
 `results/exp3.csv`:
 ```csv
-dataset,regulation,SB,SS,SG,faircarescore,k,epsilon,privacy_risk,compliant
+dataset,regulation,SB,SS,SG,pacescore,k,epsilon,privacy_risk,compliant
 compas,gdpr,0.90,0.88,0.80,0.86,10,0.5,0.04,True
 compas,hipaa,0.90,0.85,0.82,0.86,5,1.0,0.08,True
 compas,ccpa,0.90,0.82,0.85,0.86,5,1.0,0.10,True
@@ -128,7 +128,7 @@ adult,gdpr,0.88,0.85,0.78,0.84,10,0.5,0.05,True
 - **GDPR**: Strictest requirements, lowest utility (0.78-0.82) but highest privacy
 - **HIPAA**: Balanced approach, moderate utility loss (0.82-0.85)
 - **CCPA**: Most flexible, highest utility (0.85-0.88) with acceptable privacy
-- **All datasets**: Achieved compliance with FAIR-CARE scores ≥0.84
+- **All datasets**: Achieved compliance with PACE scores ≥0.84
 
 ## Generating Figures
 
@@ -143,7 +143,7 @@ docker-compose exec ml python experiments/scripts/aggregateresults.py \
 
 ### Generated Figures
 
-- `fig1_ablation_faircare.png`: FAIR-CARE scores by config
+- `fig1_ablation_pace.png`: PACE scores by config
 - `fig2_ablation_fairness.png`: DPD/EOD by config
 - `fig3_benchmark_datasets.png`: Performance across datasets
 - `fig4_benchmark_techniques.png`: Anonymization technique comparison

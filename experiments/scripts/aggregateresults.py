@@ -22,17 +22,17 @@ def load_results(csv_paths):
     return results
 
 
-def plot_ablation_faircare(df, output_dir):
-    """Figure 1: FAIR-CARE scores by configuration (Ablation)"""
+def plot_ablation_pace(df, output_dir):
+    """Figure 1: PACE scores by configuration (Ablation)"""
     plt.figure(figsize=(12, 6))
     
-    # Group by config and compute mean FAIR-CARE score
-    grouped = df.groupby('config')['faircarescore'].mean().sort_values()
+    # Group by config and compute mean PACE score
+    grouped = df.groupby('config')['pacescore'].mean().sort_values()
     
     ax = grouped.plot(kind='bar', color='steelblue')
-    plt.title('Ablation Study: FAIR-CARE Score by Configuration', fontsize=14, fontweight='bold')
+    plt.title('Ablation Study: PACE Score by Configuration', fontsize=14, fontweight='bold')
     plt.xlabel('Configuration', fontsize=12)
-    plt.ylabel('FAIR-CARE Score', fontsize=12)
+    plt.ylabel('PACE Score', fontsize=12)
     plt.xticks(rotation=45, ha='right')
     plt.ylim(0, 1.0)
     plt.axhline(y=0.85, color='green', linestyle='--', label='EXCELLENT threshold')
@@ -40,8 +40,8 @@ def plot_ablation_faircare(df, output_dir):
     plt.legend()
     plt.tight_layout()
     
-    plt.savefig(os.path.join(output_dir, 'fig1_ablation_faircare.png'), dpi=300)
-    plt.savefig(os.path.join(output_dir, 'fig1_ablation_faircare.pdf'))
+    plt.savefig(os.path.join(output_dir, 'fig1_ablation_pace.png'), dpi=300)
+    plt.savefig(os.path.join(output_dir, 'fig1_ablation_pace.pdf'))
     plt.close()
 
 
@@ -83,7 +83,7 @@ def plot_benchmark_datasets(df, output_dir):
     plt.figure(figsize=(12, 6))
     
     # Group by dataset
-    grouped = df.groupby('dataset')[['SB', 'SS', 'SG', 'faircarescore']].mean()
+    grouped = df.groupby('dataset')[['SB', 'SS', 'SG', 'pacescore']].mean()
     
     grouped.plot(kind='bar', ax=plt.gca())
     plt.title('Multi-Dataset Benchmarking: Layer Scores', fontsize=14, fontweight='bold')
@@ -91,7 +91,7 @@ def plot_benchmark_datasets(df, output_dir):
     plt.ylabel('Score', fontsize=12)
     plt.xticks(rotation=45, ha='right')
     plt.ylim(0, 1.0)
-    plt.legend(['Bronze (SB)', 'Silver (SS)', 'Gold (SG)', 'FAIR-CARE'], loc='lower right')
+    plt.legend(['Bronze (SB)', 'Silver (SS)', 'Gold (SG)', 'PACE'], loc='lower right')
     plt.tight_layout()
     
     plt.savefig(os.path.join(output_dir, 'fig3_benchmark_datasets.png'), dpi=300)
@@ -107,11 +107,11 @@ def plot_benchmark_techniques(df, output_dir):
     
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
     
-    # FAIR-CARE by technique
-    grouped_fc = df.groupby('technique')['faircarescore'].mean().sort_values()
+    # PACE by technique
+    grouped_fc = df.groupby('technique')['pacescore'].mean().sort_values()
     grouped_fc.plot(kind='barh', ax=axes[0], color='skyblue')
-    axes[0].set_title('FAIR-CARE Score by Technique', fontsize=12, fontweight='bold')
-    axes[0].set_xlabel('FAIR-CARE Score')
+    axes[0].set_title('PACE Score by Technique', fontsize=12, fontweight='bold')
+    axes[0].set_xlabel('PACE Score')
     axes[0].set_ylabel('Technique')
     axes[0].set_xlim(0, 1.0)
     for container in axes[0].containers:
@@ -137,14 +137,14 @@ def plot_regulatory_compliance(df, output_dir):
     plt.figure(figsize=(12, 6))
     
     # Group by regulation
-    grouped = df.groupby('regulation')[['faircarescore', 'privacy_risk']].mean()
+    grouped = df.groupby('regulation')[['pacescore', 'privacy_risk']].mean()
     
     ax = grouped.plot(kind='bar')
-    plt.title('Regulatory Compliance: FAIR-CARE Score and Privacy Risk', fontsize=14, fontweight='bold')
+    plt.title('Regulatory Compliance: PACE Score and Privacy Risk', fontsize=14, fontweight='bold')
     plt.xlabel('Regulation', fontsize=12)
     plt.ylabel('Score', fontsize=12)
     plt.xticks(rotation=0)
-    plt.legend(['FAIR-CARE Score', 'Privacy Risk'])
+    plt.legend(['PACE Score', 'Privacy Risk'])
     plt.tight_layout()
     
     plt.savefig(os.path.join(output_dir, 'fig5_regulatory_compliance.png'), dpi=300)
@@ -164,7 +164,7 @@ def plot_tradeoffs(df, output_dir):
     if 'dpd' in df.columns:
         fairness_score = 1 - df['dpd'].abs()  # Convert DPD to fairness score
     else:
-        fairness_score = df['faircarescore']
+        fairness_score = df['pacescore']
     
     scatter = plt.scatter(df['utility'], df['privacy_risk'], 
                          c=fairness_score, cmap='RdYlGn', 
@@ -211,7 +211,7 @@ def main():
     
     if 'exp1' in results:
         print("  - Ablation study figures...")
-        plot_ablation_faircare(results['exp1'], args.output)
+        plot_ablation_pace(results['exp1'], args.output)
         plot_ablation_fairness(results['exp1'], args.output)
     
     if 'exp2' in results:

@@ -1,8 +1,8 @@
-# FAIR-CARE Architecture
+# PACE Architecture
 
 ## Overview
 
-The FAIR-CARE Lakehouse implements a three-layer Medallion architecture that progressively transforms raw data into ethically-governed, analysis-ready datasets.
+The PACE Lakehouse implements a three-layer Medallion architecture that progressively transforms raw data into ethically-governed, analysis-ready datasets.
 
 ## Architecture Layers
 
@@ -68,12 +68,12 @@ The FAIR-CARE Lakehouse implements a three-layer Medallion architecture that pro
 - AIF360 metrics: Statistical Parity Difference, Equal Opportunity Difference
 - Fairlearn threshold optimization
 
-## FAIR-CARE Score
+## PACE Score
 
 **Composite Metric**: Combines layer scores into a single ethical readiness score.
 
 ```
-FAIR-CARE Score = w_B × SB + w_S × SS + w_G × SG
+PACE Score = w_B × SB + w_S × SS + w_G × SG
 ```
 
 **Default Weights**: w_B = 0.3, w_S = 0.3, w_G = 0.4
@@ -93,7 +93,7 @@ FAIR-CARE Score = w_B × SB + w_S × SS + w_G × SG
 ```
 Raw CSV → Bronze (Ingest + PII) → Silver (Anonymize + Causal) → Gold (Fairness + Features) → ML/Analytics
            ↓ SB                    ↓ SS                          ↓ SG
-           └────────────────────────┴──────────────────────────────→ FAIR-CARE Score
+           └────────────────────────┴──────────────────────────────→ PACE Score
 ```
 
 ## Technology Stack

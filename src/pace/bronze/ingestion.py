@@ -6,7 +6,7 @@ class DataIngestion:
     def __init__(self, spark: SparkSession):
         self.spark = spark
 
-    def ingest(self, source_path: str, output_path: str, dataset_name: str, source_system: str = "manual_upload", has_header: bool = True, column_names: list = None, delimiter: str = ","):
+    def ingest(self, source_path: str, output_path: str, dataset_name: str, source_system: str = "manual_upload", has_header: bool = True, column_names: list = None, delimiter: str = ",", drop_columns: list = None):
         """
         Ingests a CSV file into a Bronze Delta table.
         """
@@ -39,6 +39,14 @@ class DataIngestion:
             
             if new_name != col_name:
                 df = df.withColumnRenamed(col_name, new_name)
+
+        if drop_columns:
+            for col_to_drop in drop_columns:
+                sanitized_drop = re.sub(r'[^a-zA-Z0-9]', '_', col_to_drop)
+                sanitized_drop = re.sub(r'_+', '_', sanitized_drop).strip('_')
+                if sanitized_drop in df.columns:
+                    df = df.drop(sanitized_drop)
+                    print(f"Dropped column {sanitized_drop} to prevent target leakage.")
 
         # Add metadata columns
         df_with_meta = df \

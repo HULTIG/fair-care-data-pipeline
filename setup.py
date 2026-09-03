@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="faircare",
+    name="pace",
     version="1.0.0",
-    description="FAIR-CARE Lakehouse: Ethical AI Data Governance Pipeline",
+    description="PACE Lakehouse: Ethical AI Data Governance Pipeline",
     author="Anonymous for Review",
     license="Apache-2.0",
     packages=find_packages(where="src"),
@@ -16,7 +16,6 @@ setup(
         "numpy>=1.24.0",
         "scikit-learn>=1.3.0",
         "aif360>=0.6.0",
-        "fairlearn>=0.10.0",
         "diffprivlib>=0.6.0",
         "dowhy>=0.11.0",
         "sentence-transformers>=2.2.0",
@@ -33,7 +32,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "faircare-pipeline=faircare.orchestration.pipeline:main",
+            "pace-pipeline=pace.orchestration.pipeline:main",
         ],
     },
 )

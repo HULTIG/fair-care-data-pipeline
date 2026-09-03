@@ -30,12 +30,12 @@ services:
     networks:
       - legal-etl-network
 
-  # FAIR-CARE ML Service
+  # PACE ML Service
   ml:
     build:
       context: .
       dockerfile: Dockerfile.ml
-    container_name: faircare-ml
+    container_name: pace-ml
     volumes:
       - ./src:/app/src
       - ./tests:/app/tests

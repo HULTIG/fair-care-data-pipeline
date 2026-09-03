@@ -1,10 +1,10 @@
-class FAIRCAREScore:
+class PACEScore:
     def __init__(self, config: dict):
         self.config = config
 
     def calculate(self, sb: float, ss: float, sg: float) -> dict:
         """
-        Calculates the composite FAIR-CARE Score.
+        Calculates the composite PACE Score.
         """
         w_b = self.config.get("weights", {}).get("bronze", 0.33)
         w_s = self.config.get("weights", {}).get("silver", 0.33)

@@ -14,7 +14,7 @@ def plot_robustness(json_path="results/exp4_robustness.json", out_dir="results/f
     # Set style
     sns.set_theme(style="whitegrid")
     
-    # 1. Bar chart for FAIR-CARE Score with error bars (std dev)
+    # 1. Bar chart for PACE Score with error bars (std dev)
     plt.figure(figsize=(8, 5))
     sns.barplot(
         data=df, 
@@ -37,8 +37,8 @@ def plot_robustness(json_path="results/exp4_robustness.json", out_dir="results/f
         )
         
     plt.ylim(0, 1.1)
-    plt.title("Statistical Robustness: FAIR-CARE Score Across 5 Seeds")
-    plt.ylabel("FAIR-CARE Score (Mean ± Std)")
+    plt.title("Statistical Robustness: PACE Score Across 5 Seeds")
+    plt.ylabel("PACE Score (Mean ± Std)")
     plt.xlabel("Configuration")
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, "exp4_robustness_fc_score.png"), dpi=300)
@@ -83,7 +83,7 @@ def plot_sensitivity(json_path="results/exp5_sensitivity.json", out_dir="results
         print(f"No data for k={k_val} to plot sensitivity.")
         return
         
-    sns.lineplot(data=subset, x="epsilon", y="fc_score", marker='o', label="FAIR-CARE Score")
+    sns.lineplot(data=subset, x="epsilon", y="fc_score", marker='o', label="PACE Score")
     sns.lineplot(data=subset, x="epsilon", y="utility", marker='s', label="Utility (AUC)")
     sns.lineplot(data=subset, x="epsilon", y="privacy_risk", marker='^', label="Privacy Risk")
     

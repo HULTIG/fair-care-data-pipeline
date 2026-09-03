@@ -1,7 +1,7 @@
 """
-FAIR-CARE Dashboard - Streamlit Application
+PACE Dashboard - Streamlit Application
 
-Interactive dashboard for visualizing FAIR-CARE pipeline results.
+Interactive dashboard for visualizing PACE pipeline results.
 """
 import streamlit as st
 import pandas as pd
@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Page configuration
 st.set_page_config(
-    page_title="FAIR-CARE Dashboard",
+    page_title="PACE Dashboard",
     page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -49,7 +49,7 @@ def load_results(results_dir="results"):
 
 def page_overview(results):
     """Overview page"""
-    st.title("⚖️ FAIR-CARE Lakehouse Dashboard")
+    st.title("⚖️ PACE Lakehouse Dashboard")
     st.markdown("### Ethical AI Data Governance Pipeline")
     
     col1, col2, col3 = st.columns(3)
@@ -60,7 +60,7 @@ def page_overview(results):
         avg_bronze = results['summaries'].apply(lambda x: x.get('components', {}).get('bronze', 0), axis=1).mean()
         avg_silver = results['summaries'].apply(lambda x: x.get('components', {}).get('silver', 0), axis=1).mean()
         
-        col1.metric("Avg FAIR-CARE Score", f"{avg_score:.3f}")
+        col1.metric("Avg PACE Score", f"{avg_score:.3f}")
         col2.metric("Avg Bronze Score", f"{avg_bronze:.3f}")
         col3.metric("Avg Silver Score", f"{avg_silver:.3f}")
     else:
@@ -74,7 +74,7 @@ def page_overview(results):
     ```
     Raw Data → Bronze (Ingest + PII) → Silver (Anonymize + Causal) → Gold (Fairness + Features) → ML/Analytics
                 ↓ SB                    ↓ SS                          ↓ SG
-                └────────────────────────┴──────────────────────────────→ FAIR-CARE Score
+                └────────────────────────┴──────────────────────────────→ PACE Score
     ```
     """)
     
@@ -111,11 +111,11 @@ def page_experiments(results):
         if 'exp1' in results:
             df = results['exp1']
             
-            # FAIR-CARE scores by config
-            fig = px.bar(df.groupby('config')['faircarescore'].mean().reset_index(),
-                        x='faircarescore', y='config', orientation='h',
-                        title='FAIR-CARE Score by Configuration',
-                        labels={'faircarescore': 'FAIR-CARE Score', 'config': 'Configuration'})
+            # PACE scores by config
+            fig = px.bar(df.groupby('config')['pacescore'].mean().reset_index(),
+                        x='pacescore', y='config', orientation='h',
+                        title='PACE Score by Configuration',
+                        labels={'pacescore': 'PACE Score', 'config': 'Configuration'})
             fig.add_vline(x=0.85, line_dash="dash", line_color="green", annotation_text="EXCELLENT")
             fig.add_vline(x=0.70, line_dash="dash", line_color="orange", annotation_text="ACCEPTABLE")
             st.plotly_chart(fig, use_container_width=True)
@@ -131,8 +131,8 @@ def page_experiments(results):
             df = results['exp2']
             
             # Layer scores by dataset
-            grouped = df.groupby('dataset')[['SB', 'SS', 'SG', 'faircarescore']].mean().reset_index()
-            fig = px.bar(grouped, x='dataset', y=['SB', 'SS', 'SG', 'faircarescore'],
+            grouped = df.groupby('dataset')[['SB', 'SS', 'SG', 'pacescore']].mean().reset_index()
+            fig = px.bar(grouped, x='dataset', y=['SB', 'SS', 'SG', 'pacescore'],
                         title='Layer Scores by Dataset',
                         labels={'value': 'Score', 'variable': 'Layer'},
                         barmode='group')
@@ -148,10 +148,10 @@ def page_experiments(results):
             df = results['exp3']
             
             # Compliance by regulation
-            fig = px.bar(df.groupby('regulation')['faircarescore'].mean().reset_index(),
-                        x='regulation', y='faircarescore',
-                        title='FAIR-CARE Score by Regulation',
-                        labels={'faircarescore': 'FAIR-CARE Score', 'regulation': 'Regulation'})
+            fig = px.bar(df.groupby('regulation')['pacescore'].mean().reset_index(),
+                        x='regulation', y='pacescore',
+                        title='PACE Score by Regulation',
+                        labels={'pacescore': 'PACE Score', 'regulation': 'Regulation'})
             st.plotly_chart(fig, use_container_width=True)
             
             # Compliance status
@@ -164,17 +164,17 @@ def page_experiments(results):
             st.info("Run Experiment 3 first: `python experiments/scripts/runexperiment3.py`")
 
 
-def page_faircare_score(results):
-    """FAIR-CARE Score page"""
-    st.title("📊 FAIR-CARE Score")
+def page_pace_score(results):
+    """PACE Score page"""
+    st.title("📊 PACE Score")
     
     if 'summaries' in results and not results['summaries'].empty:
         df = results['summaries']
         
         # Score distribution
         fig = px.histogram(df, x='score', nbins=20,
-                          title='FAIR-CARE Score Distribution',
-                          labels={'score': 'FAIR-CARE Score', 'count': 'Frequency'})
+                          title='PACE Score Distribution',
+                          labels={'score': 'PACE Score', 'count': 'Frequency'})
         fig.add_vline(x=0.85, line_dash="dash", line_color="green", annotation_text="EXCELLENT")
         fig.add_vline(x=0.70, line_dash="dash", line_color="orange", annotation_text="ACCEPTABLE")
         st.plotly_chart(fig, use_container_width=True)
@@ -210,12 +210,12 @@ def main():
     
     # Sidebar
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Go to", ["Overview", "Experiments", "FAIR-CARE Score"])
+    page = st.sidebar.radio("Go to", ["Overview", "Experiments", "PACE Score"])
     
     st.sidebar.markdown("---")
     st.sidebar.markdown("### About")
     st.sidebar.info("""
-    FAIR-CARE Lakehouse combines FAIR principles with Causality, Anonymity, 
+    PACE Lakehouse combines FAIR principles with Causality, Anonymity, 
     Regulatory-compliance, and Ethics for ethical AI data governance.
     """)
     
@@ -228,8 +228,8 @@ def main():
         page_overview(results)
     elif page == "Experiments":
         page_experiments(results)
-    elif page == "FAIR-CARE Score":
-        page_faircare_score(results)
+    elif page == "PACE Score":
+        page_pace_score(results)
 
 
 if __name__ == "__main__":

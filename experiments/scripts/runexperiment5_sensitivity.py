@@ -11,7 +11,7 @@ import sys
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
-from faircare.orchestration.pipeline import run_pipeline
+from pace.orchestration.pipeline import run_pipeline
 
 def nested_update(base_dict, update_dict):
     import collections.abc
