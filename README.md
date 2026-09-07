@@ -103,7 +103,11 @@ docker-compose exec ml python -m pace.orchestration.pipeline \
   --output results/compas_demo \
   --verbose
 
-# Native Python
+# Native Python (Ensure you are at the repository root)
+# 1. Install the package in editable mode so Python can find the 'pace' module
+pip install -e .
+
+# 2. Run the pipeline
 python -m pace.orchestration.pipeline \
   --dataset compas \
   --config experiments/configs/default.yaml \
