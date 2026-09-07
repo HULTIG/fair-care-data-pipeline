@@ -1,42 +1,49 @@
-# GDPR Strict Configuration
-# Complies with GDPR Article 32 (Security of processing)
-# and Recital 26 (Re-identification risk)
-
 anonymization:
-  technique: "kanonymity"
-  k: 10  # Strict k-anonymity
-  l: 3  # l-diversity for sensitive attributes
-  epsilon: 0.5  # Low epsilon for strong privacy
-  quasi_identifiers: ["age", "location", "occupation", "education"]
-
-pii_detection:
-  confidence_threshold: 0.95  # High confidence required
-  techniques: ["regex", "nlp"]
-  entities: ["PERSON", "GPE", "ORG", "email", "phone", "ssn", "DATE_TIME", "LOCATION"]
-  remove_on_detection: true  # Automatically remove PII
-
-fairness:
-  metrics: ["Statistical Parity Difference", "Equal Opportunity Difference", "Disparate Impact"]
-  thresholds:
-    statistical_parity_difference: 0.05  # Stricter fairness
-    equal_opportunity_difference: 0.05
-    disparate_impact: 0.9
-
-privacy:
-  max_reidentification_risk: 0.05  # 5% max risk
-  require_pseudonymization: true
-  key_separation: true  # Separate storage of pseudonymization keys
-
-causal_validation: true
+  epsilon: 0.5
+  k: 10
+  l: 3
+  quasi_identifiers:
+  - age
+  - location
+  - occupation
+  - education
+  technique: kanonymity
 bias_mitigation: true
-
+causal_validation: true
 compliance:
-  regulation: "GDPR"
-  right_to_erasure: true
   data_minimization: true
   purpose_limitation: true
-
+  regulation: GDPR
+  right_to_erasure: true
+fairness:
+  metrics:
+  - Statistical Parity Difference
+  - Equal Opportunity Difference
+  - Disparate Impact
+  thresholds:
+    disparate_impact: 0.9
+    equal_opportunity_difference: 0.05
+    statistical_parity_difference: 0.05
+pii_detection:
+  confidence_threshold: 0.95
+  entities:
+  - PERSON
+  - GPE
+  - ORG
+  - email
+  - phone
+  - ssn
+  - DATE_TIME
+  - LOCATION
+  remove_on_detection: true
+  techniques:
+  - regex
+  - nlp
+privacy:
+  key_separation: true
+  max_reidentification_risk: 0.05
+  require_pseudonymization: true
 weights:
-  bronze: 0.25
-  silver: 0.45  # Higher weight on privacy
-  gold: 0.30
+  bronze: 0.3333
+  gold: 0.3334
+  silver: 0.3333

@@ -1,40 +1,41 @@
-# Baseline Configuration - Traditional ETL Only
-# No anonymization, no causal validation, no bias mitigation
-
+anonymization:
+  epsilon: 999
+  k: 0
+  technique: none
+bias_mitigation: false
+causal_validation: false
 datasets:
   compas:
-    source_url: "https://raw.githubusercontent.com/propublica/compas-analysis/master/compas-scores-two-years.csv"
-    raw_path: "data/raw/compas/compas.csv"
-    bronze_path: "data/processed/bronze/compas"
-    silver_path: "data/processed/silver/compas"
-    gold_path: "data/processed/gold/compas"
-    sensitive_attributes: ["race", "sex"]
-    protected_attribute: "race"
-    privileged_groups: [{"race": "Caucasian"}]
-    unprivileged_groups: [{"race": "African-American"}]
-    label_column: "two_year_recid"
+    bronze_path: data/processed/bronze/compas
     favorable_label: 0
-    quasi_identifiers: []  # No anonymization
-
-pii_detection:
-  confidence_threshold: 0.8
-  techniques: ["regex"]
-  entities: ["email", "phone", "ssn"]
-
-anonymization:
-  technique: "none"  # Baseline: no anonymization
-  k: 0
-  epsilon: 999
-
+    gold_path: data/processed/gold/compas
+    label_column: two_year_recid
+    privileged_groups:
+    - race: Caucasian
+    protected_attribute: race
+    quasi_identifiers: []
+    raw_path: data/raw/compas/compas.csv
+    sensitive_attributes:
+    - race
+    - sex
+    silver_path: data/processed/silver/compas
+    source_url: https://raw.githubusercontent.com/propublica/compas-analysis/master/compas-scores-two-years.csv
+    unprivileged_groups:
+    - race: African-American
 fairness:
-  metrics: ["Statistical Parity Difference"]
+  metrics:
+  - Statistical Parity Difference
   thresholds:
     statistical_parity_difference: 0.1
-
-causal_validation: false  # Baseline: no causal validation
-bias_mitigation: false  # Baseline: no bias mitigation
-
+pii_detection:
+  confidence_threshold: 0.8
+  entities:
+  - email
+  - phone
+  - ssn
+  techniques:
+  - regex
 weights:
-  bronze: 0.5
-  silver: 0.25
-  gold: 0.25
+  bronze: 0.3333
+  gold: 0.3334
+  silver: 0.3333

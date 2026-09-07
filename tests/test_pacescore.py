@@ -10,9 +10,9 @@ def default_config():
     """Default PACE config"""
     return {
         "weights": {
-            "bronze": 0.3,
-            "silver": 0.3,
-            "gold": 0.4
+            "bronze": 0.3333,
+            "silver": 0.3333,
+            "gold": 0.3334
         }
     }
 

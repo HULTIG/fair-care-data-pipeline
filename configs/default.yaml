@@ -1,86 +1,158 @@
-datasets:
-  compas:
-    source_url: "https://raw.githubusercontent.com/propublica/compas-analysis/master/compas-scores-two-years.csv"
-    raw_path: "data/raw/compas/compas.csv"
-    bronze_path: "data/processed/bronze/compas"
-    silver_path: "data/processed/silver/compas"
-    gold_path: "data/processed/gold/compas"
-    sensitive_attributes: ["race", "sex"]
-    protected_attribute: "race"
-    privileged_groups: [{"race": "Caucasian"}]
-    unprivileged_groups: [{"race": "African-American"}]
-    label_column: "two_year_recid"
-    favorable_label: 0
-    quasi_identifiers: ["age", "c_charge_degree", "sex"]
-    
-  adult:
-    source_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"
-    raw_path: "data/raw/adult/adult.csv"
-    bronze_path: "data/processed/bronze/adult"
-    silver_path: "data/processed/silver/adult"
-    gold_path: "data/processed/gold/adult"
-    sensitive_attributes: ["race", "sex"]
-    protected_attribute: "sex"
-    privileged_groups: [{"sex": "Male"}]
-    unprivileged_groups: [{"sex": "Female"}]
-    label_column: "income"
-    favorable_label: ">50K"
-    quasi_identifiers: ["age", "education", "marital_status", "occupation", "relationship", "race", "native_country"]
-    has_header: false
-    column_names: ["age", "workclass", "fnlwgt", "education", "education_num", "marital_status", "occupation", "relationship", "race", "sex", "capital_gain", "capital_loss", "hours_per_week", "native_country", "income"]
-
-  german:
-    source_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data"
-    raw_path: "data/raw/german/german.csv"
-    bronze_path: "data/processed/bronze/german"
-    silver_path: "data/processed/silver/german"
-    gold_path: "data/processed/gold/german"
-    sensitive_attributes: ["personal_status_sex", "age"] # 'sex' is encoded in 'personal_status_sex'
-    protected_attribute: "personal_status_sex"
-    privileged_groups: [{"personal_status_sex": "A91"}]  # A91, A93, A94 are male codes
-    unprivileged_groups: [{"personal_status_sex": "A92"}]  # A92, A95 are female codes
-    label_column: "credit_risk"
-    favorable_label: 1 # 1 is Good, 2 is Bad
-    quasi_identifiers: ["age", "job", "housing", "savings_status", "checking_status"]
-    has_header: false
-    delimiter: " "  # Space-separated values
-    # Statlog German (original) has 20 attributes + class. Column names approximated from documentation.
-    column_names: ["checking_status", "duration", "credit_history", "purpose", "credit_amount", "savings_status", "employment", "installment_rate", "personal_status_sex", "other_parties", "residence_since", "property_magnitude", "age", "other_payment_plans", "housing", "existing_credits", "job", "num_dependents", "own_telephone", "foreign_worker", "credit_risk"]
-
-  nij:
-    source_url: "https://nij.ojp.gov/sites/g/files/xyckuh171/files/media/document/nij-challenge2021_full_dataset.csv"
-    raw_path: "data/raw/nij/nij.csv"
-    bronze_path: "data/processed/bronze/nij"
-    silver_path: "data/processed/silver/nij"
-    gold_path: "data/processed/gold/nij"
-    sensitive_attributes: ["Race", "Gender"]
-    protected_attribute: "Race"
-    privileged_groups: [{"Race": "White"}]
-    unprivileged_groups: [{"Race": "Black"}]
-    label_column: "Recidivism_Arrest_Year1"
-    favorable_label: false
-    quasi_identifiers: ["Age_at_Release", "Gang_Affiliated", "Supervision_Level_First"]
-
-pii_detection:
-  confidence_threshold: 0.8
-  techniques: ["regex", "nlp"]
-  entities: ["PERSON", "location", "email", "phone", "ssn"]
-
 anonymization:
-  technique: "kanonymity"
+  epsilon: 1.0
   k: 5
   l: 2
   t: 0.2
-  epsilon: 1.0
-
+  technique: kanonymity
+datasets:
+  adult:
+    bronze_path: data/processed/bronze/adult
+    column_names:
+    - age
+    - workclass
+    - fnlwgt
+    - education
+    - education_num
+    - marital_status
+    - occupation
+    - relationship
+    - race
+    - sex
+    - capital_gain
+    - capital_loss
+    - hours_per_week
+    - native_country
+    - income
+    favorable_label: '>50K'
+    gold_path: data/processed/gold/adult
+    has_header: false
+    label_column: income
+    privileged_groups:
+    - sex: Male
+    protected_attribute: sex
+    quasi_identifiers:
+    - age
+    - education
+    - marital_status
+    - occupation
+    - relationship
+    - race
+    - native_country
+    raw_path: data/raw/adult/adult.csv
+    sensitive_attributes:
+    - race
+    - sex
+    silver_path: data/processed/silver/adult
+    source_url: https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data
+    unprivileged_groups:
+    - sex: Female
+  compas:
+    bronze_path: data/processed/bronze/compas
+    favorable_label: 0
+    gold_path: data/processed/gold/compas
+    label_column: two_year_recid
+    privileged_groups:
+    - race: Caucasian
+    protected_attribute: race
+    quasi_identifiers:
+    - age
+    - c_charge_degree
+    - sex
+    raw_path: data/raw/compas/compas.csv
+    sensitive_attributes:
+    - race
+    - sex
+    silver_path: data/processed/silver/compas
+    source_url: https://raw.githubusercontent.com/propublica/compas-analysis/master/compas-scores-two-years.csv
+    unprivileged_groups:
+    - race: African-American
+  german:
+    bronze_path: data/processed/bronze/german
+    column_names:
+    - checking_status
+    - duration
+    - credit_history
+    - purpose
+    - credit_amount
+    - savings_status
+    - employment
+    - installment_rate
+    - personal_status_sex
+    - other_parties
+    - residence_since
+    - property_magnitude
+    - age
+    - other_payment_plans
+    - housing
+    - existing_credits
+    - job
+    - num_dependents
+    - own_telephone
+    - foreign_worker
+    - credit_risk
+    delimiter: ' '
+    favorable_label: 1
+    gold_path: data/processed/gold/german
+    has_header: false
+    label_column: credit_risk
+    privileged_groups:
+    - personal_status_sex: A91
+    protected_attribute: personal_status_sex
+    quasi_identifiers:
+    - age
+    - job
+    - housing
+    - savings_status
+    - checking_status
+    raw_path: data/raw/german/german.csv
+    sensitive_attributes:
+    - personal_status_sex
+    - age
+    silver_path: data/processed/silver/german
+    source_url: https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data
+    unprivileged_groups:
+    - personal_status_sex: A92
+  nij:
+    bronze_path: data/processed/bronze/nij
+    favorable_label: false
+    gold_path: data/processed/gold/nij
+    label_column: Recidivism_Arrest_Year1
+    privileged_groups:
+    - Race: White
+    protected_attribute: Race
+    quasi_identifiers:
+    - Age_at_Release
+    - Gang_Affiliated
+    - Supervision_Level_First
+    raw_path: data/raw/nij/nij.csv
+    sensitive_attributes:
+    - Race
+    - Gender
+    silver_path: data/processed/silver/nij
+    source_url: https://nij.ojp.gov/sites/g/files/xyckuh171/files/media/document/nij-challenge2021_full_dataset.csv
+    unprivileged_groups:
+    - Race: Black
 fairness:
-  metrics: ["Statistical Parity Difference", "Equal Opportunity Difference", "Disparate Impact"]
+  metrics:
+  - Statistical Parity Difference
+  - Equal Opportunity Difference
+  - Disparate Impact
   thresholds:
-    statistical_parity_difference: 0.1
-    equal_opportunity_difference: 0.1
     disparate_impact: 0.8
-
+    equal_opportunity_difference: 0.1
+    statistical_parity_difference: 0.1
+pii_detection:
+  confidence_threshold: 0.8
+  entities:
+  - PERSON
+  - location
+  - email
+  - phone
+  - ssn
+  techniques:
+  - regex
+  - nlp
 weights:
-  bronze: 0.3
-  silver: 0.3
-  gold: 0.4
+  bronze: 0.3333
+  gold: 0.3334
+  silver: 0.3333

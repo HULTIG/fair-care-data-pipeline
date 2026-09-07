@@ -1,28 +1,31 @@
-# HIPAA Compliance Configuration
-# Healthcare privacy requirements
-
 anonymization:
-  technique: "kanonymity"
+  epsilon: 1.0
   k: 5
   l: 2
   t: 0.2
-  epsilon: 1.0
-
+  technique: kanonymity
+bias_mitigation: true
+causal_validation: true
+fairness:
+  metrics:
+  - Statistical Parity Difference
+  - Equal Opportunity Difference
+  thresholds:
+    equal_opportunity_difference: 0.1
+    statistical_parity_difference: 0.1
 pii_detection:
   confidence_threshold: 0.9
-  techniques: ["regex", "nlp"]
-  entities: ["PERSON", "email", "phone", "ssn", "medical", "date"]
-
-fairness:
-  metrics: ["Statistical Parity Difference", "Equal Opportunity Difference"]
-  thresholds:
-    statistical_parity_difference: 0.1
-    equal_opportunity_difference: 0.1
-
-causal_validation: true
-bias_mitigation: true
-
+  entities:
+  - PERSON
+  - email
+  - phone
+  - ssn
+  - medical
+  - date
+  techniques:
+  - regex
+  - nlp
 weights:
-  bronze: 0.3
-  silver: 0.4
-  gold: 0.3
+  bronze: 0.3333
+  gold: 0.3334
+  silver: 0.3333

@@ -6,9 +6,9 @@ class PACEScore:
         """
         Calculates the composite PACE Score.
         """
-        w_b = self.config.get("weights", {}).get("bronze", 0.33)
-        w_s = self.config.get("weights", {}).get("silver", 0.33)
-        w_g = self.config.get("weights", {}).get("gold", 0.33)
+        w_b = self.config.get("weights", {}).get("bronze", 0.3333)
+        w_s = self.config.get("weights", {}).get("silver", 0.3333)
+        w_g = self.config.get("weights", {}).get("gold", 0.3334)
         
         score = (w_b * sb) + (w_s * ss) + (w_g * sg)
         

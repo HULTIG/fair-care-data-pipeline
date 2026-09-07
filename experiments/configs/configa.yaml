@@ -1,26 +1,30 @@
-# Config A - k-Anonymity Only
-# Adds k-anonymity to baseline
-
 anonymization:
-  technique: "kanonymity"
   k: 5
-  quasi_identifiers: ["age", "c_charge_degree", "sex"]
-
+  quasi_identifiers:
+  - age
+  - c_charge_degree
+  - sex
+  technique: kanonymity
+bias_mitigation: false
+causal_validation: false
+fairness:
+  metrics:
+  - Statistical Parity Difference
+  - Equal Opportunity Difference
+  thresholds:
+    equal_opportunity_difference: 0.1
+    statistical_parity_difference: 0.1
 pii_detection:
   confidence_threshold: 0.8
-  techniques: ["regex", "nlp"]
-  entities: ["PERSON", "email", "phone", "ssn"]
-
-fairness:
-  metrics: ["Statistical Parity Difference", "Equal Opportunity Difference"]
-  thresholds:
-    statistical_parity_difference: 0.1
-    equal_opportunity_difference: 0.1
-
-causal_validation: false
-bias_mitigation: false
-
+  entities:
+  - PERSON
+  - email
+  - phone
+  - ssn
+  techniques:
+  - regex
+  - nlp
 weights:
-  bronze: 0.3
-  silver: 0.4
-  gold: 0.3
+  bronze: 0.3333
+  gold: 0.3334
+  silver: 0.3333
