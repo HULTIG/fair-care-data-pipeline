@@ -103,7 +103,11 @@ docker-compose exec ml python -m pace.orchestration.pipeline \
   --output results/compas_demo \
   --verbose
 
-# Native Python
+# Native Python (Ensure you are at the repository root)
+# 1. Install the package in editable mode so Python can find the 'pace' module
+pip install -e .
+
+# 2. Run the pipeline
 python -m pace.orchestration.pipeline \
   --dataset compas \
   --config experiments/configs/default.yaml \
@@ -200,31 +204,37 @@ docker-compose exec ml python experiments/scripts/runexperiment3.py \
 
 ### Experiment 4: Statistical Robustness
 
-Executes configurations across multiple random seeds to compute the mean and standard deviation of key metrics (AUC, EOD, DPD, PACE score).
+Executes configurations across multiple random seeds to compute the mean and standard deviation of key metrics (AUC, EOD, DPD, PACE score) across all datasets.
 
 ```bash
-docker-compose exec ml python experiments/scripts/runexperiment4_robustness.py \
-  --dataset compas \
-  --configs baseline,configa,configb \
-  --seeds 42,43,44,45,46 \
-  --output results/exp4_robustness.json
+for ds in compas adult german nij; do
+  echo "Running Robustness for $ds..."
+  docker-compose exec ml python experiments/scripts/runexperiment4_robustness.py \
+    --dataset $ds \
+    --configs baseline,configa,configb \
+    --seeds 42,43,44,45,46 \
+    --output results/exp4_robustness_${ds}.json
+done
 ```
 
-**Output**: `results/exp4_robustness.json` with aggregated means and standard deviations.
+**Output**: Multiple `results/exp4_robustness_{dataset}.json` files with aggregated means and standard deviations.
 
 ### Experiment 5: Hyperparameter Sensitivity
 
-Varies the differential privacy budget ($\epsilon$) and $k$-anonymity threshold to map out the utility-privacy-fairness trade-off surface.
+Varies the differential privacy budget ($\epsilon$) and $k$-anonymity threshold to map out the utility-privacy-fairness trade-off surface across all datasets.
 
 ```bash
-docker-compose exec ml python experiments/scripts/runexperiment5_sensitivity.py \
-  --dataset compas \
-  --epsilons 0.1,1.0,5.0 \
-  --ks 2,5,10 \
-  --output results/exp5_sensitivity.json
+for ds in compas adult german nij; do
+  echo "Running Sensitivity for $ds..."
+  docker-compose exec ml python experiments/scripts/runexperiment5_sensitivity.py \
+    --dataset $ds \
+    --epsilons 0.1,1.0,5.0 \
+    --ks 2,5,10 \
+    --output results/exp5_sensitivity_${ds}.json
+done
 ```
 
-**Output**: `results/exp5_sensitivity.json` with metric variations across parameter grids.
+**Output**: Multiple `results/exp5_sensitivity_{dataset}.json` files with metric variations across parameter grids.
 
 ### Aggregate Results and Generate Figures
 
