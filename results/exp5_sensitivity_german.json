@@ -1,0 +1,92 @@
+[
+    {
+        "dataset": "german",
+        "epsilon": 0.1,
+        "k": 2,
+        "fc_score": 0.9484172846364162,
+        "utility": 0.8707358515226767,
+        "privacy_risk": 0.14285714285714285,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "german",
+        "epsilon": 0.1,
+        "k": 5,
+        "fc_score": 0.9484172846364162,
+        "utility": 0.8707358515226767,
+        "privacy_risk": 0.14285714285714285,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "german",
+        "epsilon": 0.1,
+        "k": 10,
+        "fc_score": 0.9517332727272727,
+        "utility": 0.8954597438243366,
+        "privacy_risk": 0.047619047619047616,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "german",
+        "epsilon": 1.0,
+        "k": 2,
+        "fc_score": 0.9334187846364161,
+        "utility": 0.8707358515226767,
+        "privacy_risk": 0.14285714285714285,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "german",
+        "epsilon": 1.0,
+        "k": 5,
+        "fc_score": 0.9334187846364161,
+        "utility": 0.8707358515226767,
+        "privacy_risk": 0.14285714285714285,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "german",
+        "epsilon": 1.0,
+        "k": 10,
+        "fc_score": 0.9367347727272726,
+        "utility": 0.8954597438243366,
+        "privacy_risk": 0.047619047619047616,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "german",
+        "epsilon": 5.0,
+        "k": 2,
+        "fc_score": 0.8667587846364162,
+        "utility": 0.8707358515226767,
+        "privacy_risk": 0.14285714285714285,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "german",
+        "epsilon": 5.0,
+        "k": 5,
+        "fc_score": 0.8667587846364162,
+        "utility": 0.8707358515226767,
+        "privacy_risk": 0.14285714285714285,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "german",
+        "epsilon": 5.0,
+        "k": 10,
+        "fc_score": 0.8700747727272726,
+        "utility": 0.8954597438243366,
+        "privacy_risk": 0.047619047619047616,
+        "dpd": 0.0,
+        "locked": false
+    }
+]

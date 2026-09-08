@@ -1,0 +1,92 @@
+[
+    {
+        "dataset": "nij",
+        "epsilon": 0.1,
+        "k": 2,
+        "fc_score": 0.8165620747140789,
+        "utility": 0.9385724730929595,
+        "privacy_risk": 0.25,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "nij",
+        "epsilon": 0.1,
+        "k": 5,
+        "fc_score": 0.8165620747140789,
+        "utility": 0.9385724730929595,
+        "privacy_risk": 0.1,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "nij",
+        "epsilon": 0.1,
+        "k": 10,
+        "fc_score": 0.8165620747140789,
+        "utility": 0.9385724730929595,
+        "privacy_risk": 0.1,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "nij",
+        "epsilon": 1.0,
+        "k": 2,
+        "fc_score": 0.801563574714079,
+        "utility": 0.9385724730929595,
+        "privacy_risk": 0.25,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "nij",
+        "epsilon": 1.0,
+        "k": 5,
+        "fc_score": 0.801563574714079,
+        "utility": 0.9385724730929595,
+        "privacy_risk": 0.1,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "nij",
+        "epsilon": 1.0,
+        "k": 10,
+        "fc_score": 0.801563574714079,
+        "utility": 0.9385724730929595,
+        "privacy_risk": 0.1,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "nij",
+        "epsilon": 5.0,
+        "k": 2,
+        "fc_score": 0.7349035747140791,
+        "utility": 0.9385724730929595,
+        "privacy_risk": 0.25,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "nij",
+        "epsilon": 5.0,
+        "k": 5,
+        "fc_score": 0.7349035747140791,
+        "utility": 0.9385724730929595,
+        "privacy_risk": 0.1,
+        "dpd": 0.0,
+        "locked": false
+    },
+    {
+        "dataset": "nij",
+        "epsilon": 5.0,
+        "k": 10,
+        "fc_score": 0.7349035747140791,
+        "utility": 0.9385724730929595,
+        "privacy_risk": 0.1,
+        "dpd": 0.0,
+        "locked": false
+    }
+]

@@ -1,0 +1,41 @@
+[
+    {
+        "dataset": "adult",
+        "config": "baseline",
+        "fc_score_mean": 0.7911515431413094,
+        "fc_score_std": 0.0,
+        "utility_mean": 1.0,
+        "utility_std": 0.0,
+        "dpd_mean": 0.0,
+        "dpd_std": 0.0,
+        "runtime_mean": 19.821017217636108,
+        "runtime_std": 2.9271841662827702,
+        "seeds_successful": 5
+    },
+    {
+        "dataset": "adult",
+        "config": "configa",
+        "fc_score_mean": 0.949701782371472,
+        "fc_score_std": 0.0,
+        "utility_mean": 1.0687962495407881,
+        "utility_std": 0.0,
+        "dpd_mean": 0.0,
+        "dpd_std": 0.0,
+        "runtime_mean": 16.707731771469117,
+        "runtime_std": 0.16866422553339508,
+        "seeds_successful": 5
+    },
+    {
+        "dataset": "adult",
+        "config": "configb",
+        "fc_score_mean": 0.9488110209609417,
+        "fc_score_std": 0.0016674939060396343,
+        "utility_mean": 1.0616416280954994,
+        "utility_std": 0.013393359342920266,
+        "dpd_mean": 0.0,
+        "dpd_std": 0.0,
+        "runtime_mean": 21.634979486465454,
+        "runtime_std": 0.1350840507587528,
+        "seeds_successful": 5
+    }
+]
