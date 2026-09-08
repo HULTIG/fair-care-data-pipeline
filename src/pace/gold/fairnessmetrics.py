@@ -63,6 +63,29 @@ class FairnessMetrics:
                     classes = label_encoders[label_col].classes_
                     if str(favorable_label) in classes:
                         favorable_label = int(label_encoders[label_col].transform([str(favorable_label)])[0])
+                else:
+                    # Label column is already numeric (e.g. german credit_risk {1, 2}).
+                    # Coerce the config value to the observed dtype so it matches.
+                    observed_dtype = pdf[label_col].dtype
+                    try:
+                        if str(observed_dtype) == "bool":
+                            favorable_label = str(favorable_label).lower() in ("true", "1")
+                        else:
+                            favorable_label = observed_dtype.type(favorable_label)
+                    except (ValueError, TypeError):
+                        pass
+
+                # Derive the unfavorable label from OBSERVED values instead of
+                # assuming {0, 1} (breaks for e.g. german labels {1, 2}).
+                observed_labels = sorted(pdf[label_col].unique().tolist())
+                others = [v for v in observed_labels if v != favorable_label]
+                if len(observed_labels) == 2 and len(others) == 1:
+                    unfavorable_label = others[0]
+                else:
+                    raise ValueError(
+                        f"Expected binary labels with favorable={favorable_label!r}, "
+                        f"observed {observed_labels}"
+                    )
                 
                 # Handle privileged group encoding
                 priv_group_encoded = priv_group.copy()
@@ -82,7 +105,7 @@ class FairnessMetrics:
                 
                 dataset = BinaryLabelDataset(
                     favorable_label=favorable_label,
-                    unfavorable_label=0 if favorable_label == 1 else 1, # Simple assumption for binary
+                    unfavorable_label=unfavorable_label,
                     df=pdf,
                     label_names=[label_col],
                     protected_attribute_names=[prot_attr]

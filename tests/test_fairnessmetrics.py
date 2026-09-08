@@ -175,7 +175,7 @@ def test_error_key_on_failure(spark):
     data = [(None, None)]
     pdf = pd.DataFrame(data, columns=["protected_attr", "label"])
     invalid_df = spark.createDataFrame(pdf, schema="protected_attr STRING, label INT")
-    
+
     config = {
         "protected_attribute": "protected_attr",
         "label_column": "label",
@@ -185,6 +185,64 @@ def test_error_key_on_failure(spark):
     }
     metrics = FairnessMetrics(config)
     report = metrics.calculate(invalid_df)
-    
+
     # Should return dict, possibly with error key
     assert isinstance(report, dict)
+
+
+def _adult_style_df(spark):
+    """Adult-style data: string labels with leading whitespace (raw CSV form)."""
+    data = []
+    for i in range(100):
+        data.append(("Male" if i % 2 == 0 else "Female", " >50K" if i < 40 else " <=50K"))
+    pdf = pd.DataFrame(data, columns=["sex", "income"])
+    return spark.createDataFrame(pdf)
+
+
+def _adult_style_config():
+    return {
+        "protected_attribute": "sex",
+        "label_column": "income",
+        "privileged_groups": [{"sex": "Male"}],
+        "unprivileged_groups": [{"sex": "Female"}],
+        "favorable_label": ">50K",
+    }
+
+
+def test_string_labels_with_whitespace(spark):
+    """Regression: adult-style string labels (' >50K') must not hit the 'error' fallback."""
+    metrics = FairnessMetrics(_adult_style_config())
+    report = metrics.calculate(_adult_style_df(spark))
+
+    assert "error" not in report
+    assert isinstance(report["statistical_parity_difference"], (int, float))
+    assert isinstance(report["disparate_impact"], (int, float))
+
+
+def _german_style_df(spark):
+    """German-style data: numeric labels {1, 2} instead of {0, 1}."""
+    data = []
+    for i in range(100):
+        data.append(("A91" if i % 2 == 0 else "A92", 1 if i < 50 else 2))
+    pdf = pd.DataFrame(data, columns=["personal_status_sex", "credit_risk"])
+    return spark.createDataFrame(pdf)
+
+
+def _german_style_config():
+    return {
+        "protected_attribute": "personal_status_sex",
+        "label_column": "credit_risk",
+        "privileged_groups": [{"personal_status_sex": "A91"}],
+        "unprivileged_groups": [{"personal_status_sex": "A92"}],
+        "favorable_label": 1,
+    }
+
+
+def test_non_binary_zero_one_labels(spark):
+    """Regression: german-style {1, 2} labels must not hit the 'error' fallback."""
+    metrics = FairnessMetrics(_german_style_config())
+    report = metrics.calculate(_german_style_df(spark))
+
+    assert "error" not in report
+    assert isinstance(report["statistical_parity_difference"], (int, float))
+    assert isinstance(report["disparate_impact"], (int, float))

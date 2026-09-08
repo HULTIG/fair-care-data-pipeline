@@ -64,15 +64,35 @@ class BiasMitigator:
             
             # Map Config values to Encoded values
             favorable_label = self.config.get("favorable_label", 1)
-            unfavorable_label = 0 if favorable_label == 1 else 1
-            
+
             # If label string encoded, map favorable label
             if label_col in label_encoders:
                 classes = label_encoders[label_col].classes_
                 if str(favorable_label) in classes:
                     favorable_label = int(label_encoders[label_col].transform([str(favorable_label)])[0])
-                    # Assuming binary, unfavorable is the other one
-                    unfavorable_label = 1 - favorable_label
+            else:
+                # Label column is already numeric (e.g. german credit_risk {1, 2}).
+                # Coerce the config value to the observed dtype so it matches.
+                observed_dtype = pdf[label_col].dtype
+                try:
+                    if str(observed_dtype) == "bool":
+                        favorable_label = str(favorable_label).lower() in ("true", "1")
+                    else:
+                        favorable_label = observed_dtype.type(favorable_label)
+                except (ValueError, TypeError):
+                    pass
+
+            # Derive the unfavorable label from OBSERVED values instead of
+            # assuming {0, 1} (breaks for e.g. german labels {1, 2}).
+            observed_labels = sorted(pdf[label_col].unique().tolist())
+            others = [v for v in observed_labels if v != favorable_label]
+            if len(observed_labels) == 2 and len(others) == 1:
+                unfavorable_label = others[0]
+            else:
+                raise ValueError(
+                    f"Expected binary labels with favorable={favorable_label!r}, "
+                    f"observed {observed_labels}"
+                )
             
             # Handle privileged group encoding if needed
             # AIF360 group dict format: [{'sex': 1}]
@@ -93,11 +113,7 @@ class BiasMitigator:
                 label_names=[label_col],
                 protected_attribute_names=[prot_attr]
             )
-            
-            RW = Reweighing(
-                unprivileged_groups=[unpriv_group], # Note: this logic needs update for encoding too
-                privileged_groups=[priv_group_encoded]
-            )
+
             # Fix unprivileged group similarly
             unpriv_group_encoded = unpriv_group.copy()
             for k, v in unpriv_group.items():
@@ -106,16 +122,23 @@ class BiasMitigator:
                         unpriv_group_encoded[k] = int(label_encoders[k].transform([str(v)])[0])
                     except:
                         pass
-            
+
             RW = Reweighing(
                 unprivileged_groups=[unpriv_group_encoded],
                 privileged_groups=[priv_group_encoded]
             )
-            
+
             dataset_transf = RW.fit_transform(dataset)
-            
+
             # Add weights back to dataframe
             pdf['instance_weights'] = dataset_transf.instance_weights
+
+            # Restore original (pre-encoding) values: downstream stages
+            # (e.g. fairness) map config labels onto this frame, so returning
+            # label-encoded ints would break that mapping (adult '>50K').
+            for col, le in label_encoders.items():
+                if col in pdf.columns:
+                    pdf[col] = le.inverse_transform(pdf[col].astype(int))
             
             print("Bias mitigation complete. Weights added.")
             

@@ -1,22 +1,22 @@
 {
-  "score": 0.9501840549144448,
+  "score": 0.8856125746740254,
   "status": "EXCELLENT",
   "components": {
     "bronze": 1.0,
     "silver": 0.95,
-    "gold": 0.9005670513330681
+    "gold": 0.706891345752926
   },
   "locked": false,
   "fairness": {
-    "error": "could not convert string to float: '>50K'",
-    "statistical_parity_difference": 0.0,
-    "disparate_impact": 1.0
+    "statistical_parity_difference": -0.19627598779361352,
+    "disparate_impact": 0.3580225496813511,
+    "equal_opportunity_difference": -0.06539773420312817
   },
   "utility": {
-    "correlation_distance": 0.03341646786618503,
+    "correlation_distance": 0.03985351334232498,
     "original_auc": 0.7468598868704821,
-    "anonymized_auc": 0.8011341026661362,
-    "utility_retention": 1.0726698765722655
+    "anonymized_auc": 0.8063346670930792,
+    "utility_retention": 1.0796331162888
   },
   "privacy": {
     "risk": 0.1,
@@ -27,9 +27,9 @@
     "epsilon": 1.0
   },
   "runtimes": {
-    "bronze": 1.4749791622161865,
-    "silver": 7.643378019332886,
-    "gold": 10.432973861694336,
-    "total": 19.55134105682373
+    "bronze": 2.1102516651153564,
+    "silver": 8.381370067596436,
+    "gold": 12.64893388748169,
+    "total": 23.14056706428528
   }
 }

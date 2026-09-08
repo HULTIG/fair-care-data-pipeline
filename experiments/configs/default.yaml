@@ -104,7 +104,7 @@ datasets:
     gold_path: data/processed/gold/nij
     label_column: Recidivism_Arrest_Year1
     privileged_groups:
-    - Race: White
+    - Race: WHITE
     protected_attribute: Race
     quasi_identifiers:
     - Age_at_Release
@@ -117,7 +117,7 @@ datasets:
     silver_path: data/processed/silver/nij
     source_url: https://nij.ojp.gov/sites/g/files/xyckuh171/files/media/document/nij-challenge2021_full_dataset.csv
     unprivileged_groups:
-    - Race: Black
+    - Race: BLACK
 fairness:
   metrics:
   - Statistical Parity Difference
