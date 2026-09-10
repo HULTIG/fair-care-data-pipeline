@@ -158,6 +158,7 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     
     silver_metrics = SilverMetrics()
     ss = silver_metrics.calculate({
+        "technique": anon_config.get("technique"),
         "epsilon": anon_config.get("epsilon"),
         "k": anon_config.get("k"),
         "technique": silver_meta.get("technique", anon_config.get("technique", "kanonymity")),
@@ -224,6 +225,9 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         "mitigation": getattr(bias_mitigator, "last_report", {}),
         "test_record_count": int(len(test_pdf)),
     })
+    if "error" in fairness_report or fairness_report.get("statistical_parity_difference") is None:
+        spark.stop()
+        raise ValueError(f"Fairness evaluation failed; run is invalid: {fairness_report}")
     
     gold_metrics = GoldMetrics()
     sg = gold_metrics.calculate({
@@ -258,6 +262,7 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     else:
         if verbose: print("\n[CONTROL PLANE ACTION] Dataset Approved for Promotion.")
         final_score['locked'] = False
+        gold_df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(dataset_config['gold_path'])
         
     time_total = time.time() - start_total
     
