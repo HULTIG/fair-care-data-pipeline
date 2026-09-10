@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+import pandas as pd
 
 from pace.evaluation.contract import EvaluationContract, EvaluationError
 
@@ -51,3 +52,16 @@ def test_duplicate_identity_is_rejected():
             protected_attribute="group", privileged_group={"group": "A"},
             unprivileged_group={"group": "B"}, favorable_label=1,
         )
+
+
+def test_constant_predictions_keep_balanced_accuracy_defined():
+    frame = pd.DataFrame({
+        "_record_id": range(4), "y": [0, 1, 0, 1],
+        "prediction": [0, 0, 0, 0], "group": ["A", "A", "B", "B"],
+    })
+    report = EvaluationContract(config()).evaluate(
+        frame, outcome_column="y", prediction_column="prediction",
+        protected_attribute="group", privileged_group={"group": "A"},
+        unprivileged_group={"group": "B"}, favorable_label=1,
+    )
+    assert report["balanced_accuracy"] == pytest.approx(0.5)

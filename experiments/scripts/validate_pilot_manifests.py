@@ -20,6 +20,37 @@ def summary_for(manifest_path: Path, run: dict) -> Path:
     return candidates[0]
 
 
+def validate_summary(summary: dict, manifest_path: Path) -> dict:
+    split = summary.get("split", {})
+    fit = summary.get("fit", {})
+    if not split.get("test_membership_sha256") or not split.get("train_membership_sha256"):
+        raise ValueError(f"run lacks split membership hashes: {summary.get('run_id')}")
+    if split.get("train_count", 0) + split.get("test_count", 0) != split.get("eligible_count"):
+        raise ValueError(f"split counts do not reconcile: {summary.get('run_id')}")
+    if summary.get("utility", {}).get("evaluation_population") != split.get("test_count"):
+        raise ValueError(f"evaluation population does not match test split: {summary.get('run_id')}")
+    prediction_path = Path(summary.get("prediction_artifact", ""))
+    if not prediction_path.is_absolute():
+        prediction_path = manifest_path.parent / prediction_path
+    if not prediction_path.exists():
+        raise ValueError(f"missing held-out prediction artifact: {prediction_path}")
+    ids = [json.loads(line)["_record_id"] for line in prediction_path.read_text().splitlines() if line.strip()]
+    if len(ids) != len(set(ids)) or len(ids) != split.get("test_count"):
+        raise ValueError(f"held-out prediction identities do not match test split: {summary.get('run_id')}")
+    if fit.get("train_record_count") != split.get("train_count"):
+        raise ValueError(f"fit population does not match train split: {summary.get('run_id')}")
+    mitigation = summary.get("mitigation", {})
+    if mitigation.get("executed"):
+        if mitigation.get("weights_consumed") is not True:
+            raise ValueError(f"mitigation weights were not consumed: {summary.get('run_id')}")
+        if mitigation.get("weight_count") != fit.get("train_record_count"):
+            raise ValueError(f"mitigation weight count does not match training rows: {summary.get('run_id')}")
+    provenance = summary.get("provenance", {})
+    if not provenance.get("resolved_config_sha256") or not provenance.get("input_data_sha256"):
+        raise ValueError(f"run lacks source/config checksums: {summary.get('run_id')}")
+    return {"test_hash": split["test_membership_sha256"], "train_hash": split["train_membership_sha256"]}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifests", required=True, help="Comma-separated manifest.json paths")
@@ -32,6 +63,7 @@ def main():
                 for dataset in args.datasets.split(",") if dataset.strip()
                 for config in args.configs.split(",") if config.strip()}
     successful = {}
+    split_hashes = {}
     source_manifests = []
     for raw_path in args.manifests.split(","):
         path = Path(raw_path).resolve()
@@ -49,6 +81,10 @@ def main():
                 raise ValueError(f"summary/run ID mismatch for {run.get('run_id')}")
             if summary.get("evidence_valid") is not True:
                 raise ValueError(f"run lacks valid evidence: {run.get('run_id')}")
+            hashes = validate_summary(summary, path)
+            previous = split_hashes.setdefault(key[0], hashes)
+            if previous != hashes:
+                raise ValueError(f"paired split membership mismatch for dataset {key[0]}")
             successful[key] = {
                 "dataset": key[0],
                 "config": key[1],

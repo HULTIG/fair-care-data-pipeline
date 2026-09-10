@@ -6,13 +6,37 @@ from diffprivlib.mechanisms import Laplace
 class AnonymizationEngine:
     def __init__(self, config: dict):
         self.config = config
+        self._fit_state = None
 
     def anonymize(self, df: DataFrame, spark: SparkSession) -> DataFrame:
-        """
-        Anonymizes the input DataFrame based on configuration.
-        """
+        return self.fit_transform(df, spark)
+
+    def fit_transform(self, df: DataFrame, spark: SparkSession):
+        """Fit transformations on ``df`` and enforce release postconditions."""
+        self.fit(df.toPandas())
+        return self.transform(df, spark, enforce_postconditions=True)
+
+    def fit(self, pdf: pd.DataFrame):
+        """Fit all learned generalization/noise state using training rows only."""
+        self._validate(pdf)
+        bins = {}
+        for name in self.config.get("quasi_identifiers", []):
+            if name in pdf.columns and pd.api.types.is_numeric_dtype(pdf[name]):
+                values = pd.to_numeric(pdf[name], errors="coerce").dropna()
+                if values.nunique() > 1:
+                    edges = np.unique(np.linspace(float(values.min()), float(values.max()), 11))
+                    if len(edges) > 1:
+                        bins[name] = edges.tolist()
+        self._fit_state = {"numeric_bins": bins, "fit_record_ids": sorted(map(str, pdf.get("_record_id", [])))}
+        return self
+
+    def transform(self, df: DataFrame, spark: SparkSession, *, enforce_postconditions: bool):
+        """Apply fitted state; test rows never undergo training-release suppression."""
+        if self._fit_state is None:
+            raise ValueError("anonymization transform requires fit() on training rows first")
         print("Running Anonymization...")
-        pdf = df.toPandas()
+        pdf = df.toPandas().copy()
+        self._validate(pdf)
         
         technique = self.config.get("technique", "kanonymity").lower()
         supported = {"none", "kanonymity", "ldiversity", "tcloseness", "numeric_noise", "differentialprivacy"}
@@ -38,11 +62,11 @@ class AnonymizationEngine:
             raise ValueError("numeric-noise epsilon must be positive")
         
         if technique == "kanonymity":
-            pdf = self._apply_kanonymity(pdf)
+            pdf = self._apply_kanonymity(pdf, enforce_postconditions=enforce_postconditions)
         elif technique == "ldiversity":
-            pdf = self._apply_ldiversity(pdf)
+            pdf = self._apply_ldiversity(pdf, enforce_postconditions=enforce_postconditions)
         elif technique == "tcloseness":
-            pdf = self._apply_tcloseness(pdf)
+            pdf = self._apply_tcloseness(pdf, enforce_postconditions=enforce_postconditions)
         elif technique in {"numeric_noise", "differentialprivacy"}:
             pdf = self._apply_differential_privacy(pdf)
             
@@ -51,11 +75,23 @@ class AnonymizationEngine:
         
         # 1. Drop columns that are entirely NaN/None
         pdf = pdf.dropna(axis="columns", how="all")
+        # Bronze provenance columns are retained in audit records, but are not
+        # part of the transformed release. Keeping all-null timestamp metadata
+        # here can create an empty Parquet struct in Spark.
+        metadata_columns = [
+            name for name in pdf.columns
+            if name.startswith("_") and name != "_record_id"
+        ]
+        pdf = pdf.drop(columns=metadata_columns, errors="ignore")
         
         # 2. Force object columns to string to avoid inference errors for mixed types
         for col in pdf.columns:
             if pdf[col].dtype == "object":
                 pdf[col] = pdf[col].astype(str)
+            else:
+                pdf[col] = pdf[col].map(
+                    lambda value: value.item() if isinstance(value, np.generic) else value
+                )
                 
         # Calculate privacy metrics
         metadata = {
@@ -72,7 +108,62 @@ class AnonymizationEngine:
         if pdf.empty:
             raise ValueError(f"{technique} produced an empty release")
 
-        return spark.createDataFrame(pdf), metadata
+        records = []
+        for record in pdf.to_dict(orient="records"):
+            clean = {}
+            for name, value in record.items():
+                if pd.isna(value):
+                    clean[name] = None
+                elif isinstance(value, np.generic):
+                    clean[name] = value.item()
+                else:
+                    clean[name] = value
+            records.append(clean)
+        if records:
+            all_null = [
+                name for name in records[0]
+                if all(record.get(name) is None for record in records)
+            ]
+            if all_null:
+                records = [{name: value for name, value in record.items() if name not in all_null}
+                           for record in records]
+        return spark.createDataFrame(records), metadata
+
+    def _validate(self, pdf: pd.DataFrame):
+        technique = self.config.get("technique", "kanonymity").lower()
+        supported = {"none", "kanonymity", "ldiversity", "tcloseness", "numeric_noise", "differentialprivacy"}
+        if technique not in supported:
+            raise ValueError(f"unsupported anonymization technique: {technique}")
+        qis = self.config.get("quasi_identifiers", [])
+        missing_qis = sorted(set(qis).difference(pdf.columns))
+        if technique in {"kanonymity", "ldiversity", "tcloseness"} and missing_qis:
+            raise ValueError(f"configured quasi-identifiers are missing: {missing_qis}")
+        if technique in {"kanonymity", "ldiversity", "tcloseness"} and self.config.get("k", 0) < 1:
+            raise ValueError("k must be a positive integer")
+        sensitive = self.config.get("sensitive_attributes", [])
+        if technique in {"ldiversity", "tcloseness"} and not sensitive:
+            raise ValueError(f"{technique} requires at least one sensitive attribute")
+        missing_sensitive = sorted(set(sensitive).difference(pdf.columns))
+        if technique in {"ldiversity", "tcloseness"} and missing_sensitive:
+            raise ValueError(f"configured sensitive attributes are missing: {missing_sensitive}")
+        if technique == "ldiversity" and self.config.get("l", 0) < 1:
+            raise ValueError("l-diversity threshold l must be positive")
+        if technique == "tcloseness" and not 0 <= self.config.get("t", -1) <= 1:
+            raise ValueError("t-closeness threshold t must be between zero and one")
+        if technique in {"numeric_noise", "differentialprivacy"} and self.config.get("epsilon", 0) <= 0:
+            raise ValueError("numeric-noise epsilon must be positive")
+
+    def _generalize_qis(self, df: pd.DataFrame) -> pd.DataFrame:
+        for col in self.config.get("quasi_identifiers", []):
+            if col not in df.columns:
+                continue
+            if col in self._fit_state.get("numeric_bins", {}):
+                edges = self._fit_state["numeric_bins"][col]
+                df[col] = pd.cut(pd.to_numeric(df[col], errors="coerce"), bins=edges,
+                                 include_lowest=True, duplicates="drop").astype(str)
+            elif not pd.api.types.is_numeric_dtype(df[col]):
+                df[col] = df[col].astype(str).apply(lambda x: x[:-3] + "***" if len(x) > 3 else "*")
+        return df
 
     def _calculate_risk(self, df: pd.DataFrame, technique: str) -> float:
         """
@@ -96,7 +187,7 @@ class AnonymizationEngine:
         # Risk is probability of re-identification for worst-case record
         return 1.0 / max(1, min_group_size)
 
-    def _apply_kanonymity(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _apply_kanonymity(self, df: pd.DataFrame, enforce_postconditions=True) -> pd.DataFrame:
         """
         Applies basic k-anonymity by generalizing quasi-identifiers.
         This is a simplified implementation.
@@ -107,21 +198,10 @@ class AnonymizationEngine:
         print(f"Applying k-anonymity (k={k}) on {qis}...")
         
         # Simple generalization: binning numeric values, masking strings
-        for col in qis:
-            if col not in df.columns: continue
-            
-            if pd.api.types.is_numeric_dtype(df[col]):
-                # Binning
-                try:
-                    df[col] = pd.cut(df[col], bins=10).astype(str)
-                except:
-                    pass
-            else:
-                # Masking last characters
-                df[col] = df[col].astype(str).apply(lambda x: x[:-3] + "***" if len(x) > 3 else "*")
+        df = self._generalize_qis(df)
         
         # Suppression: Remove groups with size < k
-        if qis:
+        if qis and enforce_postconditions:
             groups = df.groupby(qis)
             df = groups.filter(lambda x: len(x) >= k)
             
@@ -146,7 +226,8 @@ class AnonymizationEngine:
         if protected_attr:
             exclude_cols.add(protected_attr)
         
-        mech = Laplace(epsilon=epsilon, sensitivity=1)
+        seed = int(self.config.get("seed", 42))
+        rng = np.random.default_rng(seed)
         
         for col in df.columns:
             # Skip internal columns, label, and protected attribute
@@ -157,11 +238,11 @@ class AnonymizationEngine:
                 continue
                 
             if pd.api.types.is_numeric_dtype(df[col]):
-                df[col] = df[col].apply(mech.randomise)
+                df[col] = df[col].apply(lambda value: value + rng.laplace(0.0, 1.0 / epsilon) if pd.notna(value) else value)
                 
         return df
     
-    def _apply_ldiversity(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _apply_ldiversity(self, df: pd.DataFrame, enforce_postconditions=True) -> pd.DataFrame:
         """
         Applies l-diversity: ensures each equivalence class has at least l distinct values
         for sensitive attributes.
@@ -174,20 +255,10 @@ class AnonymizationEngine:
         print(f"Applying l-diversity (k={k}, l={l}) on QIs={qis}, sensitive={sensitive_attrs}...")
         
         # First apply k-anonymity generalization
-        for col in qis:
-            if col not in df.columns: 
-                continue
-            
-            if pd.api.types.is_numeric_dtype(df[col]):
-                try:
-                    df[col] = pd.cut(df[col], bins=10).astype(str)
-                except:
-                    pass
-            else:
-                df[col] = df[col].astype(str).apply(lambda x: x[:-3] + "***" if len(x) > 3 else "*")
+        df = self._generalize_qis(df)
         
         # Suppression based on both k-anonymity and l-diversity
-        if qis and sensitive_attrs:
+        if qis and sensitive_attrs and enforce_postconditions:
             groups = df.groupby(qis)
             
             def check_ldiversity(group):
@@ -207,7 +278,7 @@ class AnonymizationEngine:
         print(f"Rows remaining after l-diversity suppression: {len(df)}")
         return df
     
-    def _apply_tcloseness(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _apply_tcloseness(self, df: pd.DataFrame, enforce_postconditions=True) -> pd.DataFrame:
         """
         Applies t-closeness: ensures the distribution of sensitive attributes in each
         equivalence class is within distance t of the overall distribution.
@@ -220,17 +291,7 @@ class AnonymizationEngine:
         print(f"Applying t-closeness (k={k}, t={t}) on QIs={qis}, sensitive={sensitive_attrs}...")
         
         # First apply k-anonymity generalization
-        for col in qis:
-            if col not in df.columns:
-                continue
-            
-            if pd.api.types.is_numeric_dtype(df[col]):
-                try:
-                    df[col] = pd.cut(df[col], bins=10).astype(str)
-                except:
-                    pass
-            else:
-                df[col] = df[col].astype(str).apply(lambda x: x[:-3] + "***" if len(x) > 3 else "*")
+        df = self._generalize_qis(df)
         
         # Calculate global distributions for sensitive attributes
         global_dists = {}
@@ -239,7 +300,7 @@ class AnonymizationEngine:
                 global_dists[attr] = df[attr].value_counts(normalize=True)
         
         # Suppression based on k-anonymity and t-closeness
-        if qis and sensitive_attrs and global_dists:
+        if qis and sensitive_attrs and global_dists and enforce_postconditions:
             groups = df.groupby(qis)
             
             def check_tcloseness(group):

@@ -75,6 +75,7 @@ def main():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--config", default="configs/default.yaml")
     parser.add_argument("--output", required=True, help="Pilot output directory")
+    parser.add_argument("--artifact-root", default="data/processed/server-pilot", help="Root for processed layer artifacts")
     args = parser.parse_args()
 
     root = ROOT
@@ -110,7 +111,7 @@ def main():
             # Every treatment owns its storage paths. This prevents Delta
             # schema/state collisions when runs are executed sequentially or
             # concurrently on the server.
-            layer_root = Path("data") / "processed" / "server-pilot" / pilot_id / dataset / config_name
+            layer_root = Path(args.artifact_root) / pilot_id / dataset / config_name
             resolved["datasets"][dataset]["bronze_path"] = str(layer_root / "bronze")
             resolved["datasets"][dataset]["silver_path"] = str(layer_root / "silver")
             resolved["datasets"][dataset]["gold_path"] = str(layer_root / "gold")

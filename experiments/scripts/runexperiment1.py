@@ -33,6 +33,7 @@ def main():
     parser.add_argument("--output", required=True, help="Output CSV path")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--artifact-root", default="results/exp1")
     args = parser.parse_args()
 
     datasets = args.datasets.split(',')
@@ -78,12 +79,12 @@ def main():
                 # ISOLATION FIX: Update storage paths to be unique for this run
                 # This prevents schema conflicts between different configs (e.g. baseline vs validaded)
                 ds_config = merged_config['datasets'][dataset.strip()]
-                base_processed = "data/processed/exp1"
+                base_processed = os.path.join(args.artifact_root, "processed")
                 ds_config['bronze_path'] = f"{base_processed}/{config_name}/bronze/{dataset}"
                 ds_config['silver_path'] = f"{base_processed}/{config_name}/silver/{dataset}"
                 ds_config['gold_path'] = f"{base_processed}/{config_name}/gold/{dataset}"
                 
-                output_dir = f"results/exp1/{dataset}_{config_name}"
+                output_dir = os.path.join(args.artifact_root, "runs", f"{dataset}_{config_name}")
                 
                 # Run pipeline with MERGED config object
                 metrics = run_pipeline(
@@ -114,13 +115,17 @@ def main():
                 
             except Exception as e:
                 print(f"Error running {dataset} with {config_name}: {e}")
-                continue
+                results.append({
+                    'dataset': dataset.strip(), 'config': config_name.strip(),
+                    'status': 'failed', 'error': str(e), 'roc_auc': None,
+                })
     
     # Write results
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     with open(args.output, 'w', newline='') as f:
         if results:
-            writer = csv.DictWriter(f, fieldnames=results[0].keys())
+            fieldnames = list(dict.fromkeys(key for row in results for key in row))
+            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
             writer.writeheader()
             writer.writerows(results)
     

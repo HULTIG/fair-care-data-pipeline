@@ -6,6 +6,7 @@ from aif360.algorithms.preprocessing import Reweighing
 class BiasMitigator:
     def __init__(self, config: dict):
         self.config = config
+        self.last_report = {"executed": False, "weights_consumed": False}
 
     def mitigate(self, df: DataFrame, spark: SparkSession) -> DataFrame:
         """
@@ -22,6 +23,16 @@ class BiasMitigator:
         if not (prot_attr and label_col):
             print("Missing config for bias mitigation. Skipping.")
             return df
+        if "_record_id" not in pdf.columns:
+            # Direct callers may supply an in-memory fixture. Production
+            # ingestion supplies the source-stable ID before this point.
+            import hashlib
+            pdf["_record_id"] = [
+                hashlib.sha256(f"mitigation|{i}|{repr(tuple(row))}".encode()).hexdigest()
+                for i, row in enumerate(pdf.itertuples(index=False, name=None))
+            ]
+        if pdf["_record_id"].duplicated().any():
+            raise ValueError("reweighing requires unique stable training _record_id values")
 
         # Debug: Check columns
         print(f"BiasMitigation Input Columns: {pdf.columns.tolist()}")
@@ -132,6 +143,18 @@ class BiasMitigator:
 
             # Add weights back to dataframe
             pdf['instance_weights'] = dataset_transf.instance_weights
+            weights = pd.to_numeric(pdf['instance_weights'], errors='coerce')
+            if not np.isfinite(weights).all() or (weights < 0).any() or float(weights.sum()) <= 0:
+                raise ValueError("reweighing produced invalid training weights")
+            self.last_report = {
+                "executed": True,
+                "weights_consumed": False,
+                "weight_count": int(len(weights)),
+                "weight_min": float(weights.min()),
+                "weight_max": float(weights.max()),
+                "weight_sum": float(weights.sum()),
+                "record_ids": sorted(map(str, pdf["_record_id"])),
+            }
 
             # Restore original (pre-encoding) values: downstream stages
             # (e.g. fairness) map config labels onto this frame, so returning
@@ -151,4 +174,4 @@ class BiasMitigator:
             
         except Exception as e:
             print(f"Bias mitigation failed: {e}")
-            return df
+            raise

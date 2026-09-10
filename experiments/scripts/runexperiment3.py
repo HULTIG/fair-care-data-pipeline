@@ -28,6 +28,7 @@ def main():
     parser.add_argument("--output", required=True, help="Output CSV path")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--artifact-root", default="results/exp3")
     args = parser.parse_args()
 
     datasets = args.datasets.split(',')
@@ -53,7 +54,7 @@ def main():
             # Merge configs
             merged_config = nested_update(base_config.copy(), reg_config)
             
-            output_dir = f"results/exp3/{dataset}_{regulation}"
+            output_dir = os.path.join(args.artifact_root, "runs", f"{dataset}_{regulation}")
             
             try:
                 # Run pipeline with merged config
@@ -97,13 +98,17 @@ def main():
                 
             except Exception as e:
                 print(f"Error running {dataset} with {regulation}: {e}")
-                continue
+                results.append({
+                    'dataset': dataset.strip(), 'regulation': regulation.strip().upper(),
+                    'status': 'failed', 'error': str(e), 'compliant': False,
+                })
     
     # Write results
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     with open(args.output, 'w', newline='') as f:
         if results:
-            writer = csv.DictWriter(f, fieldnames=results[0].keys())
+            fieldnames = list(dict.fromkeys(key for row in results for key in row))
+            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
             writer.writeheader()
             writer.writerows(results)
     

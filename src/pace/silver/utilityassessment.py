@@ -1,9 +1,7 @@
 import pandas as pd
 import numpy as np
 from pyspark.sql import DataFrame
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import LabelEncoder
 
 class UtilityAssessment:
@@ -60,43 +58,74 @@ class UtilityAssessment:
         print(f"Utility Assessment complete: {report}")
         return report
 
-    def predict_held_out(self, df: DataFrame, seed: int = 42):
-        """Fit once on training rows and return predictions for held-out rows.
-
-        All downstream utility and fairness metrics must consume this returned
-        frame. Categorical encodings are learned from the training partition.
-        """
-        pdf = df.toPandas().copy()
+    def predict_held_out(self, train_df: DataFrame, test_df: DataFrame, seed: int = 42):
+        """Fit on the supplied training partition and predict the supplied test partition."""
+        train_pdf = train_df.toPandas().copy()
+        test_pdf = test_df.toPandas().copy()
         label_col = self.config.get("label_column")
-        if label_col not in pdf.columns:
+        protected = self.config.get("protected_attribute")
+        if label_col not in train_pdf.columns or label_col not in test_pdf.columns:
             raise ValueError(f"missing outcome column {label_col!r}")
-        if "_record_id" not in pdf.columns:
-            pdf["_record_id"] = range(len(pdf))
-        pdf = pdf.dropna(subset=[label_col])
-        if pdf[label_col].nunique() < 2:
-            raise ValueError("held-out evaluation requires two outcome classes")
-        train_idx, test_idx = train_test_split(pdf.index, test_size=0.3, random_state=seed, stratify=pdf[label_col])
+        for frame_name, frame in (("training", train_pdf), ("test", test_pdf)):
+            if "_record_id" not in frame.columns:
+                raise ValueError(f"{frame_name} frame is missing _record_id")
+            if protected not in frame.columns:
+                raise ValueError(f"{frame_name} frame is missing protected attribute {protected!r}")
+        if train_pdf["_record_id"].duplicated().any() or test_pdf["_record_id"].duplicated().any():
+            raise ValueError("training or test frame contains duplicate _record_id values")
+        if set(train_pdf["_record_id"]).intersection(test_pdf["_record_id"]):
+            raise ValueError("training and test frames overlap by _record_id")
+        train_pdf = train_pdf.dropna(subset=[label_col])
+        test_pdf = test_pdf.dropna(subset=[label_col])
+        if train_pdf[label_col].nunique() < 2:
+            raise ValueError("training fit requires two outcome classes")
+        if test_pdf.empty:
+            raise ValueError("test evaluation requires at least one complete record")
         predictors = self.config.get("predictor_allowlist")
         if predictors:
-            predictors = [c for c in predictors if c in pdf.columns and c != label_col]
+            missing = sorted(set(predictors).difference(train_pdf.columns).union(set(predictors).difference(test_pdf.columns)))
+            if missing:
+                raise ValueError(f"required predictors are missing: {missing}")
+            predictors = [c for c in predictors if c != label_col]
         else:
-            predictors = [c for c in pdf.columns if c != label_col and not c.startswith("_")]
-        train = pdf.loc[train_idx, predictors].copy()
-        test = pdf.loc[test_idx, predictors].copy()
+            predictors = [c for c in train_pdf.columns if c != label_col and not c.startswith("_")]
+        predictors = [c for c in predictors if c != "instance_weights"]
+        train = train_pdf[predictors].copy()
+        test = test_pdf[predictors].copy()
         train = pd.get_dummies(train, dummy_na=True)
-        test = pd.get_dummies(test, dummy_na=True).reindex(columns=train.columns, fill_value=0)
+        test = pd.get_dummies(test, dummy_na=True)
+        train = train.loc[:, ~train.columns.duplicated()]
+        test = test.loc[:, ~test.columns.duplicated()].reindex(columns=train.columns, fill_value=0)
         train = train.apply(pd.to_numeric, errors="coerce").fillna(0)
         test = test.apply(pd.to_numeric, errors="coerce").fillna(0)
-        y_train = self._encode_labels(pdf.loc[train_idx, label_col], self.config.get("favorable_label", 1))
-        y_test = self._encode_labels(pdf.loc[test_idx, label_col], self.config.get("favorable_label", 1))
+        favorable = self.config.get("favorable_label", 1)
+        y_train = self._encode_labels(train_pdf[label_col], favorable)
+        weights = None
+        if "instance_weights" in train_pdf.columns:
+            weights = pd.to_numeric(train_pdf["instance_weights"], errors="coerce").to_numpy()
+            if not np.isfinite(weights).all() or (weights < 0).any() or weights.sum() <= 0:
+                raise ValueError("training weights must be finite, nonnegative, and have positive total mass")
         model = LogisticRegression(max_iter=500, random_state=seed)
-        model.fit(train, y_train)
+        model.fit(train, y_train, sample_weight=weights)
         scores = model.predict_proba(test)[:, 1]
         predictions = (scores >= 0.5).astype(int)
-        held_out = pdf.loc[test_idx, ["_record_id", label_col] + [self.config["protected_attribute"]]].copy()
-        favorable = self.config.get("favorable_label", 1)
-        held_out["prediction"] = [favorable if value else next(v for v in pdf[label_col].unique() if v != favorable) for value in predictions]
+        observed = list(train_pdf[label_col].dropna().unique())
+        unfavorable = next((value for value in observed if value != favorable), None)
+        if unfavorable is None:
+            raise ValueError("training labels do not contain an unfavorable outcome")
+        held_out = test_pdf[["_record_id", label_col, protected]].copy()
+        held_out["prediction"] = [favorable if value else unfavorable for value in predictions]
         held_out["prediction_score"] = scores
+        self.last_fit = {
+            "train_record_count": int(len(train_pdf)),
+            "test_record_count": int(len(test_pdf)),
+            "predictors": predictors,
+            "weights_consumed": weights is not None,
+            "weight_count": int(len(weights)) if weights is not None else 0,
+            "weight_min": float(weights.min()) if weights is not None else None,
+            "weight_max": float(weights.max()) if weights is not None else None,
+            "weight_sum": float(weights.sum()) if weights is not None else None,
+        }
         return held_out.reset_index(drop=True)
 
     @staticmethod

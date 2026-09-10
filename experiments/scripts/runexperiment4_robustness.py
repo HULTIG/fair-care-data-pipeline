@@ -51,6 +51,7 @@ def main():
         print(f"{'='*60}\n")
         
         runs = []
+        failures = []
         for seed in seeds:
             print(f"--- SEED {seed} ---")
             try:
@@ -82,12 +83,15 @@ def main():
                 runs.append(metrics)
             except Exception as e:
                 print(f"Error on seed {seed}: {e}")
+                failures.append({'seed': seed, 'status': 'failed', 'error': str(e)})
                 
         if runs:
             # Calculate means and std
             pace_scores = [r.get('score', 0) for r in runs]
             utils = [v if v is not None else np.nan for v in (r.get('utility', {}).get('roc_auc') for r in runs)]
             dpds = [v if v is not None else np.nan for v in (r.get('fairness', {}).get('statistical_parity_difference') for r in runs)]
+            eods = [v if v is not None else np.nan for v in (r.get('fairness', {}).get('equal_opportunity_difference') for r in runs)]
+            bals = [v if v is not None else np.nan for v in (r.get('utility', {}).get('balanced_accuracy') for r in runs)]
             
             # Runtime overhead (compare to naive ETL later)
             runtimes = [r.get('runtimes', {}).get('total', 0) for r in runs]
@@ -96,14 +100,25 @@ def main():
                 'dataset': dataset,
                 'config': config_name,
                 'fc_score_mean': np.mean(pace_scores),
-                'fc_score_std': np.std(pace_scores),
+                'fc_score_std': np.std(pace_scores, ddof=1) if len(pace_scores) > 1 else np.nan,
                 'roc_auc_mean': np.nanmean(utils),
-                'roc_auc_std': np.nanstd(utils),
+                'roc_auc_std': np.nanstd(utils, ddof=1) if np.isfinite(utils).sum() > 1 else np.nan,
                 'dpd_mean': np.nanmean(dpds),
-                'dpd_std': np.nanstd(dpds),
+                'dpd_std': np.nanstd(dpds, ddof=1) if np.isfinite(dpds).sum() > 1 else np.nan,
+                'balanced_accuracy_mean': np.nanmean(bals),
+                'balanced_accuracy_std': np.nanstd(bals, ddof=1) if np.isfinite(bals).sum() > 1 else np.nan,
+                'eod_mean': np.nanmean(eods),
+                'eod_std': np.nanstd(eods, ddof=1) if np.isfinite(eods).sum() > 1 else np.nan,
                 'runtime_mean': np.mean(runtimes),
-                'runtime_std': np.std(runtimes),
-                'seeds_successful': len(runs)
+                'runtime_std': np.std(runtimes, ddof=1) if len(runtimes) > 1 else np.nan,
+                'seeds_expected': len(seeds), 'seeds_successful': len(runs),
+                'seed_runs': [{'seed': r.get('seed'), 'run_id': r.get('run_id'),
+                               'roc_auc': r.get('utility', {}).get('roc_auc'),
+                               'balanced_accuracy': r.get('utility', {}).get('balanced_accuracy'),
+                               'dpd': r.get('fairness', {}).get('statistical_parity_difference'),
+                               'eod': r.get('fairness', {}).get('equal_opportunity_difference')}
+                              for r in runs],
+                'failures': failures,
             })
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)

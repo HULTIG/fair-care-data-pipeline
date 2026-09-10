@@ -98,11 +98,11 @@ class EvaluationContract:
             report["roc_auc"] = None
             report["roc_auc_reason"] = "no held-out score column or only one outcome class"
 
-        if y_true.nunique() > 1 and y_pred.nunique() > 1:
+        if y_true.nunique() > 1:
             report["balanced_accuracy"] = float(balanced_accuracy_score(favorable, predicted_favorable))
         else:
             report["balanced_accuracy"] = None
-            report["balanced_accuracy_reason"] = "outcome or predictions contain one class"
+            report["balanced_accuracy_reason"] = "outcome contains one class"
 
         report["predicted_favorable_rate"] = float(predicted_favorable.mean())
         group_report = {}

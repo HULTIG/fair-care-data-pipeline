@@ -21,6 +21,7 @@ def main():
     parser.add_argument("--output", required=True, help="Output CSV path")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--artifact-root", default="results/exp2")
     args = parser.parse_args()
 
     datasets = args.datasets.split(',')
@@ -45,7 +46,7 @@ def main():
             with open(temp_config_path, 'w') as f:
                 yaml.dump(config, f)
             
-            output_dir = f"results/exp2/{dataset}_{technique}"
+            output_dir = os.path.join(args.artifact_root, "runs", f"{dataset}_{technique}")
             
             try:
                 # Run pipeline
@@ -79,6 +80,10 @@ def main():
                 
             except Exception as e:
                 print(f"Error running {dataset} with {technique}: {e}")
+                results.append({
+                    'dataset': dataset.strip(), 'technique': technique.strip(),
+                    'status': 'failed', 'error': str(e), 'roc_auc': None,
+                })
                 if os.path.exists(temp_config_path):
                     os.remove(temp_config_path)
                 continue
@@ -87,7 +92,8 @@ def main():
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     with open(args.output, 'w', newline='') as f:
         if results:
-            writer = csv.DictWriter(f, fieldnames=results[0].keys())
+            fieldnames = list(dict.fromkeys(key for row in results for key in row))
+            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
             writer.writeheader()
             writer.writerows(results)
     

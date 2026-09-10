@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, lit, input_file_name
 import hashlib
 import re
-from pyspark.sql.functions import monotonically_increasing_id
+from pyspark.sql.types import StringType, StructField, StructType
 
 class DataIngestion:
     def __init__(self, spark: SparkSession):
@@ -86,7 +86,20 @@ class DataIngestion:
                 raise ValueError(f"{dataset_name}: required comparison groups are absent: {missing_groups}")
 
         # This identity is internal alignment metadata and is never a predictor.
-        df = df.withColumn("_record_id", monotonically_increasing_id())
+        # It is derived from the normalized source row and its stable input
+        # ordinal, rather than Spark's partition-dependent row ID.
+        base_schema = df.schema
+        indexed = df.rdd.zipWithIndex().map(
+            lambda item: tuple(item[0]) + (
+                hashlib.sha256(
+                    f"{dataset_name}|{item[1]}|{repr(tuple(item[0]))}".encode()
+                ).hexdigest(),
+            )
+        )
+        df = self.spark.createDataFrame(
+            indexed,
+            StructType(list(base_schema.fields) + [StructField("_record_id", StringType(), False)]),
+        )
 
         # Add metadata columns
         df_with_meta = df \

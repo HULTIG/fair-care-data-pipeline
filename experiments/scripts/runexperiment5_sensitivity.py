@@ -29,6 +29,8 @@ def main():
     parser.add_argument("--epsilons", default="0.1,1.0,5.0", help="Comma-separated epsilons for numeric_noise")
     parser.add_argument("--ks", default="2,5,10", help="Comma-separated ks for kanonymity")
     parser.add_argument("--output", default="results/exp5_sensitivity.json", help="Output path")
+    parser.add_argument("--artifact-root", default="results/exp5", help="Root for per-run layer and summary artifacts")
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -71,7 +73,7 @@ def main():
                 merged_config['anonymization']['k'] = k
                 
                 ds_config = merged_config['datasets'][dataset.strip()]
-                base_processed = "data/processed/exp5"
+                base_processed = os.path.join(args.artifact_root, "processed")
                 suffix = f"eps{epsilon}_k{k}"
                 # ISOLATION FIX (mirrors exp1): include dataset in paths so
                 # runs for different datasets don't overwrite each other's
@@ -80,14 +82,14 @@ def main():
                 ds_config['silver_path'] = f"{base_processed}/{suffix}/silver/{dataset.strip()}"
                 ds_config['gold_path'] = f"{base_processed}/{suffix}/gold/{dataset.strip()}"
                 
-                output_dir = f"results/exp5/{dataset}_{suffix}"
+                output_dir = os.path.join(args.artifact_root, "runs", f"{dataset}_{suffix}")
                 
                 metrics = run_pipeline(
                     dataset=dataset.strip(),
                     config_or_path=merged_config,
                     output_dir=output_dir,
                     verbose=args.verbose,
-                    seed=42
+                    seed=args.seed
                 )
                 
                 results.append({
@@ -100,9 +102,14 @@ def main():
                     'privacy_risk': metrics.get('privacy', {}).get('risk'),
                     'dpd': metrics.get('fairness', {}).get('statistical_parity_difference'),
                     'locked': metrics.get('locked', False)
+                    , 'status': 'succeeded', 'run_id': metrics.get('run_id'),
                 })
             except Exception as e:
                 print(f"Error on eps={epsilon}, k={k}: {e}")
+                results.append({
+                    'dataset': dataset, 'epsilon': epsilon, 'k': k,
+                    'status': 'failed', 'error': str(e), 'run_id': None,
+                })
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     import json

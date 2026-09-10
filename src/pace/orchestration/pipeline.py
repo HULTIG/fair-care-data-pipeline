@@ -2,6 +2,7 @@ import argparse
 import yaml
 import json
 import os
+import hashlib
 from pyspark.sql import SparkSession
 from pace.bronze.ingestion import DataIngestion
 from pace.bronze.piidetection import PIIDetection
@@ -16,6 +17,7 @@ from pace.metrics.layermetrics import BronzeMetrics, SilverMetrics, GoldMetrics
 from pace.metrics.pacescore import PACEScore
 from pace.metrics.compliance import ComplianceCheck
 from pace.evaluation.contract import EvaluationContract
+from pace.evaluation.splitting import split_source_records
 from pace.silver.utilityassessment import UtilityAssessment
 
 def load_config(config_path):
@@ -34,6 +36,18 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     dataset_config = config['datasets'].get(dataset)
     if not dataset_config:
         raise ValueError(f"Dataset {dataset} not found in config.")
+    config.setdefault("seed", seed)
+    config_checksum = hashlib.sha256(
+        json.dumps(config, sort_keys=True, default=str).encode()
+    ).hexdigest()
+    input_path = dataset_config.get("raw_path")
+    input_checksum = None
+    if input_path and os.path.isfile(input_path):
+        digest = hashlib.sha256()
+        with open(input_path, "rb") as source:
+            for block in iter(lambda: source.read(1024 * 1024), b""):
+                digest.update(block)
+        input_checksum = digest.hexdigest()
 
     import time
     run_id = config.get("run_id") or time.strftime("%Y%m%dT%H%M%SZ", time.gmtime()) + f"-seed{seed}"
@@ -81,6 +95,24 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         protected_attribute=dataset_config.get('protected_attribute'),
         required_group_values=dataset_config.get('required_group_values')
     )
+
+    # Establish the paired source split before any privacy, generalization,
+    # imputation, feature, or mitigation operation can inspect the full frame.
+    source_pdf = bronze_df.toPandas()
+    train_pdf, test_pdf, split_metadata = split_source_records(
+        source_pdf,
+        label_column=dataset_config['label_column'],
+        seed=seed,
+    )
+    split_metadata.update({
+        "dataset": dataset,
+        "record_id_column": "_record_id",
+        "source_row_count": int(len(source_pdf)),
+    })
+    with open(os.path.join(output_dir, "split.json"), "w") as handle:
+        json.dump(split_metadata, handle, indent=2)
+    train_source_df = spark.createDataFrame(train_pdf)
+    test_source_df = spark.createDataFrame(test_pdf)
     
     pii_detector = PIIDetection(config.get('pii_detection', {}))
     pii_report = pii_detector.detect(bronze_df)
@@ -109,8 +141,10 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     anon_config['sensitive_attributes'] = dataset_config.get('sensitive_attributes', [])
     anon_config['protected_attribute'] = dataset_config.get('protected_attribute')
     
+    anon_config['seed'] = seed
     anonymizer = AnonymizationEngine(anon_config)
-    silver_df, silver_meta = anonymizer.anonymize(bronze_df, spark)
+    silver_df, silver_meta = anonymizer.fit_transform(train_source_df, spark)
+    silver_test_df, silver_test_meta = anonymizer.transform(test_source_df, spark, enforce_postconditions=False)
     silver_df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(dataset_config['silver_path'])
     
     causal_config = dataset_config.copy()
@@ -144,6 +178,7 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     
     feature_engineer = FeatureEngineer(config)
     gold_df, feature_report = feature_engineer.process(gold_df)
+    gold_test_df, _ = feature_engineer.process(silver_test_df)
     
     embeddings_enabled = config.get('stages', {}).get('embeddings', False)
     if embeddings_enabled:
@@ -152,7 +187,15 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     audit.log_event("STAGE_STATUS", {"stage": "embeddings", "status": "executed" if embeddings_enabled else "skipped"})
     
     fairness_metrics = FairnessMetrics(dataset_config)
-    held_out = UtilityAssessment(dataset_config).predict_held_out(gold_df, seed=seed)
+    utility_assessment = UtilityAssessment(dataset_config)
+    held_out = utility_assessment.predict_held_out(gold_df, gold_test_df, seed=seed)
+    if mitigation_enabled:
+        bias_mitigator.last_report["weights_consumed"] = bool(
+            getattr(utility_assessment, "last_fit", {}).get("weights_consumed")
+        )
+    prediction_path = os.path.join(output_dir, "held_out_predictions.jsonl")
+    held_out.to_json(prediction_path, orient="records", lines=True)
+    prediction_sha256 = hashlib.sha256(open(prediction_path, "rb").read()).hexdigest()
     eval_report = EvaluationContract(dataset_config).evaluate(
         held_out,
         outcome_column=dataset_config['label_column'],
@@ -175,6 +218,12 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         'status': eval_report.get('status'),
     }
     audit.log_event("FAIRNESS_METRICS", fairness_report)
+    audit.log_event("EVALUATION_PROVENANCE", {
+        "split": split_metadata,
+        "fit": getattr(utility_assessment, "last_fit", {}),
+        "mitigation": getattr(bias_mitigator, "last_report", {}),
+        "test_record_count": int(len(test_pdf)),
+    })
     
     gold_metrics = GoldMetrics()
     sg = gold_metrics.calculate({
@@ -196,7 +245,11 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     # We pass the final_score to check compliance
     # Assuming checker.evaluate takes the PACE score or similar metrics
     # In this mock, we'll just implement the logic based on the status
-    evidence_valid = all(value is not None for value in (sb, ss, sg, utility_report.get('roc_auc')))
+    evidence_valid = (
+        all(value is not None for value in (sb, ss, sg, utility_report.get('roc_auc')))
+        and eval_report.get('status') == 'valid'
+        and utility_report.get('evaluation_population') == split_metadata['test_count']
+    )
     compliance_report = checker.check({'pii_found': any(r.get('recommendation') == 'REVIEW' for r in pii_report.values())})
     compliance_status = final_score.get('status', 'UNKNOWN')
     if not evidence_valid or compliance_status == 'AT RISK' or not compliance_report.get('compliant', True):
@@ -222,6 +275,19 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         'rows_input': silver_meta.get('rows_input'),
         'rows_retained': silver_meta.get('rows_retained'),
         'rows_suppressed': silver_meta.get('rows_suppressed'),
+        'test_rows_input': silver_test_meta.get('rows_input'),
+        'test_rows_transformed': silver_test_meta.get('rows_retained'),
+    }
+    final_score['split'] = split_metadata
+    final_score['fit'] = getattr(utility_assessment, 'last_fit', {})
+    final_score['mitigation'] = getattr(bias_mitigator, 'last_report', {})
+    final_score['prediction_artifact'] = prediction_path
+    final_score['prediction_artifact_sha256'] = prediction_sha256
+    final_score['provenance'] = {
+        'resolved_config_sha256': config_checksum,
+        'input_data_sha256': input_checksum,
+        'code_revision': os.environ.get('PACE_CODE_REVISION'),
+        'dirty_state': os.environ.get('PACE_CODE_DIRTY'),
     }
     final_score['runtimes'] = {
         'bronze': time_bronze,
