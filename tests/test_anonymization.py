@@ -166,10 +166,9 @@ def test_high_k_value(sample_data, spark):
         "quasi_identifiers": ["age", "gender", "zip_code"]
     }
     engine = AnonymizationEngine(config)
-    anonymized_df, _ = engine.anonymize(sample_data, spark)
-    
-    # Should suppress most/all rows
-    assert anonymized_df.count() >= 0
+    # An empty release is invalid and must be rejected explicitly.
+    with pytest.raises(ValueError, match="empty release"):
+        engine.anonymize(sample_data, spark)
 
 
 def test_low_epsilon(sample_data, spark):

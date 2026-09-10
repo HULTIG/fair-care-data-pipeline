@@ -3,7 +3,7 @@ anonymization:
   quasi_identifiers:
   - age
   - priors_count
-  technique: differentialprivacy
+  technique: numeric_noise
 bias_mitigation: false
 causal_validation: false
 fairness:

@@ -28,3 +28,12 @@ class AuditTrail:
         Verifies that provenance data (audit trail) is accessible and has entries.
         """
         return os.path.exists(self.log_file) and os.path.getsize(self.log_file) > 0
+
+    def log_failure(self, run_id: str, stage: str, error: Exception):
+        """Persist a machine-readable failure record for a run."""
+        self.log_event("RUN_FAILURE", {
+            "run_id": run_id,
+            "stage": stage,
+            "error_type": type(error).__name__,
+            "error": str(error),
+        })

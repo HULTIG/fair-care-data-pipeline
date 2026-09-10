@@ -24,6 +24,10 @@ datasets:
     - native_country
     - income
     favorable_label: '>50K'
+    missing_value_tokens: ['?', ' ?']
+    allowed_label_values: ['>50K', '<=50K']
+    required_group_values: [Male, Female]
+    predictor_allowlist: [age, workclass, fnlwgt, education, education_num, marital_status, occupation, relationship, race, sex, capital_gain, capital_loss, hours_per_week, native_country]
     gold_path: data/processed/gold/adult
     has_header: false
     label_column: income
@@ -40,7 +44,6 @@ datasets:
     - native_country
     raw_path: data/raw/adult/adult.csv
     sensitive_attributes:
-    - race
     - sex
     silver_path: data/processed/silver/adult
     source_url: https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data
@@ -49,6 +52,10 @@ datasets:
   compas:
     bronze_path: data/processed/bronze/compas
     favorable_label: 0
+    missing_value_tokens: ['', '?']
+    allowed_label_values: [0, 1]
+    required_group_values: [Caucasian, African-American]
+    predictor_allowlist: [age, c_charge_degree, sex, race, two_year_recid]
     gold_path: data/processed/gold/compas
     label_column: two_year_recid
     privileged_groups:
@@ -61,7 +68,6 @@ datasets:
     raw_path: data/raw/compas/compas.csv
     sensitive_attributes:
     - race
-    - sex
     silver_path: data/processed/silver/compas
     source_url: https://raw.githubusercontent.com/propublica/compas-analysis/master/compas-scores-two-years.csv
     unprivileged_groups:
@@ -92,6 +98,12 @@ datasets:
     - credit_risk
     delimiter: ' '
     favorable_label: 1
+    missing_value_tokens: ['?']
+    privileged_values: [A91, A93, A94]
+    unprivileged_values: [A92, A95]
+    allowed_label_values: [1, 2]
+    required_group_values: [A91, A92]
+    predictor_allowlist: [checking_status, duration, credit_history, purpose, credit_amount, savings_status, employment, installment_rate, personal_status_sex, other_parties, residence_since, property_magnitude, age, other_payment_plans, housing, existing_credits, job, num_dependents, own_telephone, foreign_worker, credit_risk]
     gold_path: data/processed/gold/german
     has_header: false
     label_column: credit_risk
@@ -107,14 +119,17 @@ datasets:
     raw_path: data/raw/german/german.csv
     sensitive_attributes:
     - personal_status_sex
-    - age
     silver_path: data/processed/silver/german
     source_url: https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data
     unprivileged_groups:
     - personal_status_sex: A92
   nij:
     bronze_path: data/processed/bronze/nij
-    favorable_label: false
+    favorable_label: 'No'
+    missing_value_tokens: ['', '?']
+    allowed_label_values: ['No', 'Yes']
+    required_group_values: [WHITE, BLACK]
+    predictor_allowlist: [Age_at_Release, Gang_Affiliated, Supervision_Level_First, Race, Gender, Recidivism_Arrest_Year1]
     gold_path: data/processed/gold/nij
     label_column: Recidivism_Arrest_Year1
     privileged_groups:
