@@ -6,7 +6,15 @@ import argparse
 import json
 from pathlib import Path
 
-from validate_pilot_manifests import summary_for, validate_summary
+from validate_pilot_manifests import reconcile_predictions, summary_for, validate_summary
+
+
+def record_split_hash(split_hashes, dataset, seed, hashes):
+    """Require common membership only among configurations of one seed."""
+    key = (dataset, int(seed))
+    previous = split_hashes.setdefault(key, hashes)
+    if previous != hashes:
+        raise ValueError(f"split mismatch within dataset/seed pair {dataset}, seed {seed}")
 
 
 def main():
@@ -44,13 +52,25 @@ def main():
             summary = json.loads(summary_path.read_text())
             if summary.get("run_id") != run.get("run_id") or summary.get("evidence_valid") is not True:
                 raise SystemExit(f"invalid summary for {key}")
-            hashes = validate_summary(summary, manifest_path)
-            previous = split_hashes.setdefault(key[0], hashes)
-            if previous != hashes:
-                raise SystemExit(f"split mismatch across seeds for {key[0]}")
+            if summary.get("seed") != seed:
+                raise SystemExit(f"summary/manifest seed mismatch for {key}")
+            if run.get("resolved_config_sha256") != summary.get("provenance", {}).get("resolved_config_sha256"):
+                raise SystemExit(f"config checksum mismatch for {key}")
+            if run.get("input_data_sha256") != summary.get("provenance", {}).get("input_data_sha256"):
+                raise SystemExit(f"input checksum mismatch for {key}")
+            hashes = validate_summary(
+                summary, manifest_path, expected_seed=seed,
+                expected_config_checksum=run.get("resolved_config_sha256"),
+                expected_input_checksum=run.get("input_data_sha256"),
+            )
+            reconcile_predictions(summary, manifest_path)
+            try:
+                record_split_hash(split_hashes, key[0], key[2], hashes)
+            except ValueError as error:
+                raise SystemExit(str(error))
             records[key] = {
                 "dataset": key[0], "config": key[1], "seed": key[2],
-                "run_id": key and run["run_id"], "summary": str(summary_path),
+                "run_id": run["run_id"], "summary": str(summary_path),
                 "test_membership_sha256": hashes["test_hash"],
                 "train_membership_sha256": hashes["train_hash"],
             }

@@ -34,6 +34,9 @@ def split_source_records(
     if eligible[record_id_column].duplicated().any():
         raise ValueError("source split requires unique stable record identities")
 
+    # Canonicalize input order so repeated reads with the same source IDs and
+    # seed produce the same membership even if Spark returns rows differently.
+    eligible = eligible.sort_values(record_id_column, key=lambda values: values.astype(str)).reset_index(drop=True)
     train_ids, test_ids = train_test_split(
         eligible[record_id_column].tolist(),
         test_size=test_size,
@@ -58,6 +61,8 @@ def split_source_records(
         "source_label_counts": {str(k): int(v) for k, v in eligible[label_column].value_counts().items()},
         "train_label_counts": {str(k): int(v) for k, v in train[label_column].value_counts().items()},
         "test_label_counts": {str(k): int(v) for k, v in test[label_column].value_counts().items()},
+        "train_membership_ids": sorted(map(str, train[record_id_column])),
+        "test_membership_ids": sorted(map(str, test[record_id_column])),
     }
     return train, test, metadata
 

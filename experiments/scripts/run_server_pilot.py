@@ -107,6 +107,7 @@ def main():
                 resolved = deep_merge(resolved, yaml.safe_load(config_path.read_text()))
             run_id = f"{pilot_id}-{dataset}-{config_name}"
             resolved["run_id"] = run_id
+            resolved["seed"] = args.seed
             run_dir = pilot_dir / dataset / config_name
             # Every treatment owns its storage paths. This prevents Delta
             # schema/state collisions when runs are executed sequentially or

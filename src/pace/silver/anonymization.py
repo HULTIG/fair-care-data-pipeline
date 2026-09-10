@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import hashlib
 from pyspark.sql import DataFrame, SparkSession
 from diffprivlib.mechanisms import Laplace
 
@@ -227,7 +228,6 @@ class AnonymizationEngine:
             exclude_cols.add(protected_attr)
         
         seed = int(self.config.get("seed", 42))
-        rng = np.random.default_rng(seed)
         
         for col in df.columns:
             # Skip internal columns, label, and protected attribute
@@ -238,7 +238,15 @@ class AnonymizationEngine:
                 continue
                 
             if pd.api.types.is_numeric_dtype(df[col]):
-                df[col] = df[col].apply(lambda value: value + rng.laplace(0.0, 1.0 / epsilon) if pd.notna(value) else value)
+                def perturb(row):
+                    value = row[col]
+                    if pd.isna(value):
+                        return value
+                    record_id = row.get("_record_id", "")
+                    material = f"{seed}|{record_id}|{col}".encode()
+                    local_seed = int.from_bytes(hashlib.sha256(material).digest()[:8], "big")
+                    return value + np.random.default_rng(local_seed).laplace(0.0, 1.0 / epsilon)
+                df[col] = df.apply(perturb, axis=1)
                 
         return df
     

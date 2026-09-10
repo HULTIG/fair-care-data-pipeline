@@ -212,6 +212,7 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     utility_report = {
         'roc_auc': eval_report.get('roc_auc'),
         'balanced_accuracy': eval_report.get('balanced_accuracy'),
+        'predicted_favorable_rate': eval_report.get('predicted_favorable_rate'),
         # Retention is a ratio against a separately measured baseline. A single
         # held-out run has no such denominator, so it must remain unavailable.
         'utility_retention': None,
@@ -262,9 +263,6 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     else:
         if verbose: print("\n[CONTROL PLANE ACTION] Dataset Approved for Promotion.")
         final_score['locked'] = False
-        gold_df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(dataset_config['gold_path'])
-        
-    time_total = time.time() - start_total
     
     # Add detailed metrics for experiments
     final_score['fairness'] = fairness_report
@@ -284,10 +282,21 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         'test_rows_transformed': silver_test_meta.get('rows_retained'),
     }
     final_score['split'] = split_metadata
+    final_score['seed'] = int(seed)
     final_score['fit'] = getattr(utility_assessment, 'last_fit', {})
     final_score['mitigation'] = getattr(bias_mitigator, 'last_report', {})
     final_score['prediction_artifact'] = prediction_path
     final_score['prediction_artifact_sha256'] = prediction_sha256
+    final_score['evaluation'] = {
+        'outcome_column': dataset_config['label_column'],
+        'protected_attribute': dataset_config['protected_attribute'],
+        'favorable_label': dataset_config.get('favorable_label', 1),
+        'privileged_values': dataset_config.get('privileged_values'),
+        'unprivileged_values': dataset_config.get('unprivileged_values'),
+        'privileged_group': dataset_config.get('privileged_groups', [{}])[0],
+        'unprivileged_group': dataset_config.get('unprivileged_groups', [{}])[0],
+        'prediction_threshold': 0.5,
+    }
     final_score['provenance'] = {
         'resolved_config_sha256': config_checksum,
         'input_data_sha256': input_checksum,
@@ -310,6 +319,9 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         audit.log_event("PUBLICATION", {"status": "eligible", "artifact": dataset_config['gold_path']})
     else:
         audit.log_event("PUBLICATION", {"status": "withheld", "reason": "evidence or policy check failed"})
+
+    # Include the complete publication operation in the reported runtime.
+    time_total = time.time() - start_total
 
     # Save Summary
     summary_path = os.path.join(output_dir, f"{dataset}_metricssummary.json")

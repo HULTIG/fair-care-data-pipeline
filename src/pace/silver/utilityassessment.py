@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from pyspark.sql import DataFrame
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import LabelEncoder
 
 class UtilityAssessment:
     def __init__(self, config: dict):
@@ -32,28 +31,14 @@ class UtilityAssessment:
         else:
             report["correlation_distance"] = 0.0
 
-        # 2. Predictive Utility
-        label_col = self.config.get("label_column")
-        if label_col and label_col in orig_pdf.columns and label_col in anon_pdf.columns:
-            try:
-                score_orig = self._train_eval(orig_pdf, label_col)
-                score_anon = self._train_eval(anon_pdf, label_col)
-                
-                report["original_auc"] = score_orig
-                report["anonymized_auc"] = score_anon
-                
-                if score_orig <= 0:
-                    raise ValueError("baseline ROC AUC is not positive; retention is undefined")
-                # Retention is a ratio, never an AUC-like score.
-                report["utility_retention"] = float(score_anon / score_orig)
-                report["status"] = "valid"
-            except Exception as e:
-                print(f"Predictive utility check failed: {e}")
-                report["status"] = "unavailable"
-                report["error"] = str(e)
-                report["original_auc"] = None
-                report["anonymized_auc"] = None
-                report["utility_retention"] = None
+        # Predictive utility requires explicit source train/test partitions.
+        # Keep this legacy comparison clearly unavailable so it cannot create a
+        # second, incomparable split.
+        report["status"] = "unavailable"
+        report["reason"] = "legacy assess() requires explicit train/test partitions; use predict_held_out()"
+        report["original_auc"] = None
+        report["anonymized_auc"] = None
+        report["utility_retention"] = None
         
         print(f"Utility Assessment complete: {report}")
         return report
@@ -120,6 +105,7 @@ class UtilityAssessment:
             "train_record_count": int(len(train_pdf)),
             "test_record_count": int(len(test_pdf)),
             "predictors": predictors,
+            "train_record_ids": sorted(map(str, train_pdf["_record_id"])),
             "weights_consumed": weights is not None,
             "weight_count": int(len(weights)) if weights is not None else 0,
             "weight_min": float(weights.min()) if weights is not None else None,
@@ -133,37 +119,4 @@ class UtilityAssessment:
         return (values == favorable).astype(int).to_numpy()
 
     def _train_eval(self, df: pd.DataFrame, label_col: str) -> float:
-        # Simple preprocessing
-        df = df.copy().dropna()
-        if df.empty:
-            raise ValueError("cannot calculate ROC AUC from an empty evaluation frame")
-        
-        y = df[label_col]
-        X = df.drop(columns=[label_col])
-        
-        # Encode categoricals
-        for col in X.select_dtypes(include=['object', 'category']).columns:
-            X[col] = LabelEncoder().fit_transform(X[col].astype(str))
-            
-        if y.dtype == 'object':
-            y = LabelEncoder().fit_transform(y.astype(str))
-            
-        # Exclude datetime and internal columns
-        X = X.select_dtypes(exclude=['datetime', 'timedelta'])
-        cols_to_drop = [c for c in X.columns if c.startswith("_")]
-        X = X.drop(columns=cols_to_drop, errors='ignore')
-            
-        if y.nunique() < 2:
-            raise ValueError("ROC AUC requires two observed outcome classes")
-
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.3, random_state=self.config.get("seed", 42), stratify=y
-        )
-        
-        model = LogisticRegression(max_iter=200)
-        model.fit(X_train, y_train)
-        
-        probs = model.predict_proba(X_test)[:, 1]
-        if len(set(y_test)) < 2:
-            raise ValueError("held-out outcome has one class; ROC AUC is undefined")
-        return float(roc_auc_score(y_test, probs))
+        raise ValueError("_train_eval is deprecated; use predict_held_out(train_df, test_df)")

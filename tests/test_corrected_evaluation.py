@@ -25,6 +25,10 @@ def test_source_split_is_reusable_and_disjoint():
     assert list(train_a._record_id) == list(train_b._record_id)
     assert list(test_a._record_id) == list(test_b._record_id)
     assert meta_a["test_membership_sha256"] == meta_b["test_membership_sha256"]
+    shuffled = frame.sample(frac=1, random_state=9).reset_index(drop=True)
+    _, shuffled_test, meta_shuffled = split_source_records(shuffled, label_column="y", seed=42)
+    assert set(test_a._record_id) == set(shuffled_test._record_id)
+    assert meta_a["test_membership_sha256"] == meta_shuffled["test_membership_sha256"]
 
 
 def test_prediction_fit_consumes_aligned_training_weights():
