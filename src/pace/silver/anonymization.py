@@ -15,6 +15,22 @@ class AnonymizationEngine:
         pdf = df.toPandas()
         
         technique = self.config.get("technique", "kanonymity")
+        if technique == "dp":
+            technique = "differentialprivacy"
+        allowed = {"none", "kanonymity", "ldiversity", "tcloseness", "differentialprivacy"}
+        if technique not in allowed:
+            raise ValueError(f"Unknown anonymization technique: {technique}")
+        if technique in {"kanonymity", "ldiversity", "tcloseness"}:
+            qis = self.config.get("quasi_identifiers", [])
+            if not qis or any(c not in pdf.columns for c in qis):
+                raise ValueError("Structural anonymization requires existing quasi-identifiers")
+            k = self.config.get("k", 5)
+            if not isinstance(k, int) or k < 1:
+                raise ValueError("k must be a positive integer")
+        if technique in {"ldiversity", "tcloseness"}:
+            sensitive = self.config.get("sensitive_attributes", [])
+            if not sensitive or any(c not in pdf.columns for c in sensitive):
+                raise ValueError(f"{technique} requires existing sensitive attributes")
         
         if technique == "kanonymity":
             pdf = self._apply_kanonymity(pdf)

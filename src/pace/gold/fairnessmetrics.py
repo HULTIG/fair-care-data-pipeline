@@ -122,8 +122,10 @@ class FairnessMetrics:
                 
                 # Handle NaN values - provide reasonable defaults
                 import math
-                report["statistical_parity_difference"] = spd if not math.isnan(spd) else 0.0
-                report["disparate_impact"] = di if not math.isnan(di) else 1.0
+                if not math.isfinite(spd) or not math.isfinite(di):
+                    raise ValueError("Fairness is undefined: check group support and favorable-label mapping")
+                report["statistical_parity_difference"] = float(spd)
+                report["disparate_impact"] = float(di)
                 
                 # EOD calculation as a diagnostic metric 
                 try:
@@ -147,19 +149,23 @@ class FairnessMetrics:
                             privileged_groups=[priv_group_encoded]
                         )
                         eod = class_metric.equal_opportunity_difference()
-                        report["equal_opportunity_difference"] = eod if not math.isnan(eod) else 0.0
+                        if not math.isfinite(eod):
+                            raise ValueError("Equal opportunity is undefined on this test split")
+                        report["equal_opportunity_difference"] = float(eod)
                     else:
-                        report["equal_opportunity_difference"] = 0.0
+                        raise ValueError("Training labels contain only one class")
                 except Exception as e:
                     print(f"EOD calculation failed: {e}")
-                    report["equal_opportunity_difference"] = 0.0
+                    report["equal_opportunity_difference"] = None
+                    report["error"] = str(e)
                 
             except Exception as e:
                 print(f"Fairness metrics calculation failed: {e}")
                 report["error"] = str(e)
                 # Provide default values on failure
-                report["statistical_parity_difference"] = 0.0
-                report["disparate_impact"] = 1.0
+                report["statistical_parity_difference"] = None
+                report["disparate_impact"] = None
+                report["equal_opportunity_difference"] = None
                 
         print(f"Fairness Metrics: {report}")
         return report

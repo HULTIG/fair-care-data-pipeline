@@ -15,10 +15,11 @@ class SilverMetrics:
         epsilon = metadata.get("epsilon")
         k = metadata.get("k")
         
-        if epsilon is not None and epsilon > 0 and epsilon != float('inf'):
+        technique = metadata.get("technique")
+        if technique in ("differentialprivacy", "dp") and epsilon is not None and epsilon > 0 and epsilon != float('inf'):
             # Differential Privacy semantics: lower epsilon is better privacy
             anon_score = max(0.0, 1.0 - (epsilon / 10.0))
-        elif k is not None and k > 0:
+        elif technique in ("kanonymity", "ldiversity", "tcloseness") and k is not None and k > 0:
             # K-Anonymity semantics: higher k is better privacy
             anon_score = min(1.0, k / 10.0)
         else:
@@ -37,8 +38,7 @@ class GoldMetrics:
         
         # Handle NaN, None, or missing SPD
         if spd is None or (isinstance(spd, float) and math.isnan(spd)):
-            # If fairness couldn't be calculated, use a neutral score
-            fairness_score = 0.5
+            raise ValueError("Gold score requires a measured fairness value")
         else:
             # Good fairness if SPD is close to 0. Heavily penalize structural bias.
             fairness_score = 1.0 if abs(spd) <= 0.1 else max(0.0, 1.0 - 2 * abs(spd))

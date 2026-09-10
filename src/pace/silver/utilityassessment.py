@@ -52,9 +52,10 @@ class UtilityAssessment:
                     report["utility_retention"] = score_anon / score_orig
             except Exception as e:
                 print(f"Predictive utility check failed: {e}")
-                report["original_auc"] = 0.5
-                report["anonymized_auc"] = 0.5
-                report["utility_retention"] = 0.5  # Default to neutral
+                report["error"] = str(e)
+                report["original_auc"] = None
+                report["anonymized_auc"] = None
+                report["utility_retention"] = None
         
         print(f"Utility Assessment complete: {report}")
         return report
@@ -62,7 +63,8 @@ class UtilityAssessment:
     def _train_eval(self, df: pd.DataFrame, label_col: str) -> float:
         # Simple preprocessing
         df = df.copy().dropna()
-        if df.empty: return 0.0
+        if df.empty:
+            raise ValueError("No complete rows remain for utility evaluation")
         
         y = df[label_col]
         X = df.drop(columns=[label_col])
@@ -87,5 +89,5 @@ class UtilityAssessment:
         try:
             probs = model.predict_proba(X_test)[:, 1]
             return roc_auc_score(y_test, probs)
-        except:
-            return 0.5 # Fallback
+        except Exception as exc:
+            raise ValueError("AUC evaluation failed") from exc

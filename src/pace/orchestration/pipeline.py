@@ -86,6 +86,8 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     anon_config = config.get('anonymization', {}).copy()
     anon_config['quasi_identifiers'] = dataset_config.get('quasi_identifiers', [])
     anon_config['label_column'] = dataset_config.get('label_column')
+    anon_config['protected_attribute'] = dataset_config.get('protected_attribute')
+    anon_config['sensitive_attributes'] = dataset_config.get('sensitive_attributes', [])
     
     anonymizer = AnonymizationEngine(anon_config)
     silver_df, silver_meta = anonymizer.anonymize(bronze_df, spark)
@@ -94,6 +96,9 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     utility_assessor = UtilityAssessment(dataset_config)
     utility_report = utility_assessor.assess(bronze_df, silver_df)
     audit.log_event("UTILITY_ASSESSMENT", utility_report)
+    if "error" in utility_report or utility_report.get("anonymized_auc") is None:
+        spark.stop()
+        raise ValueError(f"Utility evaluation failed; run is invalid: {utility_report}")
     
     causal_config = dataset_config.copy()
     causal_analyzer = CausalAnalyzer(causal_config)
@@ -102,6 +107,7 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     
     silver_metrics = SilverMetrics()
     ss = silver_metrics.calculate({
+        "technique": anon_config.get("technique"),
         "epsilon": anon_config.get("epsilon"),
         "k": anon_config.get("k"),
         "risk": silver_meta.get("risk", 1.0),
@@ -122,11 +128,14 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     embeddings_gen = EmbeddingsGenerator(dataset_config)
     gold_df = embeddings_gen.generate(gold_df, spark)
     
-    gold_df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(dataset_config['gold_path'])
+    # Gold remains in memory until evaluation and the promotion decision succeed.
     
     fairness_metrics = FairnessMetrics(dataset_config)
     fairness_report = fairness_metrics.calculate(gold_df)
     audit.log_event("FAIRNESS_METRICS", fairness_report)
+    if "error" in fairness_report or fairness_report.get("statistical_parity_difference") is None:
+        spark.stop()
+        raise ValueError(f"Fairness evaluation failed; run is invalid: {fairness_report}")
     
     gold_metrics = GoldMetrics()
     sg = gold_metrics.calculate({
@@ -154,6 +163,7 @@ def run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
     else:
         if verbose: print("\n[CONTROL PLANE ACTION] Dataset Approved for Promotion.")
         final_score['locked'] = False
+        gold_df.write.format("delta").mode("overwrite").option("overwriteSchema", "true").save(dataset_config['gold_path'])
         
     time_total = time.time() - start_total
     
