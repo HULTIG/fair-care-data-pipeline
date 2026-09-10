@@ -65,7 +65,11 @@ def main():
                 if os.path.exists(exp_config_path):
                     with open(exp_config_path, 'r') as f:
                         exp_config = yaml.safe_load(f)
-                    # 3. Merge experiment config OVER base config
+                    # Dataset definitions are owned by configs/default.yaml.
+                    # Experiment files may select stages and parameters, but
+                    # cannot replace the study population or label contract.
+                    exp_config.pop('datasets', None)
+                    # 3. Merge experiment parameters over the authoritative base
                     merged_config = nested_update(merged_config, exp_config)
                 else:
                     if config_name != "default":
@@ -100,7 +104,8 @@ def main():
                     'pacescore': metrics.get('score', 0),
                     'dpd': metrics.get('fairness', {}).get('statistical_parity_difference', None),
                     'di': metrics.get('fairness', {}).get('disparate_impact', None),
-                    'utility': metrics.get('utility', {}).get('utility_retention', 0),  # Fixed: was 'retention'
+                    'roc_auc': metrics.get('utility', {}).get('roc_auc'),
+                    'utility_retention': metrics.get('utility', {}).get('utility_retention'),
                     'privacy_risk': metrics.get('privacy', {}).get('risk', 0.1),
                     'k': metrics.get('anonymization', {}).get('k', 0),
                     'epsilon': metrics.get('anonymization', {}).get('epsilon', float('inf')),

@@ -8,8 +8,8 @@
   },
   "locked": false,
   "fairness": {
-    "statistical_parity_difference": 0.0,
-    "disparate_impact": 1.0,
+    "statistical_parity_difference": -0.029399056958312575,
+    "disparate_impact": 0.9590493166293873,
     "equal_opportunity_difference": 0.0
   },
   "utility": {
@@ -27,9 +27,9 @@
     "epsilon": 1.0
   },
   "runtimes": {
-    "bronze": 2.3574764728546143,
-    "silver": 10.093336582183838,
-    "gold": 23.17979407310486,
-    "total": 35.63062810897827
+    "bronze": 1.8847670555114746,
+    "silver": 10.245582818984985,
+    "gold": 25.138182878494263,
+    "total": 37.26855993270874
   }
 }

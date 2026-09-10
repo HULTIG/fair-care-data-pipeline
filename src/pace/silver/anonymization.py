@@ -14,23 +14,28 @@ class AnonymizationEngine:
         print("Running Anonymization...")
         pdf = df.toPandas()
         
-        technique = self.config.get("technique", "kanonymity")
-        if technique == "dp":
-            technique = "differentialprivacy"
-        allowed = {"none", "kanonymity", "ldiversity", "tcloseness", "differentialprivacy"}
-        if technique not in allowed:
-            raise ValueError(f"Unknown anonymization technique: {technique}")
-        if technique in {"kanonymity", "ldiversity", "tcloseness"}:
-            qis = self.config.get("quasi_identifiers", [])
-            if not qis or any(c not in pdf.columns for c in qis):
-                raise ValueError("Structural anonymization requires existing quasi-identifiers")
-            k = self.config.get("k", 5)
-            if not isinstance(k, int) or k < 1:
-                raise ValueError("k must be a positive integer")
-        if technique in {"ldiversity", "tcloseness"}:
-            sensitive = self.config.get("sensitive_attributes", [])
-            if not sensitive or any(c not in pdf.columns for c in sensitive):
-                raise ValueError(f"{technique} requires existing sensitive attributes")
+        technique = self.config.get("technique", "kanonymity").lower()
+        supported = {"none", "kanonymity", "ldiversity", "tcloseness", "numeric_noise", "differentialprivacy"}
+        if technique not in supported:
+            raise ValueError(f"unsupported anonymization technique: {technique}")
+        if technique in {"ldiversity", "tcloseness"} and not self.config.get("sensitive_attributes"):
+            raise ValueError(f"{technique} requires at least one sensitive attribute")
+        qis = self.config.get("quasi_identifiers", [])
+        missing_qis = sorted(set(qis).difference(pdf.columns))
+        if technique in {"kanonymity", "ldiversity", "tcloseness"} and missing_qis:
+            raise ValueError(f"configured quasi-identifiers are missing: {missing_qis}")
+        if technique in {"kanonymity", "ldiversity", "tcloseness"} and self.config.get("k", 0) < 1:
+            raise ValueError("k must be a positive integer")
+        sensitive = self.config.get("sensitive_attributes", [])
+        missing_sensitive = sorted(set(sensitive).difference(pdf.columns))
+        if technique in {"ldiversity", "tcloseness"} and missing_sensitive:
+            raise ValueError(f"configured sensitive attributes are missing: {missing_sensitive}")
+        if technique == "ldiversity" and self.config.get("l", 0) < 1:
+            raise ValueError("l-diversity threshold l must be positive")
+        if technique == "tcloseness" and not 0 <= self.config.get("t", -1) <= 1:
+            raise ValueError("t-closeness threshold t must be between zero and one")
+        if technique in {"numeric_noise", "differentialprivacy"} and self.config.get("epsilon", 0) <= 0:
+            raise ValueError("numeric-noise epsilon must be positive")
         
         if technique == "kanonymity":
             pdf = self._apply_kanonymity(pdf)
@@ -38,7 +43,7 @@ class AnonymizationEngine:
             pdf = self._apply_ldiversity(pdf)
         elif technique == "tcloseness":
             pdf = self._apply_tcloseness(pdf)
-        elif technique == "differentialprivacy":
+        elif technique in {"numeric_noise", "differentialprivacy"}:
             pdf = self._apply_differential_privacy(pdf)
             
         # Convert back to Spark DataFrame
@@ -53,27 +58,30 @@ class AnonymizationEngine:
                 pdf[col] = pdf[col].astype(str)
                 
         # Calculate privacy metrics
-        risk = self._calculate_risk(pdf, technique)
+        metadata = {
+            "technique": "numeric_noise" if technique == "differentialprivacy" else technique,
+            "rows_input": int(len(df.toPandas())),
+            "rows_retained": int(len(pdf)),
+            "rows_suppressed": int(len(df.toPandas()) - len(pdf)),
+            "privacy_guarantee": None,
+            # Retained for schema compatibility; no heuristic risk value is
+            # reported because this implementation does not validate one.
+            "risk": None,
+        }
         
         if pdf.empty:
-            # Handle empty dataframe case to avoid inference errors
-            # construct schema based on original df but with string types for safety as anonymization often converts to string
-            from pyspark.sql.types import StringType
-            schema = df.schema
-            for field in schema:
-                field.dataType = StringType()
-            return spark.createDataFrame([], schema), {"risk": risk}
+            raise ValueError(f"{technique} produced an empty release")
 
-        return spark.createDataFrame(pdf), {"risk": risk}
+        return spark.createDataFrame(pdf), metadata
 
     def _calculate_risk(self, df: pd.DataFrame, technique: str) -> float:
         """
         Calculates heuristic re-identification risk.
         """
-        if technique == "differentialprivacy":
-            # Risk bounded by epsilon, simplified heuristic
-            epsilon = self.config.get("epsilon", 1.0)
-            return min(1.0, np.exp(epsilon) - 1) if epsilon < 0.5 else min(1.0, epsilon * 0.1) # Illustrative mapping
+        if technique in {"numeric_noise", "differentialprivacy"}:
+            # Numeric perturbation is a diagnostic treatment; it is not a
+            # formal differential-privacy guarantee.
+            return None
 
         # For k-anonymity based methods
         qis = self.config.get("quasi_identifiers", [])

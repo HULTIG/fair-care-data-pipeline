@@ -74,11 +74,11 @@ def main():
                 # Compliance rules
                 compliant = False
                 if regulation.strip().lower() == 'gdpr':
-                    compliant = (k >= 10 and epsilon <= 0.5 and privacy_risk < 0.05)
+                    compliant = (privacy_risk is not None and k >= 10 and epsilon <= 0.5 and privacy_risk < 0.05)
                 elif regulation.strip().lower() == 'hipaa':
-                    compliant = (k >= 5 and privacy_risk < 0.10)
+                    compliant = (privacy_risk is not None and k >= 5 and privacy_risk < 0.10)
                 elif regulation.strip().lower() == 'ccpa':
-                    compliant = (k >= 5 and privacy_risk < 0.15)
+                    compliant = (privacy_risk is not None and k >= 5 and privacy_risk < 0.15)
                 
                 # Collect results
                 result = {

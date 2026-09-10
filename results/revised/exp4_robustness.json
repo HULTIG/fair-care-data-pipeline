@@ -1,0 +1,28 @@
+[
+    {
+        "dataset": "compas",
+        "config": "baseline",
+        "fc_score_mean": 0.56115767745751,
+        "fc_score_std": 0.007476080390995061,
+        "roc_auc_mean": 0.6403498083525211,
+        "roc_auc_std": 0.01097833498071685,
+        "dpd_mean": -0.38666357406975205,
+        "dpd_std": 0.02271347188974986,
+        "runtime_mean": 9.77036099433899,
+        "runtime_std": 2.8641106658462174,
+        "seeds_successful": 5
+    },
+    {
+        "dataset": "compas",
+        "config": "configa",
+        "fc_score_mean": 0.6403511559843869,
+        "fc_score_std": 0.009483003205759804,
+        "roc_auc_mean": 0.6312444099110766,
+        "roc_auc_std": 0.008050584256901016,
+        "dpd_mean": -0.39450296085119857,
+        "dpd_std": 0.026499388929264754,
+        "runtime_mean": 7.966565656661987,
+        "runtime_std": 0.09306664078868494,
+        "seeds_successful": 5
+    }
+]

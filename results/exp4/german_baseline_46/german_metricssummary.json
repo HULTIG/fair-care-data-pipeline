@@ -8,9 +8,9 @@
   },
   "locked": false,
   "fairness": {
-    "error": "The favorable and unfavorable labels provided do not match the labels in the dataset.",
-    "statistical_parity_difference": 0.0,
-    "disparate_impact": 1.0
+    "statistical_parity_difference": 0.048387096774193616,
+    "disparate_impact": 1.0806451612903227,
+    "equal_opportunity_difference": -0.03947368421052633
   },
   "utility": {
     "correlation_distance": 0.0,
@@ -27,9 +27,9 @@
     "epsilon": 999
   },
   "runtimes": {
-    "bronze": 1.6574454307556152,
-    "silver": 3.0405938625335693,
-    "gold": 6.898800611495972,
-    "total": 11.596858501434326
+    "bronze": 1.1820158958435059,
+    "silver": 2.824948787689209,
+    "gold": 6.791833162307739,
+    "total": 10.798816919326782
   }
 }

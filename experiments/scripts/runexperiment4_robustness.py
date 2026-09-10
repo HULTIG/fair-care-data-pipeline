@@ -63,9 +63,12 @@ def main():
                 
                 ds_config = merged_config['datasets'][dataset.strip()]
                 base_processed = "data/processed/exp4"
-                ds_config['bronze_path'] = f"{base_processed}/{config_name}_{seed}/bronze"
-                ds_config['silver_path'] = f"{base_processed}/{config_name}_{seed}/silver"
-                ds_config['gold_path'] = f"{base_processed}/{config_name}_{seed}/gold"
+                # ISOLATION FIX (mirrors exp1): include dataset in paths so
+                # runs for different datasets don't overwrite each other's
+                # delta tables when sharing a config/seed directory.
+                ds_config['bronze_path'] = f"{base_processed}/{config_name}_{seed}/bronze/{dataset.strip()}"
+                ds_config['silver_path'] = f"{base_processed}/{config_name}_{seed}/silver/{dataset.strip()}"
+                ds_config['gold_path'] = f"{base_processed}/{config_name}_{seed}/gold/{dataset.strip()}"
                 
                 output_dir = f"results/exp4/{dataset}_{config_name}_{seed}"
                 
@@ -83,8 +86,8 @@ def main():
         if runs:
             # Calculate means and std
             pace_scores = [r.get('score', 0) for r in runs]
-            utils = [r.get('utility', {}).get('utility_retention', 0) for r in runs]
-            dpds = [r.get('fairness', {}).get('statistical_parity_difference', 0) or 0 for r in runs]
+            utils = [v if v is not None else np.nan for v in (r.get('utility', {}).get('roc_auc') for r in runs)]
+            dpds = [v if v is not None else np.nan for v in (r.get('fairness', {}).get('statistical_parity_difference') for r in runs)]
             
             # Runtime overhead (compare to naive ETL later)
             runtimes = [r.get('runtimes', {}).get('total', 0) for r in runs]
@@ -94,10 +97,10 @@ def main():
                 'config': config_name,
                 'fc_score_mean': np.mean(pace_scores),
                 'fc_score_std': np.std(pace_scores),
-                'utility_mean': np.mean(utils),
-                'utility_std': np.std(utils),
-                'dpd_mean': np.mean(dpds),
-                'dpd_std': np.std(dpds),
+                'roc_auc_mean': np.nanmean(utils),
+                'roc_auc_std': np.nanstd(utils),
+                'dpd_mean': np.nanmean(dpds),
+                'dpd_std': np.nanstd(dpds),
                 'runtime_mean': np.mean(runtimes),
                 'runtime_std': np.std(runtimes),
                 'seeds_successful': len(runs)

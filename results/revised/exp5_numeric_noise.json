@@ -1,0 +1,35 @@
+[
+    {
+        "dataset": "compas",
+        "epsilon": 0.1,
+        "k": 5,
+        "fc_score": 0.6832156251671745,
+        "roc_auc": 0.6095208468336804,
+        "utility_retention": null,
+        "privacy_risk": null,
+        "dpd": -0.507576218430311,
+        "locked": true
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 1.0,
+        "k": 5,
+        "fc_score": 0.6991602076678025,
+        "roc_auc": 0.630087620124364,
+        "utility_retention": null,
+        "privacy_risk": null,
+        "dpd": -0.4174727012805305,
+        "locked": true
+    },
+    {
+        "dataset": "compas",
+        "epsilon": 5.0,
+        "k": 5,
+        "fc_score": 0.6356118255861547,
+        "roc_auc": 0.6302401453211818,
+        "utility_retention": null,
+        "privacy_risk": null,
+        "dpd": -0.4082159767213148,
+        "locked": true
+    }
+]

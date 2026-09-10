@@ -25,8 +25,9 @@ def nested_update(base_dict, update_dict):
 def main():
     parser = argparse.ArgumentParser(description="Experiment 5: Sensitivity")
     parser.add_argument("--dataset", default="compas", help="Dataset name")
-    parser.add_argument("--epsilons", default="0.1,1.0,5.0", help="Comma-separated epsilons")
-    parser.add_argument("--ks", default="2,5,10", help="Comma-separated ks")
+    parser.add_argument("--technique", choices=["kanonymity", "numeric_noise"], default="kanonymity")
+    parser.add_argument("--epsilons", default="0.1,1.0,5.0", help="Comma-separated epsilons for numeric_noise")
+    parser.add_argument("--ks", default="2,5,10", help="Comma-separated ks for kanonymity")
     parser.add_argument("--output", default="results/exp5_sensitivity.json", help="Output path")
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
@@ -44,16 +45,19 @@ def main():
 
     results = []
 
-    for epsilon in epsilons:
-        for k in ks:
+    if args.technique == "kanonymity":
+        sweep = [(base_config.get('anonymization', {}).get('epsilon', 1.0), k) for k in ks]
+    else:
+        sweep = [(epsilon, base_config.get('anonymization', {}).get('k', 5)) for epsilon in epsilons]
+
+    for epsilon, k in sweep:
             print(f"\n{'='*60}")
             print(f"Running Sensitivity for: {dataset} | epsilon={epsilon}, k={k}")
             print(f"{'='*60}\n")
             
             try:
                 merged_config = yaml.safe_load(yaml.safe_dump(base_config))
-                # Base it off configa (has DP enabled)
-                exp_config_path = f"experiments/configs/configa.yaml"
+                exp_config_path = "experiments/configs/configa.yaml" if args.technique == "kanonymity" else "experiments/configs/configb.yaml"
                 if os.path.exists(exp_config_path):
                     with open(exp_config_path, 'r') as f:
                         exp_config = yaml.safe_load(f)
@@ -62,15 +66,19 @@ def main():
                 # Override parameters
                 if 'anonymization' not in merged_config:
                     merged_config['anonymization'] = {}
+                merged_config['anonymization']['technique'] = args.technique
                 merged_config['anonymization']['epsilon'] = epsilon
                 merged_config['anonymization']['k'] = k
                 
                 ds_config = merged_config['datasets'][dataset.strip()]
                 base_processed = "data/processed/exp5"
                 suffix = f"eps{epsilon}_k{k}"
-                ds_config['bronze_path'] = f"{base_processed}/{suffix}/bronze"
-                ds_config['silver_path'] = f"{base_processed}/{suffix}/silver"
-                ds_config['gold_path'] = f"{base_processed}/{suffix}/gold"
+                # ISOLATION FIX (mirrors exp1): include dataset in paths so
+                # runs for different datasets don't overwrite each other's
+                # delta tables when sharing an eps/k directory.
+                ds_config['bronze_path'] = f"{base_processed}/{suffix}/bronze/{dataset.strip()}"
+                ds_config['silver_path'] = f"{base_processed}/{suffix}/silver/{dataset.strip()}"
+                ds_config['gold_path'] = f"{base_processed}/{suffix}/gold/{dataset.strip()}"
                 
                 output_dir = f"results/exp5/{dataset}_{suffix}"
                 
@@ -87,9 +95,10 @@ def main():
                     'epsilon': epsilon,
                     'k': k,
                     'fc_score': metrics.get('score', 0),
-                    'utility': metrics.get('utility', {}).get('utility_retention', 0),
-                    'privacy_risk': metrics.get('privacy', {}).get('risk', 0.1),
-                    'dpd': metrics.get('fairness', {}).get('statistical_parity_difference', 0),
+                    'roc_auc': metrics.get('utility', {}).get('roc_auc'),
+                    'utility_retention': metrics.get('utility', {}).get('utility_retention'),
+                    'privacy_risk': metrics.get('privacy', {}).get('risk'),
+                    'dpd': metrics.get('fairness', {}).get('statistical_parity_difference'),
                     'locked': metrics.get('locked', False)
                 })
             except Exception as e:

@@ -16,7 +16,7 @@ def main():
     parser = argparse.ArgumentParser(description="Experiment 2: Multi-Dataset Benchmarking")
     parser.add_argument("--datasets", required=True, help="Comma-separated dataset names")
     parser.add_argument("--config", required=True, help="Base config file")
-    parser.add_argument("--techniques", default="kanonymity,ldiversity,tcloseness,dp", 
+    parser.add_argument("--techniques", default="kanonymity,ldiversity,tcloseness,numeric_noise",
                         help="Anonymization techniques to test")
     parser.add_argument("--output", required=True, help="Output CSV path")
     parser.add_argument("--verbose", action="store_true")
@@ -67,9 +67,10 @@ def main():
                     'pacescore': metrics.get('score', 0),
                     'dpd': metrics.get('fairness', {}).get('statistical_parity_difference', None),
                     'di': metrics.get('fairness', {}).get('disparate_impact', None),
-                    'utility': metrics.get('utility', {}).get('utility_retention', 0),
-                    'info_loss': metrics.get('privacy', {}).get('information_loss', 0.2),
-                    'privacy_risk': metrics.get('privacy', {}).get('risk', 0.1),
+                    'roc_auc': metrics.get('utility', {}).get('roc_auc'),
+                    'utility_retention': metrics.get('utility', {}).get('utility_retention'),
+                    'info_loss': metrics.get('privacy', {}).get('information_loss'),
+                    'privacy_risk': metrics.get('privacy', {}).get('risk'),
                 }
                 results.append(result)
                 
