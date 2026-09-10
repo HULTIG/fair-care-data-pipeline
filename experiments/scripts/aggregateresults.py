@@ -82,8 +82,9 @@ def plot_benchmark_datasets(df, output_dir):
     """Figure 3: Performance across datasets"""
     plt.figure(figsize=(12, 6))
     
-    # Group by dataset
-    grouped = df.groupby('dataset')[['SB', 'SS', 'SG', 'pacescore']].mean()
+    # Filter for baseline (ungoverned raw dataset)
+    baseline_df = df[df['config'] == 'baseline']
+    grouped = baseline_df.set_index('dataset')[['SB', 'SS', 'SG', 'pacescore']]
     
     grouped.plot(kind='bar', ax=plt.gca())
     plt.title('Multi-Dataset Benchmarking: Layer Scores', fontsize=14, fontweight='bold')
