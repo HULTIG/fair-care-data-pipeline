@@ -303,13 +303,6 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
         'code_revision': os.environ.get('PACE_CODE_REVISION'),
         'dirty_state': os.environ.get('PACE_CODE_DIRTY'),
     }
-    final_score['runtimes'] = {
-        'bronze': time_bronze,
-        'silver': time_silver,
-        'gold': time_gold,
-        'total': time_total
-    }
-    
     # Promotion is the only point at which a Gold release is written. A
     # rejected run cannot overwrite or expose the previous eligible artifact.
     published = False
@@ -322,6 +315,12 @@ def _run_pipeline(dataset, config_or_path, output_dir, verbose=False, seed=42):
 
     # Include the complete publication operation in the reported runtime.
     time_total = time.time() - start_total
+    final_score['runtimes'] = {
+        'bronze': time_bronze,
+        'silver': time_silver,
+        'gold': time_gold,
+        'total': time_total
+    }
 
     # Save Summary
     summary_path = os.path.join(output_dir, f"{dataset}_metricssummary.json")
