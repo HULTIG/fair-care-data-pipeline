@@ -6,10 +6,10 @@
         "fc_score_std": 0.0,
         "utility_mean": 0.9155741755989137,
         "utility_std": 1.1102230246251565e-16,
-        "dpd_mean": 0.0,
+        "dpd_mean": -0.02947579569588199,
         "dpd_std": 0.0,
-        "runtime_mean": 36.94630274772644,
-        "runtime_std": 3.691561398593741,
+        "runtime_mean": 38.97110013961792,
+        "runtime_std": 3.0422685993353067,
         "seeds_successful": 5
     },
     {
@@ -19,23 +19,23 @@
         "fc_score_std": 0.0,
         "utility_mean": 0.9385724730929595,
         "utility_std": 0.0,
-        "dpd_mean": 0.0,
+        "dpd_mean": -0.029399056958312575,
         "dpd_std": 0.0,
-        "runtime_mean": 35.71260643005371,
-        "runtime_std": 0.22574534543913857,
+        "runtime_mean": 37.168154907226565,
+        "runtime_std": 0.40546131066637253,
         "seeds_successful": 5
     },
     {
         "dataset": "nij",
         "config": "configb",
-        "fc_score_mean": 0.799803676388447,
-        "fc_score_std": 0.0052731775106132014,
-        "utility_mean": 0.9272737152302067,
-        "utility_std": 0.03385443067475923,
-        "dpd_mean": 0.0,
+        "fc_score_mean": 0.8046052110943218,
+        "fc_score_std": 0.008762305832626287,
+        "utility_mean": 0.9581001426556688,
+        "utility_std": 0.05625505205630538,
+        "dpd_mean": -0.02947579569588199,
         "dpd_std": 0.0,
-        "runtime_mean": 41.13250260353088,
-        "runtime_std": 0.9347126794791354,
+        "runtime_mean": 42.18749370574951,
+        "runtime_std": 0.3123783527295057,
         "seeds_successful": 5
     }
 ]

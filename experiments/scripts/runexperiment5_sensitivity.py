@@ -68,9 +68,12 @@ def main():
                 ds_config = merged_config['datasets'][dataset.strip()]
                 base_processed = "data/processed/exp5"
                 suffix = f"eps{epsilon}_k{k}"
-                ds_config['bronze_path'] = f"{base_processed}/{suffix}/bronze"
-                ds_config['silver_path'] = f"{base_processed}/{suffix}/silver"
-                ds_config['gold_path'] = f"{base_processed}/{suffix}/gold"
+                # ISOLATION FIX (mirrors exp1): include dataset in paths so
+                # runs for different datasets don't overwrite each other's
+                # delta tables when sharing an eps/k directory.
+                ds_config['bronze_path'] = f"{base_processed}/{suffix}/bronze/{dataset.strip()}"
+                ds_config['silver_path'] = f"{base_processed}/{suffix}/silver/{dataset.strip()}"
+                ds_config['gold_path'] = f"{base_processed}/{suffix}/gold/{dataset.strip()}"
                 
                 output_dir = f"results/exp5/{dataset}_{suffix}"
                 

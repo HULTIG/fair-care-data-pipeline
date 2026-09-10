@@ -63,9 +63,12 @@ def main():
                 
                 ds_config = merged_config['datasets'][dataset.strip()]
                 base_processed = "data/processed/exp4"
-                ds_config['bronze_path'] = f"{base_processed}/{config_name}_{seed}/bronze"
-                ds_config['silver_path'] = f"{base_processed}/{config_name}_{seed}/silver"
-                ds_config['gold_path'] = f"{base_processed}/{config_name}_{seed}/gold"
+                # ISOLATION FIX (mirrors exp1): include dataset in paths so
+                # runs for different datasets don't overwrite each other's
+                # delta tables when sharing a config/seed directory.
+                ds_config['bronze_path'] = f"{base_processed}/{config_name}_{seed}/bronze/{dataset.strip()}"
+                ds_config['silver_path'] = f"{base_processed}/{config_name}_{seed}/silver/{dataset.strip()}"
+                ds_config['gold_path'] = f"{base_processed}/{config_name}_{seed}/gold/{dataset.strip()}"
                 
                 output_dir = f"results/exp4/{dataset}_{config_name}_{seed}"
                 
@@ -84,7 +87,16 @@ def main():
             # Calculate means and std
             pace_scores = [r.get('score', 0) for r in runs]
             utils = [r.get('utility', {}).get('utility_retention', 0) for r in runs]
-            dpds = [r.get('fairness', {}).get('statistical_parity_difference', 0) or 0 for r in runs]
+            # NOTE: do not use `or 0` here — it masks None (missing metric)
+            # as 0 and conflates "fair" with "failed to compute". Map only
+            # None -> 0 explicitly so genuine 0.0 values pass through.
+            dpds = [
+                (v if v is not None else 0)
+                for v in (
+                    r.get('fairness', {}).get('statistical_parity_difference', 0)
+                    for r in runs
+                )
+            ]
             
             # Runtime overhead (compare to naive ETL later)
             runtimes = [r.get('runtimes', {}).get('total', 0) for r in runs]

@@ -1,22 +1,22 @@
 {
-  "score": 0.947959785740575,
+  "score": 0.947617953888217,
   "status": "EXCELLENT",
   "components": {
     "bronze": 1.0,
     "silver": 0.95,
-    "gold": 0.8938955781061044
+    "gold": 0.8928702876071297
   },
   "locked": false,
   "fairness": {
-    "error": "The favorable and unfavorable labels provided do not match the labels in the dataset.",
-    "statistical_parity_difference": 0.0,
-    "disparate_impact": 1.0
+    "statistical_parity_difference": 0.048387096774193616,
+    "disparate_impact": 1.0806451612903227,
+    "equal_opportunity_difference": -0.06666666666666665
   },
   "utility": {
-    "correlation_distance": 0.377182679359329,
+    "correlation_distance": 0.4024779364743062,
     "original_auc": 0.8045638571954362,
-    "anonymized_auc": 0.7877911562122087,
-    "utility_retention": 0.9791530518886418
+    "anonymized_auc": 0.7857405752142594,
+    "utility_retention": 0.9766043654424258
   },
   "privacy": {
     "risk": 0.1,
@@ -27,9 +27,9 @@
     "epsilon": 1.0
   },
   "runtimes": {
-    "bronze": 1.5661225318908691,
-    "silver": 3.1080291271209717,
-    "gold": 7.03057074546814,
-    "total": 11.70474123954773
+    "bronze": 1.1734843254089355,
+    "silver": 2.762868642807007,
+    "gold": 7.050133228302002,
+    "total": 10.986505508422852
   }
 }
