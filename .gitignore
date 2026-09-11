@@ -74,3 +74,8 @@ htmlcov/
 *.temp
 --*
 context/
+
+# Backups and archives
+archive/
+backups/
+*backup*
