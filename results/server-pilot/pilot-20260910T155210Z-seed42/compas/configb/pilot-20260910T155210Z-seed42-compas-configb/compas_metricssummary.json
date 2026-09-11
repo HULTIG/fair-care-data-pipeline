@@ -1,0 +1,77 @@
+{
+  "score": 0.6988550675679901,
+  "status": "AT RISK",
+  "components": {
+    "bronze": 1.0,
+    "silver": 0.7,
+    "gold": 0.39665587152966447
+  },
+  "locked": true,
+  "fairness": {
+    "status": "valid",
+    "record_count": 2165,
+    "outcome_counts": {
+      "0": 1189,
+      "1": 976
+    },
+    "prediction_source": "held_out_predictions",
+    "roc_auc": 0.6296765776448041,
+    "balanced_accuracy": 0.5762246825407769,
+    "predicted_favorable_rate": 0.6083140877598152,
+    "groups": {
+      "privileged": {
+        "sample_count": 702,
+        "outcome_count": 439,
+        "non_outcome_count": 263,
+        "selection_rate": 0.7962962962962963,
+        "true_positive_rate": 0.8314350797266514,
+        "false_positive_rate": 0.7376425855513308
+      },
+      "unprivileged": {
+        "sample_count": 1124,
+        "outcome_count": 556,
+        "non_outcome_count": 568,
+        "selection_rate": 0.3781138790035587,
+        "true_positive_rate": 0.4460431654676259,
+        "false_positive_rate": 0.31161971830985913
+      }
+    },
+    "demographic_parity_difference": -0.4181824172927376,
+    "equal_opportunity_difference": -0.3853919142590255,
+    "disparate_impact": 0.474840685260283,
+    "statistical_parity_difference": -0.4181824172927376
+  },
+  "utility": {
+    "roc_auc": 0.6296765776448041,
+    "balanced_accuracy": 0.5762246825407769,
+    "utility_retention": 0.6296765776448041,
+    "evaluation_population": 2165,
+    "status": "valid"
+  },
+  "privacy": {
+    "risk": null,
+    "information_loss": null
+  },
+  "anonymization": {
+    "k": 5,
+    "epsilon": 1.0,
+    "technique": "numeric_noise"
+  },
+  "runtimes": {
+    "bronze": 3.256866693496704,
+    "silver": 2.4441983699798584,
+    "gold": 0.8494901657104492,
+    "total": 6.550576210021973
+  },
+  "run_id": "pilot-20260910T155210Z-seed42-compas-configb",
+  "evidence_valid": true,
+  "compliance": {
+    "compliant": true,
+    "issues": [
+      "k-anonymity k < 5, might not meet strict GDPR standards."
+    ]
+  },
+  "publication": {
+    "status": "withheld"
+  }
+}

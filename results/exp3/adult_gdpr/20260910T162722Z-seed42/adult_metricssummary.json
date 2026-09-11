@@ -1,0 +1,80 @@
+{
+  "score": 0.8794221998825255,
+  "status": "EXCELLENT",
+  "components": {
+    "bronze": 0.9754409672102619,
+    "silver": 1.0,
+    "gold": 0.6628905984143529
+  },
+  "locked": false,
+  "fairness": {
+    "status": "valid",
+    "record_count": 5159,
+    "outcome_counts": {
+      "<=50K": 3587,
+      ">50K": 1572
+    },
+    "prediction_source": "held_out_predictions",
+    "roc_auc": 0.8885029591591348,
+    "balanced_accuracy": 0.7756401934892114,
+    "predicted_favorable_rate": 0.26555534018220583,
+    "groups": {
+      "privileged": {
+        "sample_count": 3880,
+        "outcome_count": 1449,
+        "non_outcome_count": 2431,
+        "selection_rate": 0.33530927835051544,
+        "true_positive_rate": 0.6666666666666666,
+        "false_positive_rate": 0.13780337309749074
+      },
+      "unprivileged": {
+        "sample_count": 1279,
+        "outcome_count": 123,
+        "non_outcome_count": 1156,
+        "selection_rate": 0.05394839718530102,
+        "true_positive_rate": 0.43902439024390244,
+        "false_positive_rate": 0.012975778546712802
+      }
+    },
+    "demographic_parity_difference": -0.2813608811652144,
+    "equal_opportunity_difference": -0.2276422764227642,
+    "disparate_impact": 0.16089145355800766,
+    "statistical_parity_difference": -0.2813608811652144
+  },
+  "utility": {
+    "roc_auc": 0.8885029591591348,
+    "balanced_accuracy": 0.7756401934892114,
+    "utility_retention": null,
+    "evaluation_population": 5159,
+    "status": "valid"
+  },
+  "privacy": {
+    "risk": null,
+    "information_loss": null
+  },
+  "anonymization": {
+    "k": 10,
+    "epsilon": 0.5,
+    "technique": "kanonymity",
+    "rows_input": 32561,
+    "rows_retained": 17195,
+    "rows_suppressed": 15366
+  },
+  "runtimes": {
+    "bronze": 3.515538454055786,
+    "silver": 7.577980279922485,
+    "gold": 6.622799396514893,
+    "total": 17.716347694396973
+  },
+  "run_id": "20260910T162722Z-seed42",
+  "evidence_valid": true,
+  "compliance": {
+    "compliant": true,
+    "issues": [
+      "k-anonymity k < 5, might not meet strict GDPR standards."
+    ]
+  },
+  "publication": {
+    "status": "eligible"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "pilot_id": "pilot-20260910T155813Z-seed42",
+  "seed": 42,
+  "status": "complete",
+  "code": {
+    "revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+    "dirty": true
+  },
+  "base_config": "/home/anilson/projects/fare-care-data-pipeline/configs/default.yaml",
+  "base_config_sha256": "979aaa9dd984d084249e4ae964fd36d3ffe62f93dfbcfb32d411170e86204ee6",
+  "packages": {
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "pyspark": "3.5.0",
+    "delta-spark": "3.0.0",
+    "scikit-learn": "1.6.1",
+    "pyyaml": "6.0.3"
+  },
+  "runs": [
+    {
+      "dataset": "nij",
+      "config": "baseline",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-baseline",
+      "seed": 42,
+      "status": "succeeded",
+      "evidence_valid": true,
+      "publication": {
+        "status": "withheld"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "nij",
+      "config": "configa",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-configa",
+      "seed": 42,
+      "status": "succeeded",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "nij",
+      "config": "configb",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-configb",
+      "seed": 42,
+      "status": "succeeded",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "nij",
+      "config": "configc",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-configc",
+      "seed": 42,
+      "status": "succeeded",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "nij",
+      "config": "default",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-default",
+      "seed": 42,
+      "status": "succeeded",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    }
+  ]
+}

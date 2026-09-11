@@ -1,0 +1,77 @@
+{
+  "score": 0.8289994140536091,
+  "status": "ACCEPTABLE",
+  "components": {
+    "bronze": 1.0,
+    "silver": 0.7,
+    "gold": 0.7870108399928291
+  },
+  "locked": false,
+  "fairness": {
+    "status": "valid",
+    "record_count": 300,
+    "outcome_counts": {
+      "1": 210,
+      "2": 90
+    },
+    "prediction_source": "held_out_predictions",
+    "roc_auc": 0.7858730158730158,
+    "balanced_accuracy": 0.696031746031746,
+    "predicted_favorable_rate": 0.7633333333333333,
+    "groups": {
+      "privileged": {
+        "sample_count": 199,
+        "outcome_count": 144,
+        "non_outcome_count": 55,
+        "selection_rate": 0.7989949748743719,
+        "true_positive_rate": 0.9097222222222222,
+        "false_positive_rate": 0.509090909090909
+      },
+      "unprivileged": {
+        "sample_count": 101,
+        "outcome_count": 66,
+        "non_outcome_count": 35,
+        "selection_rate": 0.693069306930693,
+        "true_positive_rate": 0.8181818181818182,
+        "false_positive_rate": 0.45714285714285713
+      }
+    },
+    "demographic_parity_difference": -0.10592566794367886,
+    "equal_opportunity_difference": -0.09154040404040398,
+    "disparate_impact": 0.8674263652780372,
+    "statistical_parity_difference": -0.10592566794367886
+  },
+  "utility": {
+    "roc_auc": 0.7858730158730158,
+    "balanced_accuracy": 0.696031746031746,
+    "utility_retention": 0.7858730158730158,
+    "evaluation_population": 300,
+    "status": "valid"
+  },
+  "privacy": {
+    "risk": null,
+    "information_loss": null
+  },
+  "anonymization": {
+    "k": 5,
+    "epsilon": 1.0,
+    "technique": "numeric_noise"
+  },
+  "runtimes": {
+    "bronze": 1.9940402507781982,
+    "silver": 1.7027661800384521,
+    "gold": 2.250035047531128,
+    "total": 5.946871042251587
+  },
+  "run_id": "pilot-20260910T155210Z-seed42-german-configb",
+  "evidence_valid": true,
+  "compliance": {
+    "compliant": true,
+    "issues": [
+      "k-anonymity k < 5, might not meet strict GDPR standards."
+    ]
+  },
+  "publication": {
+    "status": "eligible"
+  }
+}

@@ -1,0 +1,241 @@
+{
+  "pilot_id": "pilot-20260910T203143Z-seed42",
+  "seed": 42,
+  "status": "running",
+  "code": {
+    "revision": "be2fb0f5fd12db6d8a571ff96aa6d81d91c17a74",
+    "dirty": true
+  },
+  "base_config": "/home/anilson/projects/fare-care-data-pipeline/configs/default.yaml",
+  "base_config_sha256": "be3fed4a35768638874e9c20c2d55f8f30e2f7845e4bf66985f82d6d412aedf2",
+  "packages": {
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "pyspark": "3.5.0",
+    "delta-spark": "3.0.0",
+    "scikit-learn": "1.6.1",
+    "pyyaml": "6.0.3"
+  },
+  "runs": [
+    {
+      "dataset": "compas",
+      "config": "baseline",
+      "run_id": "pilot-20260910T203143Z-seed42-compas-baseline",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "7b3362a24dc15bbc25f24dbba4ed607c398d08b252cb52bd345c15bd1464f4fe",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "compas",
+      "config": "configa",
+      "run_id": "pilot-20260910T203143Z-seed42-compas-configa",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "d61ac6865f02beecdb78d441ad94546a16ec881e4c79c5f2df7a07007826ae72",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "compas",
+      "config": "configb",
+      "run_id": "pilot-20260910T203143Z-seed42-compas-configb",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "908956866a578cf1c8bf6f93e3ea017e9c0491b3e15ea2ebbc364544f1b668b6",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "compas",
+      "config": "configc",
+      "run_id": "pilot-20260910T203143Z-seed42-compas-configc",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "471da1b50ffe71e64ce2bdf224fca35d2d7238bfef48f1c3a13e34f7740c7b6d",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "compas",
+      "config": "default",
+      "run_id": "pilot-20260910T203143Z-seed42-compas-default",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "16bd4f12efed042eaaecc6157c0dc61749153af8c0f538a5b80b90305db7b253",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "adult",
+      "config": "baseline",
+      "run_id": "pilot-20260910T203143Z-seed42-adult-baseline",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "73fed1b5cacecc1c8a3b1505bb764f0aa0f1df4af881cee4c8b78227bc0fb02e",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "adult",
+      "config": "configa",
+      "run_id": "pilot-20260910T203143Z-seed42-adult-configa",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "5a251da2df6b4a189b631823bf7dfb0d9aaef2148c07495a3116d4d836c9ae78",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "adult",
+      "config": "configb",
+      "run_id": "pilot-20260910T203143Z-seed42-adult-configb",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "bf33717bd7537171fd90c42858c75e2a70b25abf604fa10bd6ca92c5aaeab68d",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "adult",
+      "config": "configc",
+      "run_id": "pilot-20260910T203143Z-seed42-adult-configc",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "13a37a6d42b78598b43b2d63f72c94b3272ef7c57c6c86d6adf3335ca3b5c5fd",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "adult",
+      "config": "default",
+      "run_id": "pilot-20260910T203143Z-seed42-adult-default",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "0e1f5f58db993a93bb47b78549635c30b4c433a1f24dafcda0fed3b6b1536e8b",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "german",
+      "config": "baseline",
+      "run_id": "pilot-20260910T203143Z-seed42-german-baseline",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "57f15176217fec533f413ca242b3c48dc159dbe4fe7a31966a8779b87d87432a",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "german",
+      "config": "configa",
+      "run_id": "pilot-20260910T203143Z-seed42-german-configa",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "d3411564051ecc88a5b0b8fac9e97a32fa6c811e8fd5a4f87c77c916a352595a",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "german",
+      "config": "configb",
+      "run_id": "pilot-20260910T203143Z-seed42-german-configb",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "ff7337462a9c4ff0bf7ef672232cb7d9bfd802f730a9f7558be1a286aeca08dc",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "german",
+      "config": "configc",
+      "run_id": "pilot-20260910T203143Z-seed42-german-configc",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "8f40b77631b3480003ca57e7932d21ef74daba1bbc4619385be9255eb16f6516",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "german",
+      "config": "default",
+      "run_id": "pilot-20260910T203143Z-seed42-german-default",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "514f333437d524bd5ff43f768be0717eb49eff6142109f6ad784d08b3afe8c68",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "nij",
+      "config": "baseline",
+      "run_id": "pilot-20260910T203143Z-seed42-nij-baseline",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "2c13edd1a2693317b4872b15590231d9cf8c417b779103afd0978e0cc4592ca1",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "nij",
+      "config": "configa",
+      "run_id": "pilot-20260910T203143Z-seed42-nij-configa",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "5eab4e53d6d15a3c7502afc4aba2066ef2a47ac70824d7352fa412810c67a44b",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "nij",
+      "config": "configb",
+      "run_id": "pilot-20260910T203143Z-seed42-nij-configb",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "7d87286939c6400970f6c752f47412cd20864415134798c671be0fa7a64a3ea5",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "nij",
+      "config": "configc",
+      "run_id": "pilot-20260910T203143Z-seed42-nij-configc",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "4bc98dec87b01dc8ececc9e71592d92a570d81629ff7d480dec14a5bdacd7fca",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    },
+    {
+      "dataset": "nij",
+      "config": "default",
+      "run_id": "pilot-20260910T203143Z-seed42-nij-default",
+      "seed": 42,
+      "status": "failed",
+      "resolved_config_sha256": "6bb36cea0f9f5f3e40f24b15d23e8921810837f18f04562210da812d1c03f8c5",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "error_type": "UnboundLocalError",
+      "error": "local variable 'time_total' referenced before assignment"
+    }
+  ]
+}

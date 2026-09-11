@@ -1,0 +1,6 @@
+{
+  "run_id": "pilot-20260910T155658Z-seed42-nij-configa",
+  "status": "failed",
+  "error_type": "ValueError",
+  "error": "nij: unknown labels in Recidivism_Arrest_Year1: ['No', 'Yes']"
+}

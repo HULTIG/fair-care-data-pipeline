@@ -1,0 +1,80 @@
+{
+  "score": 0.8742396888320545,
+  "status": "EXCELLENT",
+  "components": {
+    "bronze": 1.0,
+    "silver": 0.75,
+    "gold": 0.8727195225916453
+  },
+  "locked": false,
+  "fairness": {
+    "status": "valid",
+    "record_count": 239,
+    "outcome_counts": {
+      "1": 170,
+      "2": 69
+    },
+    "prediction_source": "held_out_predictions",
+    "roc_auc": 0.7454390451832907,
+    "balanced_accuracy": 0.5990196078431372,
+    "predicted_favorable_rate": 0.8075313807531381,
+    "groups": {
+      "privileged": {
+        "sample_count": 170,
+        "outcome_count": 126,
+        "non_outcome_count": 44,
+        "selection_rate": 0.8117647058823529,
+        "true_positive_rate": 0.8412698412698413,
+        "false_positive_rate": 0.7272727272727273
+      },
+      "unprivileged": {
+        "sample_count": 69,
+        "outcome_count": 44,
+        "non_outcome_count": 25,
+        "selection_rate": 0.7971014492753623,
+        "true_positive_rate": 0.9318181818181818,
+        "false_positive_rate": 0.56
+      }
+    },
+    "demographic_parity_difference": -0.014663256606990638,
+    "equal_opportunity_difference": 0.09054834054834049,
+    "disparate_impact": 0.9819365679479101,
+    "statistical_parity_difference": -0.014663256606990638
+  },
+  "utility": {
+    "roc_auc": 0.7454390451832907,
+    "balanced_accuracy": 0.5990196078431372,
+    "utility_retention": null,
+    "evaluation_population": 239,
+    "status": "valid"
+  },
+  "privacy": {
+    "risk": null,
+    "information_loss": null
+  },
+  "anonymization": {
+    "k": 5,
+    "epsilon": 1.0,
+    "technique": "tcloseness",
+    "rows_input": 1000,
+    "rows_retained": 796,
+    "rows_suppressed": 204
+  },
+  "runtimes": {
+    "bronze": 3.014183759689331,
+    "silver": 3.487779140472412,
+    "gold": 3.998634099960327,
+    "total": 10.500628232955933
+  },
+  "run_id": "20260910T162450Z-seed42",
+  "evidence_valid": true,
+  "compliance": {
+    "compliant": true,
+    "issues": [
+      "k-anonymity k < 5, might not meet strict GDPR standards."
+    ]
+  },
+  "publication": {
+    "status": "eligible"
+  }
+}

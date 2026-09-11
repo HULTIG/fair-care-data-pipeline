@@ -1,0 +1,218 @@
+{
+  "expected_run_count": 20,
+  "manifest_sha256": "f3514523a8bf120285b19cdd0ca87be110eeec7c711d7e5db0c4fd65436ff1b6",
+  "runs": [
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "baseline",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "adult",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "withheld",
+      "run_id": "pilot-20260910T155210Z-seed42-adult-baseline",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/adult/baseline/pilot-20260910T155210Z-seed42-adult-baseline/adult_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configa",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "adult",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155210Z-seed42-adult-configa",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/adult/configa/pilot-20260910T155210Z-seed42-adult-configa/adult_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configb",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "adult",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155210Z-seed42-adult-configb",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/adult/configb/pilot-20260910T155210Z-seed42-adult-configb/adult_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configc",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "adult",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155210Z-seed42-adult-configc",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/adult/configc/pilot-20260910T155210Z-seed42-adult-configc/adult_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "default",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "adult",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155210Z-seed42-adult-default",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/adult/default/pilot-20260910T155210Z-seed42-adult-default/adult_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "baseline",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "compas",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "withheld",
+      "run_id": "pilot-20260910T155210Z-seed42-compas-baseline",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/compas/baseline/pilot-20260910T155210Z-seed42-compas-baseline/compas_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configa",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "compas",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "withheld",
+      "run_id": "pilot-20260910T155210Z-seed42-compas-configa",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/compas/configa/pilot-20260910T155210Z-seed42-compas-configa/compas_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configb",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "compas",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "withheld",
+      "run_id": "pilot-20260910T155210Z-seed42-compas-configb",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/compas/configb/pilot-20260910T155210Z-seed42-compas-configb/compas_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configc",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "compas",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "withheld",
+      "run_id": "pilot-20260910T155210Z-seed42-compas-configc",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/compas/configc/pilot-20260910T155210Z-seed42-compas-configc/compas_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "default",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "compas",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155210Z-seed42-compas-default",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/compas/default/pilot-20260910T155210Z-seed42-compas-default/compas_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "baseline",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "german",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "withheld",
+      "run_id": "pilot-20260910T155210Z-seed42-german-baseline",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/german/baseline/pilot-20260910T155210Z-seed42-german-baseline/german_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configa",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "german",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155210Z-seed42-german-configa",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/german/configa/pilot-20260910T155210Z-seed42-german-configa/german_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configb",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "german",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155210Z-seed42-german-configb",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/german/configb/pilot-20260910T155210Z-seed42-german-configb/german_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configc",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "german",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155210Z-seed42-german-configc",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/german/configc/pilot-20260910T155210Z-seed42-german-configc/german_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "default",
+      "config_checksum": "258106484a29cb441b372596b57b67a0b9710a82bd114c6a5e6995536c9ae625",
+      "dataset": "german",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155210Z-seed42-german-default",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/german/default/pilot-20260910T155210Z-seed42-german-default/german_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "baseline",
+      "config_checksum": "979aaa9dd984d084249e4ae964fd36d3ffe62f93dfbcfb32d411170e86204ee6",
+      "dataset": "nij",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/manifest.json",
+      "publication": "withheld",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-baseline",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/nij/baseline/pilot-20260910T155813Z-seed42-nij-baseline/nij_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configa",
+      "config_checksum": "979aaa9dd984d084249e4ae964fd36d3ffe62f93dfbcfb32d411170e86204ee6",
+      "dataset": "nij",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-configa",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/nij/configa/pilot-20260910T155813Z-seed42-nij-configa/nij_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configb",
+      "config_checksum": "979aaa9dd984d084249e4ae964fd36d3ffe62f93dfbcfb32d411170e86204ee6",
+      "dataset": "nij",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-configb",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/nij/configb/pilot-20260910T155813Z-seed42-nij-configb/nij_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "configc",
+      "config_checksum": "979aaa9dd984d084249e4ae964fd36d3ffe62f93dfbcfb32d411170e86204ee6",
+      "dataset": "nij",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-configc",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/nij/configc/pilot-20260910T155813Z-seed42-nij-configc/nij_metricssummary.json"
+    },
+    {
+      "code_revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+      "config": "default",
+      "config_checksum": "979aaa9dd984d084249e4ae964fd36d3ffe62f93dfbcfb32d411170e86204ee6",
+      "dataset": "nij",
+      "manifest": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/manifest.json",
+      "publication": "eligible",
+      "run_id": "pilot-20260910T155813Z-seed42-nij-default",
+      "summary": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/nij/default/pilot-20260910T155813Z-seed42-nij-default/nij_metricssummary.json"
+    }
+  ],
+  "source_manifests": [
+    {
+      "path": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot/pilot-20260910T155210Z-seed42/manifest.json",
+      "sha256": "4b518c9cc2846ef91463c7bbd42305abf70c35bb736b6362a50560c3cd07cd56"
+    },
+    {
+      "path": "/home/anilson/projects/fare-care-data-pipeline/results/server-pilot-nij-2/pilot-20260910T155813Z-seed42/manifest.json",
+      "sha256": "0564fa0ac276f41681341151f9a027c9a4d4e020ef1b1a7ab3e33a9ce3a30f9b"
+    }
+  ],
+  "status": "validated",
+  "successful_run_count": 20
+}

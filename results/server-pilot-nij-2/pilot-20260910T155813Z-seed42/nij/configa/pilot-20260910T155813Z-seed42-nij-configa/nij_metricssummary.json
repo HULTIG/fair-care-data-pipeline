@@ -1,0 +1,77 @@
+{
+  "score": 0.746641620167325,
+  "status": "ACCEPTABLE",
+  "components": {
+    "bronze": 0.939603896522805,
+    "silver": 0.5,
+    "gold": 0.8003048633961434
+  },
+  "locked": false,
+  "fairness": {
+    "status": "valid",
+    "record_count": 7750,
+    "outcome_counts": {
+      "No": 5433,
+      "Yes": 2317
+    },
+    "prediction_source": "held_out_predictions",
+    "roc_auc": 0.6006097267922869,
+    "balanced_accuracy": 0.5005268003261134,
+    "predicted_favorable_rate": 0.9985806451612903,
+    "groups": {
+      "privileged": {
+        "sample_count": 3181,
+        "outcome_count": 2281,
+        "non_outcome_count": 900,
+        "selection_rate": 0.9996856334486011,
+        "true_positive_rate": 0.9995615957913196,
+        "false_positive_rate": 1.0
+      },
+      "unprivileged": {
+        "sample_count": 4569,
+        "outcome_count": 3152,
+        "non_outcome_count": 1417,
+        "selection_rate": 0.9978113372729263,
+        "true_positive_rate": 0.9984137055837563,
+        "false_positive_rate": 0.9964714184897672
+      }
+    },
+    "demographic_parity_difference": -0.0018742961756748056,
+    "equal_opportunity_difference": -0.0011478902075633401,
+    "disparate_impact": 0.9981251144230121,
+    "statistical_parity_difference": -0.0018742961756748056
+  },
+  "utility": {
+    "roc_auc": 0.6006097267922869,
+    "balanced_accuracy": 0.5005268003261134,
+    "utility_retention": 0.6006097267922869,
+    "evaluation_population": 7750,
+    "status": "valid"
+  },
+  "privacy": {
+    "risk": null,
+    "information_loss": null
+  },
+  "anonymization": {
+    "k": 5,
+    "epsilon": 1.0,
+    "technique": "kanonymity"
+  },
+  "runtimes": {
+    "bronze": 3.9581329822540283,
+    "silver": 4.421918630599976,
+    "gold": 2.163708448410034,
+    "total": 10.543785572052002
+  },
+  "run_id": "pilot-20260910T155813Z-seed42-nij-configa",
+  "evidence_valid": true,
+  "compliance": {
+    "compliant": true,
+    "issues": [
+      "k-anonymity k < 5, might not meet strict GDPR standards."
+    ]
+  },
+  "publication": {
+    "status": "eligible"
+  }
+}

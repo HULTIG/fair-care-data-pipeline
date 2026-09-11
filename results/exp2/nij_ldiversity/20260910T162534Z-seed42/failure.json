@@ -1,0 +1,6 @@
+{
+  "run_id": "20260910T162534Z-seed42",
+  "status": "failed",
+  "error_type": "ValueError",
+  "error": "ldiversity produced an empty release"
+}

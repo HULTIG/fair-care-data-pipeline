@@ -1,0 +1,804 @@
+{
+  "kind": "independent_baseline_diagnostic_not_pipeline_results",
+  "script_sha256": "aba30268ba147b1bfaade1b41020142bd2c36781ad6c1c745dc017ea460c7f62",
+  "python": "3.9.25",
+  "platform": "Linux-5.15.0-320.202.8.3.el9uek.x86_64-x86_64-with-glibc2.34",
+  "packages": {
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "scikit-learn": "1.6.1",
+    "PyYAML": "6.0.3"
+  },
+  "protocol": {
+    "test_fraction": 0.3,
+    "preprocessing": "fit on training partition only",
+    "protected_attribute": "excluded from model inputs; retained for evaluation",
+    "threshold": 0.5,
+    "std_ddof": 1,
+    "hardware_scope": "single Python process"
+  },
+  "datasets": {
+    "compas": {
+      "data": {
+        "source_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+        "raw_rows": 7214,
+        "evaluated_rows": 7214,
+        "exact_duplicates_removed": 0,
+        "features": [
+          "age",
+          "juv_fel_count",
+          "juv_misd_count",
+          "juv_other_count",
+          "priors_count",
+          "c_charge_degree",
+          "sex"
+        ],
+        "target": "two_year_recid",
+        "favorable_class": "encoded as 1",
+        "privileged_group": "Caucasian",
+        "unprivileged_group": "African-American",
+        "favorable_count": 3963,
+        "protected_group_counts": {
+          "African-American": 3696,
+          "Caucasian": 2454,
+          "Hispanic": 637,
+          "Other": 377,
+          "Asian": 32,
+          "Native American": 18
+        }
+      },
+      "runs": [
+        {
+          "seed": 42,
+          "train_n": 5049,
+          "test_n": 2165,
+          "split_sha256": "5e99e4b91f9112f6ab42ea634147d7bf281d4b7a61d049b9c0346a2ac070a4fa",
+          "auc": 0.7337603751602807,
+          "balanced_accuracy": 0.6729760681934123,
+          "dpd": -0.22387570304881854,
+          "eod": -0.10963213839532149,
+          "predicted_favorable_rate": 0.6766743648960739,
+          "group_metrics": {
+            "privileged": {
+              "n": 737,
+              "positive_outcomes": 447,
+              "selection_rate": 0.7937584803256446,
+              "true_positive_rate": 0.8814317673378076,
+              "false_positive_rate": 0.6586206896551724
+            },
+            "unprivileged": {
+              "n": 1109,
+              "positive_outcomes": 539,
+              "selection_rate": 0.569882777276826,
+              "true_positive_rate": 0.7717996289424861,
+              "false_positive_rate": 0.37894736842105264
+            }
+          },
+          "fit_and_evaluation_seconds": 0.015388102037832141
+        },
+        {
+          "seed": 43,
+          "train_n": 5049,
+          "test_n": 2165,
+          "split_sha256": "c0772d848ee0be31a1f0d483d0ef290237852052df4f7da7fedf8b20bf61b04c",
+          "auc": 0.73443252009541,
+          "balanced_accuracy": 0.6718446242192778,
+          "dpd": -0.2197965822987693,
+          "eod": -0.1107237281733926,
+          "predicted_favorable_rate": 0.669284064665127,
+          "group_metrics": {
+            "privileged": {
+              "n": 737,
+              "positive_outcomes": 447,
+              "selection_rate": 0.7869742198100407,
+              "true_positive_rate": 0.8769574944071589,
+              "false_positive_rate": 0.6482758620689655
+            },
+            "unprivileged": {
+              "n": 1109,
+              "positive_outcomes": 539,
+              "selection_rate": 0.5671776375112714,
+              "true_positive_rate": 0.7662337662337663,
+              "false_positive_rate": 0.37894736842105264
+            }
+          },
+          "fit_and_evaluation_seconds": 0.01402177382260561
+        },
+        {
+          "seed": 44,
+          "train_n": 5049,
+          "test_n": 2165,
+          "split_sha256": "a3f5f75b902cc3672fa4863c0741837f0035e34f4d5557bfd5d8a4203fb549aa",
+          "auc": 0.7227225489114699,
+          "balanced_accuracy": 0.6564688779660549,
+          "dpd": -0.2215314932836432,
+          "eod": -0.15819750719079573,
+          "predicted_favorable_rate": 0.6503464203233257,
+          "group_metrics": {
+            "privileged": {
+              "n": 737,
+              "positive_outcomes": 447,
+              "selection_rate": 0.7652645861601085,
+              "true_positive_rate": 0.87248322147651,
+              "false_positive_rate": 0.6
+            },
+            "unprivileged": {
+              "n": 1109,
+              "positive_outcomes": 539,
+              "selection_rate": 0.5437330928764653,
+              "true_positive_rate": 0.7142857142857143,
+              "false_positive_rate": 0.3824561403508772
+            }
+          },
+          "fit_and_evaluation_seconds": 0.013954324880614877
+        },
+        {
+          "seed": 45,
+          "train_n": 5049,
+          "test_n": 2165,
+          "split_sha256": "23cbc3efc5c4d2fd8bc9d3a0ef72b58d4307e6c3da09c547d1e5b0fccebfc462",
+          "auc": 0.7357065794371908,
+          "balanced_accuracy": 0.6794605433688593,
+          "dpd": -0.21382839063148074,
+          "eod": -0.15934305387804903,
+          "predicted_favorable_rate": 0.648960739030023,
+          "group_metrics": {
+            "privileged": {
+              "n": 737,
+              "positive_outcomes": 447,
+              "selection_rate": 0.7530529172320217,
+              "true_positive_rate": 0.8791946308724832,
+              "false_positive_rate": 0.5586206896551724
+            },
+            "unprivileged": {
+              "n": 1109,
+              "positive_outcomes": 539,
+              "selection_rate": 0.539224526600541,
+              "true_positive_rate": 0.7198515769944341,
+              "false_positive_rate": 0.3684210526315789
+            }
+          },
+          "fit_and_evaluation_seconds": 0.013837903970852494
+        },
+        {
+          "seed": 46,
+          "train_n": 5049,
+          "test_n": 2165,
+          "split_sha256": "08041eea8a045b2e5f2e5211a8a2a6381bff158d19fea363ac953b3d4a9d8680",
+          "auc": 0.7266972521336292,
+          "balanced_accuracy": 0.6674873154186601,
+          "dpd": -0.207456446760378,
+          "eod": -0.12131173396753459,
+          "predicted_favorable_rate": 0.6286374133949192,
+          "group_metrics": {
+            "privileged": {
+              "n": 737,
+              "positive_outcomes": 447,
+              "selection_rate": 0.7340569877883311,
+              "true_positive_rate": 0.8411633109619687,
+              "false_positive_rate": 0.5689655172413793
+            },
+            "unprivileged": {
+              "n": 1109,
+              "positive_outcomes": 539,
+              "selection_rate": 0.5266005410279531,
+              "true_positive_rate": 0.7198515769944341,
+              "false_positive_rate": 0.34385964912280703
+            }
+          },
+          "fit_and_evaluation_seconds": 0.013918204000219703
+        }
+      ],
+      "summary": {
+        "auc": {
+          "mean": 0.730663855147596,
+          "sample_std": 0.005657265773875513
+        },
+        "balanced_accuracy": {
+          "mean": 0.6696474858332528,
+          "sample_std": 0.00852269055742206
+        },
+        "dpd": {
+          "mean": -0.21729772320461796,
+          "sample_std": 0.00663938843644813
+        },
+        "eod": {
+          "mean": -0.1318416323210187,
+          "sample_std": 0.025005332347158724
+        }
+      }
+    },
+    "adult": {
+      "data": {
+        "source_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+        "raw_rows": 32561,
+        "evaluated_rows": 32537,
+        "exact_duplicates_removed": 24,
+        "features": [
+          "age",
+          "workclass",
+          "education",
+          "education_num",
+          "marital_status",
+          "occupation",
+          "relationship",
+          "race",
+          "capital_gain",
+          "capital_loss",
+          "hours_per_week",
+          "native_country"
+        ],
+        "target": "income",
+        "favorable_class": "encoded as 1",
+        "privileged_group": "Male",
+        "unprivileged_group": "Female",
+        "favorable_count": 7839,
+        "protected_group_counts": {
+          "Male": 21775,
+          "Female": 10762
+        }
+      },
+      "runs": [
+        {
+          "seed": 42,
+          "train_n": 22775,
+          "test_n": 9762,
+          "split_sha256": "ee2dc90becbbfbf5ba14770241fe393d4e0063c2925207a75c6631031f2b3641",
+          "auc": 0.9050804093567252,
+          "balanced_accuracy": 0.7589507766669421,
+          "dpd": -0.17194743773387292,
+          "eod": -0.1119000356288492,
+          "predicted_favorable_rate": 0.19063716451546814,
+          "group_metrics": {
+            "privileged": {
+              "n": 6533,
+              "positive_outcomes": 1998,
+              "selection_rate": 0.24751262819531608,
+              "true_positive_rate": 0.6006006006006006,
+              "false_positive_rate": 0.09195148842337376
+            },
+            "unprivileged": {
+              "n": 3229,
+              "positive_outcomes": 354,
+              "selection_rate": 0.07556519046144317,
+              "true_positive_rate": 0.4887005649717514,
+              "false_positive_rate": 0.024695652173913042
+            }
+          },
+          "fit_and_evaluation_seconds": 0.14133299211971462
+        },
+        {
+          "seed": 43,
+          "train_n": 22775,
+          "test_n": 9762,
+          "split_sha256": "de5485a34b450bcad54a9b8a1912537e9df3ef6f100954b266840e7861f5bcab",
+          "auc": 0.9054935587595363,
+          "balanced_accuracy": 0.760297378060536,
+          "dpd": -0.17900283464510192,
+          "eod": -0.12173190139291828,
+          "predicted_favorable_rate": 0.194120057365294,
+          "group_metrics": {
+            "privileged": {
+              "n": 6533,
+              "positive_outcomes": 1998,
+              "selection_rate": 0.2533292514924231,
+              "true_positive_rate": 0.6076076076076076,
+              "false_positive_rate": 0.09724366041896361
+            },
+            "unprivileged": {
+              "n": 3229,
+              "positive_outcomes": 354,
+              "selection_rate": 0.07432641684732115,
+              "true_positive_rate": 0.4858757062146893,
+              "false_positive_rate": 0.02365217391304348
+            }
+          },
+          "fit_and_evaluation_seconds": 0.13252698886208236
+        },
+        {
+          "seed": 44,
+          "train_n": 22775,
+          "test_n": 9762,
+          "split_sha256": "a3e57d2119d61a00ca254013bb26f86f33a98d2bb2ff9c9ae6ed1e2033e5e21b",
+          "auc": 0.9001628671036566,
+          "balanced_accuracy": 0.7624638519375362,
+          "dpd": -0.179280530031277,
+          "eod": -0.09548531582429887,
+          "predicted_favorable_rate": 0.19678344601516082,
+          "group_metrics": {
+            "privileged": {
+              "n": 6533,
+              "positive_outcomes": 1998,
+              "selection_rate": 0.2560844941068422,
+              "true_positive_rate": 0.6096096096096096,
+              "false_positive_rate": 0.10033076074972437
+            },
+            "unprivileged": {
+              "n": 3229,
+              "positive_outcomes": 354,
+              "selection_rate": 0.0768039640755652,
+              "true_positive_rate": 0.5141242937853108,
+              "false_positive_rate": 0.022956521739130435
+            }
+          },
+          "fit_and_evaluation_seconds": 0.15131012187339365
+        },
+        {
+          "seed": 45,
+          "train_n": 22775,
+          "test_n": 9762,
+          "split_sha256": "0c5658238d1d55898c8ea8063bac2df1fe91abeada59826dac70c98d66290380",
+          "auc": 0.8986039675654338,
+          "balanced_accuracy": 0.7573182613126221,
+          "dpd": -0.1754075848195148,
+          "eod": -0.12788211940754313,
+          "predicted_favorable_rate": 0.19821757836508913,
+          "group_metrics": {
+            "privileged": {
+              "n": 6533,
+              "positive_outcomes": 1998,
+              "selection_rate": 0.25623756314097657,
+              "true_positive_rate": 0.6081081081081081,
+              "false_positive_rate": 0.10121278941565601
+            },
+            "unprivileged": {
+              "n": 3229,
+              "positive_outcomes": 354,
+              "selection_rate": 0.08082997832146176,
+              "true_positive_rate": 0.480225988700565,
+              "false_positive_rate": 0.03165217391304348
+            }
+          },
+          "fit_and_evaluation_seconds": 0.1513417838141322
+        },
+        {
+          "seed": 46,
+          "train_n": 22775,
+          "test_n": 9762,
+          "split_sha256": "cd49fb010910535cf4c72671daa3c94e59e3db24d89fea9ab05bd9c14ee4eb21",
+          "auc": 0.9055784780173879,
+          "balanced_accuracy": 0.7574387548541683,
+          "dpd": -0.16798897485794895,
+          "eod": -0.10389202762084115,
+          "predicted_favorable_rate": 0.1861298914156935,
+          "group_metrics": {
+            "privileged": {
+              "n": 6533,
+              "positive_outcomes": 1998,
+              "selection_rate": 0.24169600489820908,
+              "true_positive_rate": 0.5925925925925926,
+              "false_positive_rate": 0.08710033076074973
+            },
+            "unprivileged": {
+              "n": 3229,
+              "positive_outcomes": 354,
+              "selection_rate": 0.07370703004026015,
+              "true_positive_rate": 0.4887005649717514,
+              "false_positive_rate": 0.022608695652173914
+            }
+          },
+          "fit_and_evaluation_seconds": 0.1523597720079124
+        }
+      ],
+      "summary": {
+        "auc": {
+          "mean": 0.9029838561605479,
+          "sample_std": 0.003337948785724296
+        },
+        "balanced_accuracy": {
+          "mean": 0.7592938045663609,
+          "sample_std": 0.002151627803291279
+        },
+        "dpd": {
+          "mean": -0.1747254724175431,
+          "sample_std": 0.004811640336028821
+        },
+        "eod": {
+          "mean": -0.11217827997489013,
+          "sample_std": 0.01308889515247147
+        }
+      }
+    },
+    "german": {
+      "data": {
+        "source_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+        "raw_rows": 1000,
+        "evaluated_rows": 1000,
+        "exact_duplicates_removed": 0,
+        "features": [
+          "checking_status",
+          "duration",
+          "credit_history",
+          "purpose",
+          "credit_amount",
+          "savings_status",
+          "employment",
+          "installment_rate",
+          "other_parties",
+          "residence_since",
+          "property_magnitude",
+          "age",
+          "other_payment_plans",
+          "housing",
+          "existing_credits",
+          "job",
+          "num_dependents",
+          "own_telephone",
+          "foreign_worker"
+        ],
+        "target": "credit_risk",
+        "favorable_class": "encoded as 1",
+        "privileged_group": "male",
+        "unprivileged_group": "female",
+        "favorable_count": 700,
+        "protected_group_counts": {
+          "male": 690,
+          "female": 310
+        }
+      },
+      "runs": [
+        {
+          "seed": 42,
+          "train_n": 700,
+          "test_n": 300,
+          "split_sha256": "0aa6b5e4b11fe2f8b5075527f59f806bc1cae9ade2541aba501da025a7fcca3e",
+          "auc": 0.7908994708994709,
+          "balanced_accuracy": 0.6888888888888889,
+          "dpd": 0.013090229079008808,
+          "eod": 0.046666666666666634,
+          "predicted_favorable_rate": 0.7866666666666666,
+          "group_metrics": {
+            "privileged": {
+              "n": 207,
+              "positive_outcomes": 150,
+              "selection_rate": 0.782608695652174,
+              "true_positive_rate": 0.8866666666666667,
+              "false_positive_rate": 0.5087719298245614
+            },
+            "unprivileged": {
+              "n": 93,
+              "positive_outcomes": 60,
+              "selection_rate": 0.7956989247311828,
+              "true_positive_rate": 0.9333333333333333,
+              "false_positive_rate": 0.5454545454545454
+            }
+          },
+          "fit_and_evaluation_seconds": 0.013715853914618492
+        },
+        {
+          "seed": 43,
+          "train_n": 700,
+          "test_n": 300,
+          "split_sha256": "03ab678c52c83c07ebe20aa5b548abee4943bdd298ba126019bd7b45ea83cddf",
+          "auc": 0.8333333333333334,
+          "balanced_accuracy": 0.696031746031746,
+          "dpd": -0.06373694872993607,
+          "eod": 0.04999999999999993,
+          "predicted_favorable_rate": 0.7966666666666666,
+          "group_metrics": {
+            "privileged": {
+              "n": 207,
+              "positive_outcomes": 150,
+              "selection_rate": 0.8164251207729468,
+              "true_positive_rate": 0.9,
+              "false_positive_rate": 0.5964912280701754
+            },
+            "unprivileged": {
+              "n": 93,
+              "positive_outcomes": 60,
+              "selection_rate": 0.7526881720430108,
+              "true_positive_rate": 0.95,
+              "false_positive_rate": 0.3939393939393939
+            }
+          },
+          "fit_and_evaluation_seconds": 0.01281816209666431
+        },
+        {
+          "seed": 44,
+          "train_n": 700,
+          "test_n": 300,
+          "split_sha256": "71a5394f3ed6f0591e3286c4b8f63bea4c6e061db70db7af4af1f0a9247d855f",
+          "auc": 0.7766137566137566,
+          "balanced_accuracy": 0.6873015873015873,
+          "dpd": -0.02680380239987523,
+          "eod": 0.043333333333333335,
+          "predicted_favorable_rate": 0.7066666666666667,
+          "group_metrics": {
+            "privileged": {
+              "n": 207,
+              "positive_outcomes": 150,
+              "selection_rate": 0.714975845410628,
+              "true_positive_rate": 0.8066666666666666,
+              "false_positive_rate": 0.47368421052631576
+            },
+            "unprivileged": {
+              "n": 93,
+              "positive_outcomes": 60,
+              "selection_rate": 0.6881720430107527,
+              "true_positive_rate": 0.85,
+              "false_positive_rate": 0.3939393939393939
+            }
+          },
+          "fit_and_evaluation_seconds": 0.012858883943408728
+        },
+        {
+          "seed": 45,
+          "train_n": 700,
+          "test_n": 300,
+          "split_sha256": "ee140167f38aa59c3bceecb71907579402ee270f7f4072f5fb83deb408f19ea5",
+          "auc": 0.7565079365079366,
+          "balanced_accuracy": 0.65,
+          "dpd": -0.01605111422783223,
+          "eod": 0.0,
+          "predicted_favorable_rate": 0.71,
+          "group_metrics": {
+            "privileged": {
+              "n": 207,
+              "positive_outcomes": 150,
+              "selection_rate": 0.714975845410628,
+              "true_positive_rate": 0.8,
+              "false_positive_rate": 0.49122807017543857
+            },
+            "unprivileged": {
+              "n": 93,
+              "positive_outcomes": 60,
+              "selection_rate": 0.6989247311827957,
+              "true_positive_rate": 0.8,
+              "false_positive_rate": 0.5151515151515151
+            }
+          },
+          "fit_and_evaluation_seconds": 0.01293335622176528
+        },
+        {
+          "seed": 46,
+          "train_n": 700,
+          "test_n": 300,
+          "split_sha256": "9a1026ae73f8b4bc8cddce72c5995ca3a1cebaaad4b7ed666925d45fab414ed3",
+          "auc": 0.7525925925925926,
+          "balanced_accuracy": 0.6579365079365079,
+          "dpd": -0.017609474832476213,
+          "eod": -0.006666666666666599,
+          "predicted_favorable_rate": 0.7433333333333333,
+          "group_metrics": {
+            "privileged": {
+              "n": 207,
+              "positive_outcomes": 150,
+              "selection_rate": 0.748792270531401,
+              "true_positive_rate": 0.84,
+              "false_positive_rate": 0.5087719298245614
+            },
+            "unprivileged": {
+              "n": 93,
+              "positive_outcomes": 60,
+              "selection_rate": 0.7311827956989247,
+              "true_positive_rate": 0.8333333333333334,
+              "false_positive_rate": 0.5454545454545454
+            }
+          },
+          "fit_and_evaluation_seconds": 0.01289290003478527
+        }
+      ],
+      "summary": {
+        "auc": {
+          "mean": 0.781989417989418,
+          "sample_std": 0.032626536986138245
+        },
+        "balanced_accuracy": {
+          "mean": 0.676031746031746,
+          "sample_std": 0.020599786939924137
+        },
+        "dpd": {
+          "mean": -0.02222222222222219,
+          "sample_std": 0.027616990346507653
+        },
+        "eod": {
+          "mean": 0.02666666666666666,
+          "sample_std": 0.027588242262078042
+        }
+      }
+    },
+    "nij": {
+      "data": {
+        "source_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+        "raw_rows": 25835,
+        "evaluated_rows": 25835,
+        "exact_duplicates_removed": 0,
+        "features": [
+          "Gender",
+          "Age_at_Release",
+          "Residence_PUMA",
+          "Gang_Affiliated",
+          "Supervision_Risk_Score_First",
+          "Supervision_Level_First",
+          "Education_Level",
+          "Dependents",
+          "Prison_Offense",
+          "Prison_Years",
+          "Prior_Arrest_Episodes_Felony",
+          "Prior_Arrest_Episodes_Misd",
+          "Prior_Arrest_Episodes_Violent",
+          "Prior_Arrest_Episodes_Property",
+          "Prior_Arrest_Episodes_Drug",
+          "Prior_Arrest_Episodes_DVCharges",
+          "Prior_Arrest_Episodes_GunCharges",
+          "Prior_Conviction_Episodes_Felony",
+          "Prior_Conviction_Episodes_Misd",
+          "Prior_Conviction_Episodes_Viol",
+          "Prior_Conviction_Episodes_Prop",
+          "Prior_Conviction_Episodes_Drug",
+          "Prior_Revocations_Parole",
+          "Prior_Revocations_Probation"
+        ],
+        "target": "Recidivism_Arrest_Year1",
+        "favorable_class": "encoded as 1",
+        "privileged_group": "WHITE",
+        "unprivileged_group": "BLACK",
+        "favorable_count": 18111,
+        "protected_group_counts": {
+          "BLACK": 14847,
+          "WHITE": 10988
+        }
+      },
+      "runs": [
+        {
+          "seed": 42,
+          "train_n": 18084,
+          "test_n": 7751,
+          "split_sha256": "a4c0342c93c39de9858c4f42f793047adfe9e91e59ca281490c349efdfc3c357",
+          "auc": 0.7135760169231309,
+          "balanced_accuracy": 0.5690224070729715,
+          "dpd": -0.010363818790510293,
+          "eod": -9.835267533742087e-05,
+          "predicted_favorable_rate": 0.8991097922848664,
+          "group_metrics": {
+            "privileged": {
+              "n": 3297,
+              "positive_outcomes": 2367,
+              "selection_rate": 0.9050652107976949,
+              "true_positive_rate": 0.9404309252217997,
+              "false_positive_rate": 0.8150537634408602
+            },
+            "unprivileged": {
+              "n": 4454,
+              "positive_outcomes": 3067,
+              "selection_rate": 0.8947013920071846,
+              "true_positive_rate": 0.9403325725464623,
+              "false_positive_rate": 0.7937995674116799
+            }
+          },
+          "fit_and_evaluation_seconds": 0.16105803288519382
+        },
+        {
+          "seed": 43,
+          "train_n": 18084,
+          "test_n": 7751,
+          "split_sha256": "61a510973019f7d5533b89cb1367e705a02cdf7c573a466aa509885a30aea673",
+          "auc": 0.6979439307710893,
+          "balanced_accuracy": 0.5622736700412007,
+          "dpd": -0.01499573914264496,
+          "eod": -0.01800831975474093,
+          "predicted_favorable_rate": 0.8900786995226423,
+          "group_metrics": {
+            "privileged": {
+              "n": 3297,
+              "positive_outcomes": 2367,
+              "selection_rate": 0.8986957840461025,
+              "true_positive_rate": 0.9374735952682721,
+              "false_positive_rate": 0.8
+            },
+            "unprivileged": {
+              "n": 4454,
+              "positive_outcomes": 3067,
+              "selection_rate": 0.8837000449034575,
+              "true_positive_rate": 0.9194652755135312,
+              "false_positive_rate": 0.8046142754145638
+            }
+          },
+          "fit_and_evaluation_seconds": 0.1550213189329952
+        },
+        {
+          "seed": 44,
+          "train_n": 18084,
+          "test_n": 7751,
+          "split_sha256": "6789541eff12b3dd417b6b8ccc5206344b1f1cdddbf8f764fc3befb66c59109a",
+          "auc": 0.6907567309459502,
+          "balanced_accuracy": 0.570264724939554,
+          "dpd": -0.013541994811246738,
+          "eod": -0.009848078176326491,
+          "predicted_favorable_rate": 0.882724809701974,
+          "group_metrics": {
+            "privileged": {
+              "n": 3297,
+              "positive_outcomes": 2367,
+              "selection_rate": 0.8905065210797695,
+              "true_positive_rate": 0.9302915082382763,
+              "false_positive_rate": 0.789247311827957
+            },
+            "unprivileged": {
+              "n": 4454,
+              "positive_outcomes": 3067,
+              "selection_rate": 0.8769645262685227,
+              "true_positive_rate": 0.9204434300619498,
+              "false_positive_rate": 0.7808219178082192
+            }
+          },
+          "fit_and_evaluation_seconds": 0.1550353339407593
+        },
+        {
+          "seed": 45,
+          "train_n": 18084,
+          "test_n": 7751,
+          "split_sha256": "8002b54e9b83fde48ff7976974d5b8d60da4a98263bac3cce0fa4625e48724ee",
+          "auc": 0.6973371675232066,
+          "balanced_accuracy": 0.5634950198473812,
+          "dpd": -0.0151219237147866,
+          "eod": -0.005365868508533933,
+          "predicted_favorable_rate": 0.8939491678493098,
+          "group_metrics": {
+            "privileged": {
+              "n": 3297,
+              "positive_outcomes": 2367,
+              "selection_rate": 0.902638762511374,
+              "true_positive_rate": 0.9349387410223912,
+              "false_positive_rate": 0.8204301075268817
+            },
+            "unprivileged": {
+              "n": 4454,
+              "positive_outcomes": 3067,
+              "selection_rate": 0.8875168387965874,
+              "true_positive_rate": 0.9295728725138572,
+              "false_positive_rate": 0.7945205479452054
+            }
+          },
+          "fit_and_evaluation_seconds": 0.14714865293353796
+        },
+        {
+          "seed": 46,
+          "train_n": 18084,
+          "test_n": 7751,
+          "split_sha256": "41c338c08f55b0f09540c42c221023e4bf355a538d29ed48238bdad4885f641d",
+          "auc": 0.7021078778114873,
+          "balanced_accuracy": 0.5632474537705894,
+          "dpd": -0.006306504709142846,
+          "eod": -0.009204928818973168,
+          "predicted_favorable_rate": 0.8944652302928654,
+          "group_metrics": {
+            "privileged": {
+              "n": 3297,
+              "positive_outcomes": 2367,
+              "selection_rate": 0.8980891719745223,
+              "true_positive_rate": 0.9374735952682721,
+              "false_positive_rate": 0.7978494623655914
+            },
+            "unprivileged": {
+              "n": 4454,
+              "positive_outcomes": 3067,
+              "selection_rate": 0.8917826672653795,
+              "true_positive_rate": 0.928268666449299,
+              "false_positive_rate": 0.8111031002162942
+            }
+          },
+          "fit_and_evaluation_seconds": 0.1516110070515424
+        }
+      ],
+      "summary": {
+        "auc": {
+          "mean": 0.7003443447949729,
+          "sample_std": 0.008439707310613102
+        },
+        "balanced_accuracy": {
+          "mean": 0.5656606551343394,
+          "sample_std": 0.003690664571166468
+        },
+        "dpd": {
+          "mean": -0.012065996233666287,
+          "sample_std": 0.003747326005054908
+        },
+        "eod": {
+          "mean": -0.008505109586782389,
+          "sample_std": 0.006578995200677059
+        }
+      }
+    }
+  }
+}

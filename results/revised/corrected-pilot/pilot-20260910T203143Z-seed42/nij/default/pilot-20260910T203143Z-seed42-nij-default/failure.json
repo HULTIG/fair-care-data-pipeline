@@ -1,0 +1,6 @@
+{
+  "run_id": "pilot-20260910T203143Z-seed42-nij-default",
+  "status": "failed",
+  "error_type": "UnboundLocalError",
+  "error": "local variable 'time_total' referenced before assignment"
+}

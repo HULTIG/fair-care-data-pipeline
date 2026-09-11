@@ -1,0 +1,321 @@
+{
+  "pilot_id": "pilot-20260910T204348Z-seed42",
+  "seed": 42,
+  "status": "complete",
+  "code": {
+    "revision": "be2fb0f5fd12db6d8a571ff96aa6d81d91c17a74",
+    "dirty": true
+  },
+  "base_config": "/home/anilson/projects/fare-care-data-pipeline/configs/default.yaml",
+  "base_config_sha256": "be3fed4a35768638874e9c20c2d55f8f30e2f7845e4bf66985f82d6d412aedf2",
+  "packages": {
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "pyspark": "3.5.0",
+    "delta-spark": "3.0.0",
+    "scikit-learn": "1.6.1",
+    "pyyaml": "6.0.3"
+  },
+  "runs": [
+    {
+      "dataset": "compas",
+      "config": "baseline",
+      "run_id": "pilot-20260910T204348Z-seed42-compas-baseline",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "e567a98728b0c9c9d07961094049de9830cbf33b4e61985bcde8c2a22c65499f",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "withheld"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "compas",
+      "config": "configa",
+      "run_id": "pilot-20260910T204348Z-seed42-compas-configa",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "b98989d9b6b613b0499876dad4b5ad517890fc9f01a226b5e7d439710587bc9c",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "withheld"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "compas",
+      "config": "configb",
+      "run_id": "pilot-20260910T204348Z-seed42-compas-configb",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "96f03a81e3de182bad021060b9bc51ce120dc5fcc80b9a0d36ee10d09776d564",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "compas",
+      "config": "configc",
+      "run_id": "pilot-20260910T204348Z-seed42-compas-configc",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "85b489631cde21bce58a59a6179c4575de7fafbcc9ec41b660b3b2ee6a12703d",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "compas",
+      "config": "default",
+      "run_id": "pilot-20260910T204348Z-seed42-compas-default",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "7f6059ed9edf3dde0618545ad4480c9d39d6867781c73087a69195fd9aeec8bb",
+      "input_data_sha256": "c451db85908b2f7fef1d83203bedf6b71ecda0d5af468d82ae62178f91d0cc7d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "adult",
+      "config": "baseline",
+      "run_id": "pilot-20260910T204348Z-seed42-adult-baseline",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "2fa7fb45f92e9acb07d4fb39fc45de04556ac5030e1b398028077e3b207e31ab",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "withheld"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "adult",
+      "config": "configa",
+      "run_id": "pilot-20260910T204348Z-seed42-adult-configa",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "d34517df07beef330306deb7b1cce2d05839c06059fe09b3c56bcddbce2d7afb",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "adult",
+      "config": "configb",
+      "run_id": "pilot-20260910T204348Z-seed42-adult-configb",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "35a6dcd5a3923a53f3ba9cf79b77dcb93164da3c6838ef7d3ffe40207438d395",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "adult",
+      "config": "configc",
+      "run_id": "pilot-20260910T204348Z-seed42-adult-configc",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "e4773d61d2047e8fe1f6848dd99140ea8fb5bc7b7a6c85877023f89c1dfaa011",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "adult",
+      "config": "default",
+      "run_id": "pilot-20260910T204348Z-seed42-adult-default",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "663f469cef72b3273b69f67ec68787faf802ca1623ce318de363aa7686d35714",
+      "input_data_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "german",
+      "config": "baseline",
+      "run_id": "pilot-20260910T204348Z-seed42-german-baseline",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "7bea82d6f4004910e13d453dce7aec5e5280344833f6eccd48053d82f4ff6756",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "german",
+      "config": "configa",
+      "run_id": "pilot-20260910T204348Z-seed42-german-configa",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "33c87baf201c75b3022d7c2b67d5458a1cb322254b16ba38efe954993fbe9d63",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "german",
+      "config": "configb",
+      "run_id": "pilot-20260910T204348Z-seed42-german-configb",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "e4e2b39acf9c07712214ca81bfdb8955d058c8e6e943029911e8652dd6a48a25",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "german",
+      "config": "configc",
+      "run_id": "pilot-20260910T204348Z-seed42-german-configc",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "efb2986044f1eebcebe7f7852cdd2be10a270cebd87e6bfb59792bfc88988984",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "german",
+      "config": "default",
+      "run_id": "pilot-20260910T204348Z-seed42-german-default",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "bd59e0a477ef66e1d63ee1f01b56a0c70aabc438fc1e0f75c613c84f0ff88b17",
+      "input_data_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "nij",
+      "config": "baseline",
+      "run_id": "pilot-20260910T204348Z-seed42-nij-baseline",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "83a73bd9e3f19fd6986aa774c47eea05629cba60002607fefa05f4f66afcdd61",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "evidence_valid": true,
+      "publication": {
+        "status": "withheld"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "nij",
+      "config": "configa",
+      "run_id": "pilot-20260910T204348Z-seed42-nij-configa",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "70eaba10015e4b367210b9f9d67feab25c0a9633700bedb5bfff3ff028589a3e",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "nij",
+      "config": "configb",
+      "run_id": "pilot-20260910T204348Z-seed42-nij-configb",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "a02820e8093be7424f1cb9c72f22f3e4ac82f3e292ee60b1a66b6ee962fc6599",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "nij",
+      "config": "configc",
+      "run_id": "pilot-20260910T204348Z-seed42-nij-configc",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "76001bca35f91e2b6049f184df4d4842d9286ddd422057354e22bd1b6697b02d",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    },
+    {
+      "dataset": "nij",
+      "config": "default",
+      "run_id": "pilot-20260910T204348Z-seed42-nij-default",
+      "seed": 42,
+      "status": "succeeded",
+      "resolved_config_sha256": "609b82d6bb6eb394f0d611b3e6176172634f10511518e24f02f506b6e0fd4954",
+      "input_data_sha256": "2df247209bea3ad2d861ef1624461ef73b5b792f01593da0b6f18e3de1b72f5c",
+      "evidence_valid": true,
+      "publication": {
+        "status": "eligible"
+      },
+      "utility_status": "valid",
+      "metric_status": "valid"
+    }
+  ]
+}

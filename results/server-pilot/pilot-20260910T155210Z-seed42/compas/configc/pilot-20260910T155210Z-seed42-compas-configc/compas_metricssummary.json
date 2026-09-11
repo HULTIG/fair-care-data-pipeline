@@ -1,0 +1,77 @@
+{
+  "score": 0.6369633100913781,
+  "status": "AT RISK",
+  "components": {
+    "bronze": 1.0,
+    "silver": 0.5,
+    "gold": 0.4109577387263889
+  },
+  "locked": true,
+  "fairness": {
+    "status": "valid",
+    "record_count": 2165,
+    "outcome_counts": {
+      "0": 1189,
+      "1": 976
+    },
+    "prediction_source": "held_out_predictions",
+    "roc_auc": 0.6308700657667967,
+    "balanced_accuracy": 0.5758575879992831,
+    "predicted_favorable_rate": 0.6120092378752887,
+    "groups": {
+      "privileged": {
+        "sample_count": 702,
+        "outcome_count": 439,
+        "non_outcome_count": 263,
+        "selection_rate": 0.7905982905982906,
+        "true_positive_rate": 0.8223234624145785,
+        "false_positive_rate": 0.7376425855513308
+      },
+      "unprivileged": {
+        "sample_count": 1124,
+        "outcome_count": 556,
+        "non_outcome_count": 568,
+        "selection_rate": 0.3861209964412811,
+        "true_positive_rate": 0.45863309352517984,
+        "false_positive_rate": 0.31514084507042256
+      }
+    },
+    "demographic_parity_difference": -0.40447729415700945,
+    "equal_opportunity_difference": -0.3636903688893987,
+    "disparate_impact": 0.48839088198518804,
+    "statistical_parity_difference": -0.40447729415700945
+  },
+  "utility": {
+    "roc_auc": 0.6308700657667967,
+    "balanced_accuracy": 0.5758575879992831,
+    "utility_retention": 0.6308700657667967,
+    "evaluation_population": 2165,
+    "status": "valid"
+  },
+  "privacy": {
+    "risk": null,
+    "information_loss": null
+  },
+  "anonymization": {
+    "k": 0,
+    "epsilon": 1.0,
+    "technique": "none"
+  },
+  "runtimes": {
+    "bronze": 3.219391345977783,
+    "silver": 3.2814626693725586,
+    "gold": 1.2676753997802734,
+    "total": 7.768551588058472
+  },
+  "run_id": "pilot-20260910T155210Z-seed42-compas-configc",
+  "evidence_valid": true,
+  "compliance": {
+    "compliant": true,
+    "issues": [
+      "k-anonymity k < 5, might not meet strict GDPR standards."
+    ]
+  },
+  "publication": {
+    "status": "withheld"
+  }
+}

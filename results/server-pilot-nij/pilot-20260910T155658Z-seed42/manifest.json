@@ -1,0 +1,66 @@
+{
+  "pilot_id": "pilot-20260910T155658Z-seed42",
+  "seed": 42,
+  "status": "incomplete",
+  "code": {
+    "revision": "4db74694347708392878a8af4e99cf35eddd6f95",
+    "dirty": true
+  },
+  "base_config": "/home/anilson/projects/fare-care-data-pipeline/configs/default.yaml",
+  "base_config_sha256": "70927901d8367612ac98754fd6648a4edabac4b2c2827f667fb39a1810172381",
+  "packages": {
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "pyspark": "3.5.0",
+    "delta-spark": "3.0.0",
+    "scikit-learn": "1.6.1",
+    "pyyaml": "6.0.3"
+  },
+  "runs": [
+    {
+      "dataset": "nij",
+      "config": "baseline",
+      "run_id": "pilot-20260910T155658Z-seed42-nij-baseline",
+      "seed": 42,
+      "status": "failed",
+      "error_type": "ValueError",
+      "error": "nij: unknown labels in Recidivism_Arrest_Year1: ['No', 'Yes']"
+    },
+    {
+      "dataset": "nij",
+      "config": "configa",
+      "run_id": "pilot-20260910T155658Z-seed42-nij-configa",
+      "seed": 42,
+      "status": "failed",
+      "error_type": "ValueError",
+      "error": "nij: unknown labels in Recidivism_Arrest_Year1: ['No', 'Yes']"
+    },
+    {
+      "dataset": "nij",
+      "config": "configb",
+      "run_id": "pilot-20260910T155658Z-seed42-nij-configb",
+      "seed": 42,
+      "status": "failed",
+      "error_type": "ValueError",
+      "error": "nij: unknown labels in Recidivism_Arrest_Year1: ['No', 'Yes']"
+    },
+    {
+      "dataset": "nij",
+      "config": "configc",
+      "run_id": "pilot-20260910T155658Z-seed42-nij-configc",
+      "seed": 42,
+      "status": "failed",
+      "error_type": "ValueError",
+      "error": "nij: unknown labels in Recidivism_Arrest_Year1: ['No', 'Yes']"
+    },
+    {
+      "dataset": "nij",
+      "config": "default",
+      "run_id": "pilot-20260910T155658Z-seed42-nij-default",
+      "seed": 42,
+      "status": "failed",
+      "error_type": "ValueError",
+      "error": "nij: unknown labels in Recidivism_Arrest_Year1: ['No', 'Yes']"
+    }
+  ]
+}

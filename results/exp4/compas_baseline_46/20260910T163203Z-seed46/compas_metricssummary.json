@@ -1,0 +1,80 @@
+{
+  "score": 0.5651566542551704,
+  "status": "AT RISK",
+  "components": {
+    "bronze": 1.0,
+    "silver": 0.25,
+    "gold": 0.44550586159319255
+  },
+  "locked": true,
+  "fairness": {
+    "status": "valid",
+    "record_count": 2165,
+    "outcome_counts": {
+      "0": 1189,
+      "1": 976
+    },
+    "prediction_source": "held_out_predictions",
+    "roc_auc": 0.6289290318355417,
+    "balanced_accuracy": 0.587747228694729,
+    "predicted_favorable_rate": 0.6096997690531177,
+    "groups": {
+      "privileged": {
+        "sample_count": 769,
+        "outcome_count": 481,
+        "non_outcome_count": 288,
+        "selection_rate": 0.7802340702210663,
+        "true_positive_rate": 0.8316008316008316,
+        "false_positive_rate": 0.6944444444444444
+      },
+      "unprivileged": {
+        "sample_count": 1082,
+        "outcome_count": 507,
+        "non_outcome_count": 575,
+        "selection_rate": 0.411275415896488,
+        "true_positive_rate": 0.47337278106508873,
+        "false_positive_rate": 0.3565217391304348
+      }
+    },
+    "demographic_parity_difference": -0.3689586543245783,
+    "equal_opportunity_difference": -0.3582280505357429,
+    "disparate_impact": 0.5271179913739987,
+    "statistical_parity_difference": -0.3689586543245783
+  },
+  "utility": {
+    "roc_auc": 0.6289290318355417,
+    "balanced_accuracy": 0.587747228694729,
+    "utility_retention": null,
+    "evaluation_population": 2165,
+    "status": "valid"
+  },
+  "privacy": {
+    "risk": null,
+    "information_loss": null
+  },
+  "anonymization": {
+    "k": 0,
+    "epsilon": 999,
+    "technique": "none",
+    "rows_input": 7214,
+    "rows_retained": 7214,
+    "rows_suppressed": 0
+  },
+  "runtimes": {
+    "bronze": 4.045163154602051,
+    "silver": 3.2569379806518555,
+    "gold": 0.7857367992401123,
+    "total": 8.08786153793335
+  },
+  "run_id": "20260910T163203Z-seed46",
+  "evidence_valid": true,
+  "compliance": {
+    "compliant": true,
+    "issues": [
+      "k-anonymity k < 5, might not meet strict GDPR standards."
+    ]
+  },
+  "publication": {
+    "status": "withheld"
+  }
+}
